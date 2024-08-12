@@ -1,20 +1,22 @@
-server:
-  port: 8081
-
 spring:
-  application:
-    name: eureka-page
   datasource:
-    url: jdbc:postgresql://localhost:5432/habitdb
+    url: jdbc:postgresql://localhost:5432/budgetdb
     username: brightvl
-    password: habitpass
+    password: brightPass
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8080
+
+#  docker run --name budgetdb -e POSTGRES_USER=brightvl -e POSTGRES_PASSWORD=brightPass -e POSTGRES_DB=budgetdb -p 5432:5432 -d postgres
+#  --name budget-postgres — задает имя контейнера.
+#  -e POSTGRES_PASSWORD=yourPassword — устанавливает пароль для пользователя PostgreSQL.
+#  -e POSTGRES_USER=yourUsername — устанавливает имя пользователя.
+#  -e POSTGRES_DB=budgetdb — создает базу данных с именем budgetdb.
+#  -p 5432:5432 — маппинг порта 5432 контейнера на порт 5432 хоста.
+#  -d postgres — запускает контейнер в фоновом режиме с последней версией PostgreSQL.
