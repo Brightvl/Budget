@@ -38,28 +38,37 @@ export function Auth() {
         }
     };
 
-
     const handleRegister = () => {
         navigate('/register');  // Перенаправление на страницу регистрации
     };
 
     return (
-        <div className="auth-container">
+        <div className="container">
             <h2>Login</h2>
-            <input
-                type="text"
-                placeholder="Login"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>Login</button>
-            <button onClick={handleRegister}>Register</button>
+            <div className="auth-form">
+                <div className="form-group">
+                    <input
+                        type="text"
+                        placeholder="Login"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        className="auth-input"
+                    />
+                </div>
+                <div className="form-group">
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="auth-input"
+                    />
+                </div>
+                <div className="button-group">
+                    <button onClick={handleLogin} className="button">Login</button>
+                    <button onClick={handleRegister} className="button">Register</button>
+                </div>
+            </div>
         </div>
     );
 }

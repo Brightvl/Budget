@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { handleLogout } from "../utils/authUtils";
-import BudgetList from "./BudgetList";
-import CategoryList from "./CategoryList";
-import TransactionList from "./TransactionList";
+import { handleLogout } from "../../utils/authUtils.js";
+import BudgetList from "../BudgetList.jsx";
+import CategoryList from "../CategoryList.jsx";
+import TransactionList from "../TransactionList.jsx";
 import {useEffect, useState} from "react";
 
 export function UserDashboard() {
@@ -30,23 +30,23 @@ export function UserDashboard() {
     }, [userId]);
 
     return (
-        <div className="dashboard-container">
+        <div className="container">
             <h2>User Dashboard</h2>
             <div className="user-info">
                 <h3>Welcome, {userName}!</h3>
                 <p>Current Balance: ${balance.toFixed(2)}</p>
             </div>
-            <div className="tabs">
-                <button onClick={() => setActiveTab('budgets')}>Budgets</button>
-                <button onClick={() => setActiveTab('categories')}>Categories</button>
-                <button onClick={() => setActiveTab('transactions')}>Transactions</button>
+            <div className="button-group">
+                <button className="button" onClick={() => setActiveTab('budgets')}>Budgets</button>
+                <button className="button" onClick={() => setActiveTab('categories')}>Categories</button>
+                <button className="button" onClick={() => setActiveTab('transactions')}>Transactions</button>
             </div>
             <div className="tab-content">
                 {activeTab === 'budgets' && <BudgetList userId={userId} />}
                 {activeTab === 'categories' && <CategoryList userId={userId} />}
                 {activeTab === 'transactions' && <TransactionList userId={userId} />}
             </div>
-            <button onClick={() => handleLogout(navigate)}>Logout</button>
+            <button className={"button"} onClick={() => handleLogout(navigate)}>Logout</button>
         </div>
     );
 }

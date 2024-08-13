@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults())  // Используем стандартную форму аутентификации
-                .httpBasic(AbstractHttpConfigurer::disable)  // Отключаем Basic Authentication
+                .httpBasic(Customizer.withDefaults()) // поддержку Basic Auth для REST ресурсов
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");

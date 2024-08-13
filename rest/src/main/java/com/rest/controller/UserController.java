@@ -2,6 +2,7 @@ package com.rest.controller;
 
 import com.rest.dto.LoginRequestDTO;
 import com.rest.dto.UserDTO;
+import com.rest.dto.UserRegistrationDTO;
 import com.rest.model.Role;
 import com.rest.model.User;
 import com.rest.service.UserService;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO userDTO) {
         if (userService.getUserByLogin(userDTO.getLogin()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
@@ -36,9 +37,21 @@ public class UserController {
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole() != null ? userDTO.getRole() : Role.USER);
 
-        userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+        if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password cannot be empty");
+        }
+
+        user.setPassword(userDTO.getPassword());
+
+        try {
+            userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user");
+        }
     }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
@@ -47,13 +60,16 @@ public class UserController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin());
 
-        UserDTO userDTO = new UserDTO(authenticatedUser.getId(), authenticatedUser.getLogin(), authenticatedUser.getEmail(), authenticatedUser.getRole());
-
-        return ResponseEntity.ok(userDTO);
+        if (authenticatedUser.getRole() == Role.ADMIN) {
+            UserDTO userDTO = new UserDTO(authenticatedUser.getId(), authenticatedUser.getLogin(), authenticatedUser.getEmail(), authenticatedUser.getRole());
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
+
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {

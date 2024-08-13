@@ -9,6 +9,7 @@ export function Register() {
     const [currency, setCurrency] = useState('');
     const navigate = useNavigate();
 
+
     const handleRegister = async () => {
         const response = await fetch('/api/users/register', {
             method: 'POST',
@@ -28,11 +29,11 @@ export function Register() {
     };
 
     return (
-        <div className="register-container">
-            <h2>Register</h2>
+        <div className="container">
+            <h2>Регистрация</h2>
             <input
                 type="text"
-                placeholder="Login"
+                placeholder="Логин"
                 value={login}
                 onChange={(e) => setLogin(e.target.value)}
             />
@@ -44,17 +45,17 @@ export function Register() {
             />
             <input
                 type="password"
-                placeholder="Password"
+                placeholder="Пароль"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
             <input
                 type="text"
-                placeholder="Currency"
+                placeholder="Валюта"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
             />
-            <button onClick={handleRegister}>Register</button>
+            <button className={"button"} onClick={handleRegister}>Зарегистрироваться</button>
         </div>
     );
 }

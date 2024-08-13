@@ -34,4 +34,5 @@ public class AdminController {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }
