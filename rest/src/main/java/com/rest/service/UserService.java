@@ -2,20 +2,21 @@ package com.rest.service;
 
 import com.rest.model.User;
 import com.rest.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -31,7 +32,7 @@ public class UserService {
         User user = getUserById(id);
         user.setLogin(userDetails.getLogin());
         user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
+        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setCurrency(userDetails.getCurrency());
         return userRepository.save(user);
     }

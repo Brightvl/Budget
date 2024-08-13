@@ -1,13 +1,15 @@
 package com.rest.controller;
 
+import com.rest.dto.TransactionDTO;
+import com.rest.model.Category;
 import com.rest.model.Transaction;
+import com.rest.model.User;
 import com.rest.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -19,32 +21,57 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(transactionDTO.getAmount());
+        transaction.setDate(transactionDTO.getDate());
+        transaction.setDescription(transactionDTO.getDescription());
+
+        Category category = new Category();
+        category.setId(transactionDTO.getCategoryId());
+        transaction.setCategory(category);
+
+        User user = new User();
+        user.setId(transactionDTO.getUserId());
+        transaction.setUser(user);
+
         Transaction createdTransaction = transactionService.createTransaction(transaction);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
+
+        TransactionDTO createdTransactionDTO = new TransactionDTO(createdTransaction.getId(), createdTransaction.getAmount(), createdTransaction.getDate(), createdTransaction.getDescription(), createdTransaction.getCategory().getId(), createdTransaction.getUser().getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTransactionDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
         Transaction transaction = transactionService.getTransactionById(id);
-        return ResponseEntity.ok(transaction);
+        if (transaction != null) {
+            TransactionDTO transactionDTO = new TransactionDTO(transaction.getId(), transaction.getAmount(), transaction.getDate(), transaction.getDescription(), transaction.getCategory().getId(), transaction.getUser().getId());
+            return ResponseEntity.ok(transactionDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction updatedTransaction = transactionService.updateTransaction(id, transactionDetails);
-        return ResponseEntity.ok(updatedTransaction);
-    }
+    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionDTO) {
+        Transaction transaction = transactionService.getTransactionById(id);
+        transaction.setAmount(transactionDTO.getAmount());
+        transaction.setDate(transactionDTO.getDate());
+        transaction.setDescription(transactionDTO.getDescription());
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteTransaction(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+        Category category = new Category();
+        category.setId(transactionDTO.getCategoryId());
+        transaction.setCategory(category);
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Transaction>> getAllTransactionsByUser(@PathVariable Long userId) {
-        List<Transaction> transactions = transactionService.getAllTransactionsByUser(userId);
-        return ResponseEntity.ok(transactions);
+        User user = new User();
+        user.setId(transactionDTO.getUserId());
+        transaction.setUser(user);
+
+        Transaction updatedTransaction = transactionService.updateTransaction(id, transaction);
+
+        TransactionDTO updatedTransactionDTO = new TransactionDTO(updatedTransaction.getId(), updatedTransaction.getAmount(), updatedTransaction.getDate(), updatedTransaction.getDescription(), updatedTransaction.getCategory().getId(), updatedTransaction.getUser().getId());
+
+        return ResponseEntity.ok(updatedTransactionDTO);
     }
 }

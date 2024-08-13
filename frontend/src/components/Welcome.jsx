@@ -1,11 +1,16 @@
-
 import { useNavigate } from 'react-router-dom';
 
 const Welcome = () => {
     const navigate = useNavigate();
 
     const handleGetStarted = () => {
-        navigate('/user-list');
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        if (isLoggedIn) {
+            navigate('/dashboard');
+        } else {
+            navigate('/auth');
+        }
     };
 
     return (

@@ -1,13 +1,14 @@
 package com.rest.controller;
 
+import com.rest.dto.CategoryDTO;
 import com.rest.model.Category;
+import com.rest.model.User;
 import com.rest.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -19,32 +20,48 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+        category.setType(categoryDTO.getType());
+
+        User user = new User();
+        user.setId(categoryDTO.getUserId());
+        category.setUser(user);
+
         Category createdCategory = categoryService.createCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+
+        CategoryDTO createdCategoryDTO = new CategoryDTO(createdCategory.getId(), createdCategory.getName(), createdCategory.getType(), createdCategory.getUser().getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoryDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         Category category = categoryService.getCategoryById(id);
-        return ResponseEntity.ok(category);
+        if (category != null) {
+            CategoryDTO categoryDTO = new CategoryDTO(category.getId(), category.getName(), category.getType(), category.getUser().getId());
+            return ResponseEntity.ok(categoryDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category categoryDetails) {
-        Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
-        return ResponseEntity.ok(updatedCategory);
-    }
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        Category category = categoryService.getCategoryById(id);
+        category.setName(categoryDTO.getName());
+        category.setType(categoryDTO.getType());
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+        User user = new User();
+        user.setId(categoryDTO.getUserId());
+        category.setUser(user);
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Category>> getAllCategoriesByUser(@PathVariable Long userId) {
-        List<Category> categories = categoryService.getAllCategoriesByUser(userId);
-        return ResponseEntity.ok(categories);
+        Category updatedCategory = categoryService.updateCategory(id, category);
+
+        CategoryDTO updatedCategoryDTO = new CategoryDTO(updatedCategory.getId(), updatedCategory.getName(), updatedCategory.getType(), updatedCategory.getUser().getId());
+
+        return ResponseEntity.ok(updatedCategoryDTO);
     }
 }
+
