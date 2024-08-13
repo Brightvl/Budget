@@ -61,15 +61,10 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin());
+        UserDTO userDTO = new UserDTO(authenticatedUser.getId(), authenticatedUser.getLogin(), authenticatedUser.getEmail(), authenticatedUser.getRole());
 
-        if (authenticatedUser.getRole() == Role.ADMIN) {
-            UserDTO userDTO = new UserDTO(authenticatedUser.getId(), authenticatedUser.getLogin(), authenticatedUser.getEmail(), authenticatedUser.getRole());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
+        return ResponseEntity.ok(userDTO);
     }
-
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {
