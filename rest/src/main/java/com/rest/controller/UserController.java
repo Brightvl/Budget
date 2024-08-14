@@ -34,6 +34,7 @@ public class UserController {
 
         User user = new User();
         user.setLogin(userDTO.getLogin());
+        user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole() != null ? userDTO.getRole() : Role.USER);
 
@@ -52,7 +53,6 @@ public class UserController {
     }
 
 
-
     @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
@@ -61,8 +61,12 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin());
-        UserDTO userDTO = new UserDTO(authenticatedUser.getId(), authenticatedUser.getLogin(), authenticatedUser.getEmail(), authenticatedUser.getRole());
-
+        UserDTO userDTO = new UserDTO(
+                authenticatedUser.getId(),
+                authenticatedUser.getUsername(),
+                authenticatedUser.getLogin(),
+                authenticatedUser.getEmail(),
+                authenticatedUser.getRole());
         return ResponseEntity.ok(userDTO);
     }
 
@@ -70,7 +74,12 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {
         User user = userService.getUserByLogin(login);
         if (user != null) {
-            UserDTO userDTO = new UserDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole());
+            UserDTO userDTO = new UserDTO(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getLogin(),
+                    user.getEmail(),
+                    user.getRole());
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -86,7 +95,12 @@ public class UserController {
 
         User updatedUser = userService.updateUser(id, user);
 
-        UserDTO updatedUserDTO = new UserDTO(updatedUser.getId(), updatedUser.getLogin(), updatedUser.getEmail(), updatedUser.getRole());
+        UserDTO updatedUserDTO = new UserDTO(
+                updatedUser.getId(),
+                updatedUser.getUsername(),
+                updatedUser.getLogin(),
+                updatedUser.getEmail(),
+                updatedUser.getRole());
         return ResponseEntity.ok(updatedUserDTO);
     }
 }

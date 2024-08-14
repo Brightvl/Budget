@@ -21,6 +21,7 @@ export function Auth() {
 
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userId', userData.id);
+            localStorage.setItem('userName', userData.username);
             localStorage.setItem('userLogin', userData.login);
             localStorage.setItem('userEmail', userData.email);
             localStorage.setItem('userRole', userData.role);
@@ -47,7 +48,7 @@ export function Auth() {
 
     return (
         <div className="container">
-            <h2>Login</h2>
+            <h2>Авторизация</h2>
             <div className="auth-form">
                 <div className="form-group">
                     <input

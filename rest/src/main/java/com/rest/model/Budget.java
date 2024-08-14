@@ -15,7 +15,7 @@ public class Budget {
     private Long id;
 
     private Double amount;
-    private String period;
+    private String period; // например, "MONTHLY"
 
     @ManyToOne
     @JoinColumn(name = "category_id")

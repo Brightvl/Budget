@@ -1,12 +1,14 @@
-import {handleLogout} from '../../utils/authUtils';
-import {useNavigate} from 'react-router-dom';
-import {useEffect, useState} from "react";
+import { handleLogout } from '../../utils/authUtils';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 import axios from 'axios';
 
 function AdminDashboard() {
     const [users, setUsers] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
+    const [isSearchOpen, setIsSearchOpen] = useState(false); // Состояние для управления открытием/закрытием поиска
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false); // Состояние для управления открытием/закрытием удаления
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -66,36 +68,49 @@ function AdminDashboard() {
     return (
         <div className="container">
             <div className="">
-                <h2>Admin Dashboard </h2>
+                <h2>Admin Dashboard</h2>
                 <button className={"button"} onClick={() => handleLogout(navigate)}>Logout</button>
             </div>
 
-            <div className="search-block">
-                <p>Поиск по id пользователя</p>
-                <div className={`search-panel`}>
-                    <input
-                        className={"search-panel__input"}
-                        type="text"
-                        placeholder="Search by login or ID"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <button className={`search-panel__button`} onClick={handleSearch}>Search</button>
-                </div>
+            {/* Кнопка для раскрытия поиска */}
+            <div>
+                <button className="button" onClick={() => setIsSearchOpen(!isSearchOpen)}>
+                    {isSearchOpen ? 'Скрыть поиск' : 'Найти пользователя по логину'}
+                </button>
+                {isSearchOpen && (
+                    <div className="search-block">
+                        <div className={`search-panel`}>
+                            <input
+                                className={"search-panel__input"}
+                                type="text"
+                                placeholder="Search by login or ID"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button className={`search-panel__button`} onClick={handleSearch}>Search</button>
+                        </div>
+                    </div>
+                )}
             </div>
 
-
-            <ul>
-                {filteredUsers.map(user => (
-                    <li key={user.id}>
-                        {user.login} - {user.email}
-                        <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+            {/* Кнопка для раскрытия списка пользователей и удаления */}
+            <div>
+                <button className="button" onClick={() => setIsDeleteOpen(!isDeleteOpen)}>
+                    {isDeleteOpen ? 'Скрыть удаление пользователей' : 'Удалить пользователя'}
+                </button>
+                {isDeleteOpen && (
+                    <ul>
+                        {filteredUsers.map(user => (
+                            <li key={user.id}>
+                                {user.login} - {user.email}
+                                <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
-
 }
 
 export default AdminDashboard;
