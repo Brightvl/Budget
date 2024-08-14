@@ -5,7 +5,6 @@ import com.rest.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class CategoryService {
 
@@ -23,6 +22,10 @@ public class CategoryService {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
+    public List<Category> getAllCategoriesByUser(Long userId) {
+        return categoryRepository.findAllByUserId(userId);
+    }
+
     public Category updateCategory(Long id, Category categoryDetails) {
         Category category = getCategoryById(id);
         category.setName(categoryDetails.getName());
@@ -33,9 +36,5 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         Category category = getCategoryById(id);
         categoryRepository.delete(category);
-    }
-
-    public List<Category> getAllCategoriesByUser(Long userId) {
-        return categoryRepository.findAllByUserId(userId);
     }
 }

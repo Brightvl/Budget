@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useState} from 'react';
 
 export function Auth() {
     const [login, setLogin] = useState('');
@@ -12,15 +12,18 @@ export function Auth() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ login, password }),
+            body: JSON.stringify({login, password}),
         });
 
         if (response.ok) {
             const userData = await response.json(); // Получаем DTO из ответа
-            console.log('Login successful:', userData); // Логируем данные пользователя
+            console.log('Login successful:', userData);
 
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userRole', userData.role); // Сохраняем роль пользователя
+            localStorage.setItem('userId', userData.id);
+            localStorage.setItem('userLogin', userData.login);
+            localStorage.setItem('userEmail', userData.email);
+            localStorage.setItem('userRole', userData.role);
 
             if (userData.role === 'ADMIN') {
                 console.log('Redirecting to admin dashboard');

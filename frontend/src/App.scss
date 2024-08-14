@@ -1,12 +1,38 @@
-$app-bg-color: #98728c;
-$container-bg-color: #fff;
-$button-bg-color: #007bff;
-$button-hover-bg-color: #0056b3;
-$input-border-color: #ccc;
-$box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-$border-radius: 8px;
-$padding: 40px;
+// Переменные
+$app-bg-color: #98728c; // Цвет фона приложения
+$container-bg-color: #fff; // Цвет фона контейнера
+$button-bg-color: #007bff; // Цвет фона кнопки
+$button-hover-bg-color: #0056b3; // Цвет фона кнопки при наведении
+$input-border-color: #ccc; // Цвет обводки поля ввода
+$box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Тень для контейнера
+$border-radius: 8px; // Радиус закругления углов
+$padding: 40px; // Внутренний отступ контейнера
 
+// Миксин для кнопок
+@mixin button-style($bg-color, $hover-color) {
+  background-color: $bg-color;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+// Миксин для полей ввода
+@mixin input-style($border-color) {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid $border-color;
+}
+
+// Основной контейнер приложения
 .app-container {
   display: flex;
   justify-content: center;
@@ -16,37 +42,48 @@ $padding: 40px;
   background-color: $app-bg-color;
 }
 
-.container{
+// Внутренний контейнер
+.container {
   background: $container-bg-color;
   padding: $padding;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
-
   text-align: center;
 }
 
+// Кнопка
 .button {
-  background-color: $button-bg-color;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
+  @include button-style($button-bg-color, $button-hover-bg-color);
 
-  &-group{
+  &-group {
     display: flex;
     gap: 20px;
   }
-  &:hover {
-    background-color: $button-hover-bg-color;
-  }
 }
 
+// Поля ввода
 input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid $input-border-color;
+  @include input-style($input-border-color);
+}
+
+// Панель поиска
+.search-panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; // Выравнивание влево
+  max-width: 500px; // Устанавливаем максимальную ширину для панели поиска
+  margin: 20px auto; // Центрируем панель на странице
+
+  &__input {
+    @include input-style($input-border-color);
+    flex: 1; // Заставляем input занимать всю доступную ширину
+    border-radius: 4px 0 0 4px; // Закругленные углы слева
+    outline: none; // Убираем синюю рамку при фокусе
+  }
+
+  &__button {
+    @include button-style($button-bg-color, $button-hover-bg-color);
+    padding: 10px 20px; // Увеличиваем размер кнопки для соответствия input
+    border-radius: 0 4px 4px 0; // Закругленные углы справа
+  }
 }

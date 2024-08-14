@@ -5,7 +5,6 @@ import com.rest.repository.BudgetRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class BudgetService {
 
@@ -23,6 +22,10 @@ public class BudgetService {
         return budgetRepository.findById(id).orElseThrow(() -> new RuntimeException("Budget not found"));
     }
 
+    public List<Budget> getAllBudgetsByUser(Long userId) {
+        return budgetRepository.findByUserId(userId);
+    }
+
     public Budget updateBudget(Long id, Budget budgetDetails) {
         Budget budget = getBudgetById(id);
         budget.setAmount(budgetDetails.getAmount());
@@ -34,9 +37,5 @@ public class BudgetService {
     public void deleteBudget(Long id) {
         Budget budget = getBudgetById(id);
         budgetRepository.delete(budget);
-    }
-
-    public List<Budget> getAllBudgetsByUser(Long userId) {
-        return budgetRepository.findByUserId(userId);
     }
 }

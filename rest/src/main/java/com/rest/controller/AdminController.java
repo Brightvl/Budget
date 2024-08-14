@@ -1,6 +1,6 @@
 package com.rest.controller;
 
-import com.rest.dto.UserDTO;
+import com.rest.dto.user.UserDTO;
 import com.rest.model.User;
 import com.rest.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,16 @@ public class AdminController {
                 .map(user -> new UserDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole()))
                 .collect(Collectors.toList());
     }
-
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            UserDTO userDTO = new UserDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole());
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

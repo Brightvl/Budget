@@ -1,4 +1,4 @@
-package com.rest.dto;
+package com.rest.dto.user;
 
 import com.rest.model.Role;
 import lombok.AllArgsConstructor;

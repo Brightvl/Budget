@@ -1,4 +1,4 @@
-package com.rest.dto;
+package com.rest.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;

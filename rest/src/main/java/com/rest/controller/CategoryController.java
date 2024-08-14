@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -47,6 +49,16 @@ public class CategoryController {
         }
     }
 
+    // Метод для получения всех категорий пользователя
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CategoryDTO>> getCategoriesByUserId(@PathVariable Long userId) {
+        List<Category> categories = categoryService.getAllCategoriesByUser(userId);
+        List<CategoryDTO> categoryDTOs = categories.stream()
+                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getType(), category.getUser().getId()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categoryDTOs);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService.getCategoryById(id);
@@ -62,6 +74,13 @@ public class CategoryController {
         CategoryDTO updatedCategoryDTO = new CategoryDTO(updatedCategory.getId(), updatedCategory.getName(), updatedCategory.getType(), updatedCategory.getUser().getId());
 
         return ResponseEntity.ok(updatedCategoryDTO);
+    }
+
+    // Метод для удаления категории
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
 

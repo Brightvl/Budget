@@ -1,8 +1,8 @@
 package com.rest.controller;
 
-import com.rest.dto.LoginRequestDTO;
-import com.rest.dto.UserDTO;
-import com.rest.dto.UserRegistrationDTO;
+import com.rest.dto.user.LoginRequestDTO;
+import com.rest.dto.user.UserDTO;
+import com.rest.dto.user.UserRegistrationDTO;
 import com.rest.model.Role;
 import com.rest.model.User;
 import com.rest.service.UserService;

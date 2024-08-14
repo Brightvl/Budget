@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -37,7 +39,14 @@ public class TransactionController {
 
         Transaction createdTransaction = transactionService.createTransaction(transaction);
 
-        TransactionDTO createdTransactionDTO = new TransactionDTO(createdTransaction.getId(), createdTransaction.getAmount(), createdTransaction.getDate(), createdTransaction.getDescription(), createdTransaction.getCategory().getId(), createdTransaction.getUser().getId());
+        TransactionDTO createdTransactionDTO = new TransactionDTO(
+                createdTransaction.getId(),
+                createdTransaction.getAmount(),
+                createdTransaction.getDate(),
+                createdTransaction.getDescription(),
+                createdTransaction.getCategory().getId(),
+                createdTransaction.getUser().getId()
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTransactionDTO);
     }
@@ -46,11 +55,35 @@ public class TransactionController {
     public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
         Transaction transaction = transactionService.getTransactionById(id);
         if (transaction != null) {
-            TransactionDTO transactionDTO = new TransactionDTO(transaction.getId(), transaction.getAmount(), transaction.getDate(), transaction.getDescription(), transaction.getCategory().getId(), transaction.getUser().getId());
+            TransactionDTO transactionDTO = new TransactionDTO(
+                    transaction.getId(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    transaction.getDescription(),
+                    transaction.getCategory().getId(),
+                    transaction.getUser().getId()
+            );
             return ResponseEntity.ok(transactionDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    // Метод для получения всех транзакций пользователя
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TransactionDTO>> getTransactionsByUserId(@PathVariable Long userId) {
+        List<Transaction> transactions = transactionService.getAllTransactionsByUser(userId);
+        List<TransactionDTO> transactionDTOs = transactions.stream()
+                .map(transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getAmount(),
+                        transaction.getDate(),
+                        transaction.getDescription(),
+                        transaction.getCategory().getId(),
+                        transaction.getUser().getId()
+                ))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(transactionDTOs);
     }
 
     @PutMapping("/{id}")
@@ -70,8 +103,22 @@ public class TransactionController {
 
         Transaction updatedTransaction = transactionService.updateTransaction(id, transaction);
 
-        TransactionDTO updatedTransactionDTO = new TransactionDTO(updatedTransaction.getId(), updatedTransaction.getAmount(), updatedTransaction.getDate(), updatedTransaction.getDescription(), updatedTransaction.getCategory().getId(), updatedTransaction.getUser().getId());
+        TransactionDTO updatedTransactionDTO = new TransactionDTO(
+                updatedTransaction.getId(),
+                updatedTransaction.getAmount(),
+                updatedTransaction.getDate(),
+                updatedTransaction.getDescription(),
+                updatedTransaction.getCategory().getId(),
+                updatedTransaction.getUser().getId()
+        );
 
         return ResponseEntity.ok(updatedTransactionDTO);
+    }
+
+    // Метод для удаления транзакции
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteTransaction(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

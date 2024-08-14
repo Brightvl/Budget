@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/budgets")
 public class BudgetController {
@@ -54,6 +55,16 @@ public class BudgetController {
         }
     }
 
+    // Метод для получения всех бюджетов пользователя
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BudgetDTO>> getBudgetsByUserId(@PathVariable Long userId) {
+        List<Budget> budgets = budgetService.getAllBudgetsByUser(userId);
+        List<BudgetDTO> budgetDTOs = budgets.stream()
+                .map(budget -> new BudgetDTO(budget.getId(), budget.getAmount(), budget.getPeriod(), budget.getCategory().getId(), budget.getUser().getId()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(budgetDTOs);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<BudgetDTO> updateBudget(@PathVariable Long id, @RequestBody BudgetDTO budgetDTO) {
         Budget budget = budgetService.getBudgetById(id);
@@ -74,5 +85,11 @@ public class BudgetController {
 
         return ResponseEntity.ok(updatedBudgetDTO);
     }
-}
 
+    // Метод для удаления бюджета
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBudget(@PathVariable Long id) {
+        budgetService.deleteBudget(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+}
