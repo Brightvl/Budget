@@ -65,11 +65,13 @@ input, select {
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s;
-  padding: 10px 20px;
-  border-radius: 0 4px 4px 0;
 }
 .search-panel__button:hover {
   background-color: #0056b3;
+}
+.search-panel__button {
+  padding: 10px 20px;
+  border-radius: 0 4px 4px 0;
 }
 
 /*# sourceMappingURL=App.css.map */

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -32,6 +31,7 @@ public class AdminController {
                         user.getRole()))
                 .collect(Collectors.toList());
     }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
@@ -54,4 +54,14 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/users/login/{login}")
+    public ResponseEntity<Void> deleteUserByLogin(@PathVariable String login) {
+        User user = userService.getUserByLogin(login);
+        if (user != null) {
+            userService.deleteUser(user.getId());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }

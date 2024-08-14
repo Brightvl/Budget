@@ -19,8 +19,10 @@ $padding: 40px; // Внутренний отступ контейнера
   margin-top: 10px;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: $hover-color;
+  & {
+    &:hover {
+      background-color: $hover-color;
+    }
   }
 }
 
@@ -83,7 +85,10 @@ input, select {
 
   &__button {
     @include button-style($button-bg-color, $button-hover-bg-color);
-    padding: 10px 20px; // Увеличиваем размер кнопки для соответствия input
-    border-radius: 0 4px 4px 0; // Закругленные углы справа
+
+    & {
+      padding: 10px 20px; // Увеличиваем размер кнопки для соответствия input
+      border-radius: 0 4px 4px 0; // Закругленные углы справа
+    }
   }
 }
