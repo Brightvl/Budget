@@ -74,4 +74,82 @@ input, select {
   border-radius: 0 4px 4px 0;
 }
 
+.goal-list {
+  margin-top: 20px;
+}
+.goal-list .goal-item {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.goal-list .goal-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #007bff;
+}
+.goal-list .goal-item .goal-details {
+  margin-top: 10px;
+}
+.goal-list .goal-item .goal-details p {
+  margin: 10px 0;
+  color: #333;
+}
+.goal-list .goal-item .goal-details .step-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0;
+}
+.goal-list .goal-item .goal-details .step-list li {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.goal-list .goal-item .goal-details .step-list li button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.goal-list .goal-item .goal-details .step-list li button:hover {
+  background-color: #0056b3;
+}
+.goal-list .goal-item .goal-details .add-step-form {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+.goal-list .goal-item .goal-details .add-step-form input {
+  flex: 1;
+}
+.goal-list .goal-item .goal-details button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.add-goal-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.add-goal-form input {
+  width: 100%;
+}
+.add-goal-form button {
+  align-self: flex-start;
+}
+
 /*# sourceMappingURL=App.css.map */

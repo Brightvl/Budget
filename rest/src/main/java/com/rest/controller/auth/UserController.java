@@ -1,8 +1,11 @@
 package com.rest.controller.auth;
 
+import com.rest.config.security.JwtCore;
+import com.rest.dto.auth.JwtResponse;
 import com.rest.dto.auth.LoginRequestDTO;
 import com.rest.dto.auth.UserDTO;
 import com.rest.dto.auth.UserRegistrationDTO;
+import com.rest.model.Goal;
 import com.rest.model.auth.Role;
 import com.rest.model.auth.User;
 import com.rest.service.auth.UserService;
@@ -23,10 +26,14 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtCore jwtCore) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.jwtCore = jwtCore;
     }
+
+    private final JwtCore jwtCore;
+
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO userDTO) {
@@ -55,7 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<JwtResponse> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getLogin(), loginRequestDTO.getPassword())
         );
@@ -64,16 +71,24 @@ public class UserController {
         User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        String token = jwtCore.generateToken(authentication); // Генерация JWT токена
+
         UserDTO userDTO = new UserDTO(
                 authenticatedUser.getId(),
                 authenticatedUser.getLogin(),
                 authenticatedUser.getUsername(),
                 authenticatedUser.getEmail(),
                 authenticatedUser.getRole(),
-                authenticatedUser.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                authenticatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList()),
+                token // Передаем токен в UserDTO
         );
-        return ResponseEntity.ok(userDTO);
+
+        // Возвращаем JwtResponse, содержащий токен и данные пользователя
+        JwtResponse jwtResponse = new JwtResponse(token, userDTO);
+
+        return ResponseEntity.ok(jwtResponse);
     }
+
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {

@@ -14,6 +14,12 @@ spring:
 server:
   port: 8080
 
+# JWT Configuration
+test:
+  app:
+    secret: "мой-длинный-ключ-для-HS256"
+    lifetime: 3600000  # Время жизни токена в миллисекундах (например, 1 час)
+
 #  docker run --name budgetdb -e POSTGRES_USER=brightvl -e POSTGRES_PASSWORD=brightPass -e POSTGRES_DB=budgetdb -p 5432:5432 -d postgres
 #  --name budget-postgres — задает имя контейнера.
 #  -e POSTGRES_PASSWORD=yourPassword — устанавливает пароль для пользователя PostgreSQL.

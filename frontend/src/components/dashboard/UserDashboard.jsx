@@ -1,60 +1,179 @@
-import { useNavigate } from "react-router-dom";
-import { handleLogout } from "../../utils/authUtils.js";
-import BudgetList from "../BudgetList.jsx";
-import CategoryList from "../CategoryList.jsx";
-import TransactionList from "../TransactionList.jsx";
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 export function UserDashboard() {
-    const [userName, setUserName] = useState(localStorage.getItem("userName"));
-    const [balance, setBalance] = useState(0);
-    const [activeTab, setActiveTab] = useState('budgets'); // активная вкладка
-    const userId = localStorage.getItem('userId'); // Здесь можно использовать реальный userId после аутентификации
-
     const navigate = useNavigate();
+    const [goals, setGoals] = useState([]);
+    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
+    const [newStep, setNewStep] = useState({ title: '' });
+    const [selectedGoalId, setSelectedGoalId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Проверяем, доступен ли userId и если нет, перенаправляем на страницу аутентификации
-        if (!userId) {
-            navigate('/auth');
-            return;
-        }
-
-        // Получение данных пользователя
-        const fetchUserData = async () => {
-            const response = await fetch(`/api/users/${userId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setUserName(data.login);
-                // Убедитесь, что поле balance действительно присутствует в ответе от API
-                setBalance(data.balance || 0); // Если balance может быть не определен
-            } else {
-                console.error('Failed to fetch user data');
-                // Возможно, стоит добавить обработку ошибок или редирект на страницу ошибки
+        const fetchGoals = async () => {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token'); // Получаем токен из localStorage
+            try {
+                const response = await fetch(`/api/goals/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Используем токен в заголовке авторизации
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Goals fetched:', data);
+                    setGoals(data);
+                } else {
+                    console.error('Failed to fetch goals:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching goals:', error);
             }
+            setIsLoading(false);
         };
+        fetchGoals();
+    }, []);
 
-        fetchUserData();
-    }, [userId, navigate]);
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/auth');
+    };
+
+    const handleAddGoal = async () => {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/goals/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newGoal),
+        });
+
+        if (response.ok) {
+            const goal = await response.json();
+            setGoals([...goals, goal]);
+            setNewGoal({ title: '', description: '' });
+        }
+    };
+
+    const handleAddStep = async (goalId) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/goals/${goalId}/steps`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newStep),
+        });
+
+        if (response.ok) {
+            const step = await response.json();
+            setGoals(goals.map(goal => goal.id === goalId ? { ...goal, steps: [...goal.steps, step] } : goal));
+            setNewStep({ title: '' });
+        }
+    };
+
+    const handleDeleteGoal = async (goalId) => {
+        const userId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/goals/${userId}/${goalId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            setGoals(goals.filter(goal => goal.id !== goalId));
+        }
+    };
+
+    const handleDeleteStep = async (goalId, stepId) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/goals/${goalId}/steps/${stepId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            setGoals(goals.map(goal =>
+                goal.id === goalId
+                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
+                    : goal
+            ));
+        }
+    };
 
     return (
-        <div className="container">
-            <h2>Бюджет пользователя {userName}</h2>
-            <div className="user-info">
+        <div className="dashboard-container">
+            <header className="dashboard-header">
+                <h1>Добро пожаловать, {localStorage.getItem('userName')}!</h1>
+                <button onClick={handleLogout} className="button">Выйти</button>
+            </header>
 
-                <p>Текущий баланс: {balance.toFixed(2)} ₽</p>
+            <div className="dashboard-content">
+                <h2>Ваши цели</h2>
+                {isLoading ? (
+                    <p>Загрузка...</p>
+                ) : goals.length > 0 ? (
+                    <div className="goal-list">
+                        {goals.map(goal => (
+                            <div key={goal.id} className="goal-item">
+                                <h3 onClick={() => setSelectedGoalId(goal.id === selectedGoalId ? null : goal.id)}>
+                                    {goal.title}
+                                </h3>
+                                {selectedGoalId === goal.id && (
+                                    <div className="goal-details">
+                                        <p>{goal.description}</p>
+                                        <ul className="step-list">
+                                            {goal.steps.map(step => (
+                                                <li key={step.id}>
+                                                    {step.title}
+                                                    <button onClick={() => handleDeleteStep(goal.id, step.id)}>Удалить шаг</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <div className="add-step-form">
+                                            <input
+                                                type="text"
+                                                placeholder="Название шага"
+                                                value={newStep.title}
+                                                onChange={(e) => setNewStep({ title: e.target.value })}
+                                            />
+                                            <button onClick={() => handleAddStep(goal.id)}>Добавить шаг</button>
+                                        </div>
+                                        <button onClick={() => handleDeleteGoal(goal.id)}>Удалить цель</button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>У вас ещё нет целей. Начните с добавления новой цели.</p>
+                )}
+                <div className="add-goal-form">
+                    <input
+                        type="text"
+                        placeholder="Название цели"
+                        value={newGoal.title}
+                        onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Описание цели"
+                        value={newGoal.description}
+                        onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                    />
+                    <button onClick={handleAddGoal}>Добавить цель</button>
+                </div>
             </div>
-            <div className="button-group">
-                <button className="button" onClick={() => setActiveTab('budgets')}>Budgets</button>
-                <button className="button" onClick={() => setActiveTab('categories')}>Categories</button>
-                <button className="button" onClick={() => setActiveTab('transactions')}>Transactions</button>
-            </div>
-            <div className="tab-content">
-                {activeTab === 'budgets' && <BudgetList userId={userId} />}
-                {activeTab === 'categories' && <CategoryList userId={userId} />}
-                {activeTab === 'transactions' && <TransactionList userId={userId} />}
-            </div>
-            <button className="button" onClick={() => handleLogout(navigate)}>Logout</button>
         </div>
     );
 }

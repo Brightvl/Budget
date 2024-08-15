@@ -5,9 +5,14 @@ const Welcome = () => {
 
     const handleGetStarted = () => {
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const userRole = localStorage.getItem('userRole');
 
         if (isLoggedIn) {
-            navigate('/dashboard');
+            if (userRole === 'ADMIN') {
+                navigate('/admin');
+            } else {
+                navigate('/dashboard');
+            }
         } else {
             navigate('/auth');
         }
@@ -15,10 +20,10 @@ const Welcome = () => {
 
     return (
         <header className="container">
-            <h1>Твой бюджет</h1>
+            <h1>Цели</h1>
             <div className="text">
-                <p>Возьмите под контроль свои финансы.</p>
-                <p>С легкостью отслеживайте свои доходы, расходы и сбережения.</p>
+                <p>Достигни поставленных целей</p>
+                <p>Ставь себе задачи по силам</p>
             </div>
             <button className="button" onClick={handleGetStarted}>
                 Начать
