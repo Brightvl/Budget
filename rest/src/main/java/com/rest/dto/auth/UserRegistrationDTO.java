@@ -1,6 +1,6 @@
-package com.rest.dto.user;
+package com.rest.dto.auth;
 
-import com.rest.model.Role;
+import com.rest.model.auth.Role;
 import lombok.Getter;
 import lombok.Setter;
 

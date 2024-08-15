@@ -1,6 +1,6 @@
-package com.rest.service;
+package com.rest.service.legasy;
 
-import com.rest.model.Transaction;
+import com.rest.model.legasy.Transaction;
 import com.rest.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 

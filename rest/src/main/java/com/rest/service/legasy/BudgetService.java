@@ -1,6 +1,6 @@
-package com.rest.service;
+package com.rest.service.legasy;
 
-import com.rest.model.Budget;
+import com.rest.model.legasy.Budget;
 import com.rest.repository.BudgetRepository;
 import org.springframework.stereotype.Service;
 

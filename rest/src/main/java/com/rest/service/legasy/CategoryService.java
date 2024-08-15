@@ -1,6 +1,6 @@
-package com.rest.service;
+package com.rest.service.legasy;
 
-import com.rest.model.Category;
+import com.rest.model.legasy.Category;
 import com.rest.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 

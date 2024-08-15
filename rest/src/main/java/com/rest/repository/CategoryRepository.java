@@ -1,7 +1,7 @@
 package com.rest.repository;
 
 
-import com.rest.model.Category;
+import com.rest.model.legasy.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,11 @@
-package com.rest.controller;
+package com.rest.controller.auth;
 
-import com.rest.dto.user.LoginRequestDTO;
-import com.rest.dto.user.UserDTO;
-import com.rest.dto.user.UserRegistrationDTO;
-import com.rest.model.Role;
-import com.rest.model.User;
-import com.rest.service.UserService;
+import com.rest.dto.auth.LoginRequestDTO;
+import com.rest.dto.auth.UserDTO;
+import com.rest.dto.auth.UserRegistrationDTO;
+import com.rest.model.auth.Role;
+import com.rest.model.auth.User;
+import com.rest.service.auth.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,7 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO userDTO) {
-        if (userService.getUserByLogin(userDTO.getLogin()) != null) {
+        if (userService.getUserByLogin(userDTO.getLogin()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
 
@@ -48,10 +50,9 @@ public class UserController {
             userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user: " + e.getMessage());
         }
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<UserDTO> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
@@ -60,35 +61,45 @@ public class UserController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin());
+        User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         UserDTO userDTO = new UserDTO(
                 authenticatedUser.getId(),
-                authenticatedUser.getUsername(),
                 authenticatedUser.getLogin(),
+                authenticatedUser.getUsername(),
                 authenticatedUser.getEmail(),
-                authenticatedUser.getRole());
+                authenticatedUser.getRole(),
+                authenticatedUser.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+        );
         return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {
-        User user = userService.getUserByLogin(login);
-        if (user != null) {
-            UserDTO userDTO = new UserDTO(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getLogin(),
-                    user.getEmail(),
-                    user.getRole());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        User user = userService.getUserByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDTO userDTO = new UserDTO(
+                user.getId(),
+                user.getLogin(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+        );
+        return ResponseEntity.ok(userDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        User user = userService.getUserById(id);
+        User user = userService.getUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!userDTO.getLogin().equals(user.getLogin()) && userService.getUserByLogin(userDTO.getLogin()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
         user.setLogin(userDTO.getLogin());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
@@ -97,10 +108,12 @@ public class UserController {
 
         UserDTO updatedUserDTO = new UserDTO(
                 updatedUser.getId(),
-                updatedUser.getUsername(),
                 updatedUser.getLogin(),
+                updatedUser.getUsername(),
                 updatedUser.getEmail(),
-                updatedUser.getRole());
+                updatedUser.getRole(),
+                updatedUser.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+        );
         return ResponseEntity.ok(updatedUserDTO);
     }
 }

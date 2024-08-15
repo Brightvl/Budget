@@ -1,5 +1,6 @@
-package com.rest.model;
+package com.rest.model.auth;
 
+import com.rest.model.Goal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,21 +34,14 @@ public class User implements UserDetails {
     private String email;
     @Column(nullable = false)
     private String password;
-    private String currency;
 
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Goal> goals;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToMany(mappedBy = "user")
-    private List<Category> categories;
-
-    @OneToMany(mappedBy = "user")
-    private List<Transaction> transactions;
-
-    @OneToMany(mappedBy = "user")
-    private List<Budget> budgets;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

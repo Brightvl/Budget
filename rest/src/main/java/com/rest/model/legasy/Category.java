@@ -1,5 +1,6 @@
-package com.rest.model;
+package com.rest.model.legasy;
 
+import com.rest.model.auth.User;
 import jakarta.persistence.*;
 import lombok.*;
 

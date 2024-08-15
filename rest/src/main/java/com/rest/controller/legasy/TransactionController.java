@@ -1,10 +1,10 @@
-package com.rest.controller;
+package com.rest.controller.legasy;
 
-import com.rest.dto.TransactionDTO;
-import com.rest.model.Category;
-import com.rest.model.Transaction;
-import com.rest.model.User;
-import com.rest.service.TransactionService;
+import com.rest.dto.legasy.TransactionDTO;
+import com.rest.model.legasy.Category;
+import com.rest.model.legasy.Transaction;
+import com.rest.model.auth.User;
+import com.rest.service.legasy.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

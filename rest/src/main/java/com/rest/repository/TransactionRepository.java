@@ -1,6 +1,6 @@
 package com.rest.repository;
 
-import com.rest.model.Transaction;
+import com.rest.model.legasy.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

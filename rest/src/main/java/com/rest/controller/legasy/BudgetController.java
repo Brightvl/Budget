@@ -1,10 +1,10 @@
-package com.rest.controller;
+package com.rest.controller.legasy;
 
-import com.rest.dto.BudgetDTO;
-import com.rest.model.Budget;
-import com.rest.model.Category;
-import com.rest.model.User;
-import com.rest.service.BudgetService;
+import com.rest.dto.legasy.BudgetDTO;
+import com.rest.model.legasy.Budget;
+import com.rest.model.legasy.Category;
+import com.rest.model.auth.User;
+import com.rest.service.legasy.BudgetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

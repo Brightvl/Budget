@@ -1,6 +1,6 @@
-package com.rest.config;
+package com.rest.config.security;
 
-import com.rest.service.CustomUserDetailsService;
+import com.rest.service.auth.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

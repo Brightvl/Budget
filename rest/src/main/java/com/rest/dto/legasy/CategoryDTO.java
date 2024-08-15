@@ -1,4 +1,4 @@
-package com.rest.dto;
+package com.rest.dto.legasy;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.rest.repository;
 
-import com.rest.model.Budget;
+import com.rest.model.legasy.Budget;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,14 +1,16 @@
-package com.rest.controller;
+package com.rest.controller.auth;
 
-import com.rest.dto.user.UserDTO;
-import com.rest.model.User;
-import com.rest.service.UserService;
+import com.rest.dto.auth.UserDTO;
+import com.rest.model.auth.User;
+import com.rest.service.auth.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -28,37 +30,42 @@ public class AdminController {
                         user.getUsername(),
                         user.getLogin(),
                         user.getEmail(),
-                        user.getRole()))
+                        user.getRole(),
+                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                ))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        if (user != null) {
-            UserDTO userDTO = new UserDTO(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getLogin(),
-                    user.getEmail(),
-                    user.getRole());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<User> userOpt = userService.getUserById(id);
+        return userOpt.map(user -> ResponseEntity.ok(new UserDTO(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getLogin(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                )))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        Optional<User> userOpt = userService.getUserById(id);
+        if (userOpt.isPresent()) {
+            userService.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/users/login/{login}")
     public ResponseEntity<Void> deleteUserByLogin(@PathVariable String login) {
-        User user = userService.getUserByLogin(login);
-        if (user != null) {
-            userService.deleteUser(user.getId());
+        Optional<User> userOpt = userService.getUserByLogin(login);
+        if (userOpt.isPresent()) {
+            userService.deleteUser(userOpt.get().getId());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

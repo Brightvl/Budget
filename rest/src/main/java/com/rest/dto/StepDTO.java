@@ -1,19 +1,19 @@
 package com.rest.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
+@Builder
 @AllArgsConstructor
-public class TransactionDTO {
+public class StepDTO {
     private Long id;
-    private Double amount;
-    private LocalDateTime date;
-    private String description;
-    private Long categoryId;
-    private Long userId;
+    private String title;
+    private boolean isCompleted;
+    private LocalDateTime startTime;
 }
