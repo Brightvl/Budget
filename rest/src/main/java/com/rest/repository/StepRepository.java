@@ -15,4 +15,10 @@ public interface StepRepository extends JpaRepository<Step, Long> {
 
     // Найти шаг по ID шага и ID цели
     Optional<Step> findByIdAndGoalId(Long stepId, Long goalId);
+
+    // Найти шаг по ID шага, ID цели и ID пользователя
+    Optional<Step> findByIdAndGoalIdAndGoalUserId(Long stepId, Long goalId, Long userId);
+
+    // Найти все шаги по ID цели и ID пользователя
+    List<Step> findByGoalIdAndGoalUserId(Long goalId, Long userId);
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,14 +32,13 @@ public class StepController {
     @GetMapping
     public ResponseEntity<List<StepDTO>> getStepsByGoal(@PathVariable Long goalId) {
         User currentUser = authService.getCurrentUser();
-        Goal goal = goalService.getGoalById(goalId)
-                .orElseThrow(() -> new RuntimeException("Goal not found"));
+        Optional<Goal> goalOptional = goalService.getGoalByIdAndUserId(goalId, currentUser.getId());
 
-        if (!goal.getUser().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!goalOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        List<Step> steps = stepService.getStepsByGoalId(goalId);
+        List<Step> steps = stepService.getStepsByGoalIdAndUserId(goalId, currentUser.getId());
         List<StepDTO> stepDTOs = steps.stream()
                 .map(this::convertToStepDTO)
                 .collect(Collectors.toList());
@@ -49,28 +49,26 @@ public class StepController {
     @GetMapping("/{stepId}")
     public ResponseEntity<StepDTO> getStepById(@PathVariable Long goalId, @PathVariable Long stepId) {
         User currentUser = authService.getCurrentUser();
-        Step step = stepService.getStepByIdAndGoalId(stepId, goalId)
-                .orElseThrow(() -> new RuntimeException("Step not found"));
+        Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!step.getGoal().getUser().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!stepOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(convertToStepDTO(step));
+        return ResponseEntity.ok(convertToStepDTO(stepOptional.get()));
     }
 
     @PostMapping
     public ResponseEntity<StepDTO> createStep(@PathVariable Long goalId, @RequestBody StepDTO stepDTO) {
         User currentUser = authService.getCurrentUser();
-        Goal goal = goalService.getGoalById(goalId)
-                .orElseThrow(() -> new RuntimeException("Goal not found"));
+        Optional<Goal> goalOptional = goalService.getGoalByIdAndUserId(goalId, currentUser.getId());
 
-        if (!goal.getUser().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!goalOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         Step step = convertToStepEntity(stepDTO);
-        step.setGoal(goal);
+        step.setGoal(goalOptional.get());
 
         Step createdStep = stepService.createStep(step);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -80,13 +78,13 @@ public class StepController {
     @PutMapping("/{stepId}")
     public ResponseEntity<StepDTO> updateStep(@PathVariable Long goalId, @PathVariable Long stepId, @RequestBody StepDTO stepDTO) {
         User currentUser = authService.getCurrentUser();
-        Step step = stepService.getStepByIdAndGoalId(stepId, goalId)
-                .orElseThrow(() -> new RuntimeException("Step not found"));
+        Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!step.getGoal().getUser().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!stepOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+        Step step = stepOptional.get();
         step.setTitle(stepDTO.getTitle());
         step.setIsCompleted(stepDTO.isCompleted());
 
@@ -97,14 +95,13 @@ public class StepController {
     @DeleteMapping("/{stepId}")
     public ResponseEntity<Void> deleteStep(@PathVariable Long goalId, @PathVariable Long stepId) {
         User currentUser = authService.getCurrentUser();
-        Step step = stepService.getStepByIdAndGoalId(stepId, goalId)
-                .orElseThrow(() -> new RuntimeException("Step not found"));
+        Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!step.getGoal().getUser().getId().equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if (!stepOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        stepService.deleteStepByIdAndGoalId(stepId, goalId);
+        stepService.deleteStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
         return ResponseEntity.noContent().build();
     }
 

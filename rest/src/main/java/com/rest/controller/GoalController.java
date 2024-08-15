@@ -3,9 +3,12 @@ package com.rest.controller;
 import com.rest.dto.GoalDTO;
 import com.rest.model.Goal;
 import com.rest.model.Step;
+import com.rest.model.auth.User;
 import com.rest.service.GoalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,6 +27,11 @@ public class GoalController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<GoalDTO>> getGoalsByUser(@PathVariable Long userId) {
+        Long currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         List<Goal> goals = goalService.getGoalsByUserId(userId);
         List<GoalDTO> goalDTOs = goals.stream()
                 .map(this::convertToGoalDTO)
@@ -34,6 +42,11 @@ public class GoalController {
 
     @GetMapping("/{userId}/{goalId}")
     public ResponseEntity<GoalDTO> getGoalById(@PathVariable Long userId, @PathVariable Long goalId) {
+        Long currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return goalService.getGoalByIdAndUserId(goalId, userId)
                 .map(this::convertToGoalDTO)
                 .map(ResponseEntity::ok)
@@ -42,6 +55,11 @@ public class GoalController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<GoalDTO> createGoal(@PathVariable Long userId, @RequestBody GoalDTO goalDTO) {
+        Long currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Goal goal = convertToGoalEntity(goalDTO);
         Goal createdGoal = goalService.createGoal(userId, goal);
 
@@ -51,6 +69,11 @@ public class GoalController {
 
     @PutMapping("/{userId}/{goalId}")
     public ResponseEntity<GoalDTO> updateGoal(@PathVariable Long userId, @PathVariable Long goalId, @RequestBody GoalDTO goalDTO) {
+        Long currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Goal goal = convertToGoalEntity(goalDTO);
         Goal updatedGoal = goalService.updateGoal(userId, goalId, goal);
 
@@ -62,11 +85,24 @@ public class GoalController {
 
     @DeleteMapping("/{userId}/{goalId}")
     public ResponseEntity<Void> deleteGoal(@PathVariable Long userId, @PathVariable Long goalId) {
+        Long currentUserId = getCurrentUserId();
+        if (!userId.equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         boolean isDeleted = goalService.deleteGoal(userId, goalId);
         if (!isDeleted) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    private Long getCurrentUserId() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            return ((User) principal).getId();
+        }
+        return null;
     }
 
     private GoalDTO convertToGoalDTO(Goal goal) {
@@ -81,7 +117,6 @@ public class GoalController {
                         .collect(Collectors.toList()) : new ArrayList<>()) // Проверка на null
                 .build();
     }
-
 
     private Goal convertToGoalEntity(GoalDTO goalDTO) {
         return Goal.builder()

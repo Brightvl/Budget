@@ -20,8 +20,16 @@ public class StepService {
         return stepRepository.findByGoalId(goalId);
     }
 
+    public List<Step> getStepsByGoalIdAndUserId(Long goalId, Long userId) {
+        return stepRepository.findByGoalIdAndGoalUserId(goalId, userId);
+    }
+
     public Optional<Step> getStepByIdAndGoalId(Long stepId, Long goalId) {
         return stepRepository.findByIdAndGoalId(stepId, goalId);
+    }
+
+    public Optional<Step> getStepByIdAndGoalIdAndUserId(Long stepId, Long goalId, Long userId) {
+        return stepRepository.findByIdAndGoalIdAndGoalUserId(stepId, goalId, userId);
     }
 
     public Step createStep(Step step) {
@@ -32,8 +40,8 @@ public class StepService {
         return stepRepository.save(step);
     }
 
-    public boolean deleteStepByIdAndGoalId(Long stepId, Long goalId) {
-        Optional<Step> step = stepRepository.findByIdAndGoalId(stepId, goalId);
+    public boolean deleteStepByIdAndGoalIdAndUserId(Long stepId, Long goalId, Long userId) {
+        Optional<Step> step = stepRepository.findByIdAndGoalIdAndGoalUserId(stepId, goalId, userId);
         if (step.isPresent()) {
             stepRepository.delete(step.get());
             return true;
