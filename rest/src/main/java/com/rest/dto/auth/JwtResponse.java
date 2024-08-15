@@ -11,5 +11,4 @@ public class JwtResponse {
         this.token = token;
         this.user = user;
     }
-
 }

@@ -8,11 +8,11 @@ import com.rest.service.GoalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,8 +28,11 @@ public class GoalController {
     @GetMapping("/{userId}")
     public ResponseEntity<List<GoalDTO>> getGoalsByUser(@PathVariable Long userId) {
         Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+        }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
         }
 
         List<Goal> goals = goalService.getGoalsByUserId(userId);
@@ -43,8 +46,11 @@ public class GoalController {
     @GetMapping("/{userId}/{goalId}")
     public ResponseEntity<GoalDTO> getGoalById(@PathVariable Long userId, @PathVariable Long goalId) {
         Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+        }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
         }
 
         return goalService.getGoalByIdAndUserId(goalId, userId)
@@ -56,22 +62,27 @@ public class GoalController {
     @PostMapping("/{userId}")
     public ResponseEntity<GoalDTO> createGoal(@PathVariable Long userId, @RequestBody GoalDTO goalDTO) {
         Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+        }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
         }
 
         Goal goal = convertToGoalEntity(goalDTO);
         Goal createdGoal = goalService.createGoal(userId, goal);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(convertToGoalDTO(createdGoal));
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToGoalDTO(createdGoal));
     }
 
     @PutMapping("/{userId}/{goalId}")
     public ResponseEntity<GoalDTO> updateGoal(@PathVariable Long userId, @PathVariable Long goalId, @RequestBody GoalDTO goalDTO) {
         Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+        }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
         }
 
         Goal goal = convertToGoalEntity(goalDTO);
@@ -86,8 +97,11 @@ public class GoalController {
     @DeleteMapping("/{userId}/{goalId}")
     public ResponseEntity<Void> deleteGoal(@PathVariable Long userId, @PathVariable Long goalId) {
         Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+        }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
         }
 
         boolean isDeleted = goalService.deleteGoal(userId, goalId);
@@ -114,7 +128,7 @@ public class GoalController {
                 .startTime(goal.getStartTime())
                 .stepIds(goal.getSteps() != null ? goal.getSteps().stream()
                         .map(Step::getId)
-                        .collect(Collectors.toList()) : new ArrayList<>()) // Проверка на null
+                        .collect(Collectors.toList()) : new ArrayList<>())
                 .build();
     }
 

@@ -8,19 +8,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Arrays;
 import java.util.Date;
 
 @Component
 public class JwtCore {
 
-    @Value("${test.app.secret}")
-    private String secret;
+    private final SecretKey key;
 
     @Value("${test.app.lifetime}")
     private Long lifetime;
-
-    private SecretKey key;
 
     // Инициализация секретного ключа из строки при создании компонента
     public JwtCore(@Value("${test.app.secret}") String secret) {
@@ -29,24 +25,32 @@ public class JwtCore {
 
     /**
      * Генерация токена сессии
+     *
      * @param authentication интерфейс с данными об аутентификации
      * @return Строка с токеном
      */
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + lifetime))
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + lifetime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    /**
+     * Извлечение имени пользователя из JWT
+     *
+     * @param jwtToken JWT токен
+     * @return Имя пользователя (subject)
+     */
     public String getNameFromJwt(String jwtToken) {
-        return Arrays.toString(Jwts.parser()
-                .verifyWith(key)
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
                 .build()
-                .parseUnsecuredContent(jwtToken)
-                .getPayload());
+                .parseClaimsJws(jwtToken)
+                .getBody()
+                .getSubject();
     }
 }

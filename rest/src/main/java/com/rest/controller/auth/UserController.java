@@ -25,15 +25,13 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtCore jwtCore;
 
     public UserController(UserService userService, AuthenticationManager authenticationManager, JwtCore jwtCore) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtCore = jwtCore;
     }
-
-    private final JwtCore jwtCore;
-
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO userDTO) {
@@ -71,7 +69,7 @@ public class UserController {
         User authenticatedUser = userService.getUserByLogin(loginRequestDTO.getLogin())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String token = jwtCore.generateToken(authentication); // Генерация JWT токена
+        String token = jwtCore.generateToken(authentication);
 
         UserDTO userDTO = new UserDTO(
                 authenticatedUser.getId(),
@@ -79,16 +77,11 @@ public class UserController {
                 authenticatedUser.getUsername(),
                 authenticatedUser.getEmail(),
                 authenticatedUser.getRole(),
-                authenticatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList()),
-                token // Передаем токен в UserDTO
+                authenticatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
         );
 
-        // Возвращаем JwtResponse, содержащий токен и данные пользователя
-        JwtResponse jwtResponse = new JwtResponse(token, userDTO);
-
-        return ResponseEntity.ok(jwtResponse);
+        return ResponseEntity.ok(new JwtResponse(token, userDTO));
     }
-
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {
@@ -101,7 +94,7 @@ public class UserController {
                 user.getUsername(),
                 user.getEmail(),
                 user.getRole(),
-                user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
         );
         return ResponseEntity.ok(userDTO);
     }
@@ -127,7 +120,7 @@ public class UserController {
                 updatedUser.getUsername(),
                 updatedUser.getEmail(),
                 updatedUser.getRole(),
-                updatedUser.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
         );
         return ResponseEntity.ok(updatedUserDTO);
     }
