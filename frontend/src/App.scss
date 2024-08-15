@@ -51,6 +51,7 @@ $padding: 40px; // Внутренний отступ контейнера
   border-radius: $border-radius;
   box-shadow: $box-shadow;
   text-align: center;
+  max-width: 500px; // Ограничиваем максимальную ширину контейнера
 }
 
 // Кнопка
@@ -60,6 +61,7 @@ $padding: 40px; // Внутренний отступ контейнера
   &-group {
     display: flex;
     gap: 20px;
+    justify-content: center; // Центрируем группу кнопок
   }
 }
 
@@ -113,6 +115,7 @@ input, select {
 
     .goal-details {
       margin-top: 10px;
+      text-align: left; // Выравнивание текста влево
       p {
         margin: 10px 0;
         color: #333;
@@ -143,10 +146,16 @@ input, select {
       .add-step-form {
         margin-top: 10px;
         display: flex;
+        flex-direction: column;
         gap: 10px;
 
         input {
           flex: 1;
+        }
+
+        button {
+          flex: 0 0 auto;
+          padding: 10px 20px; // Добавляем padding к кнопке
         }
       }
 
@@ -156,6 +165,7 @@ input, select {
       }
     }
   }
+
 }
 
 // Форма добавления цели

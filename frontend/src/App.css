@@ -13,6 +13,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 500px;
 }
 
 .button {
@@ -31,6 +32,7 @@
 .button-group {
   display: flex;
   gap: 20px;
+  justify-content: center;
 }
 
 input, select {
@@ -92,6 +94,7 @@ input, select {
 }
 .goal-list .goal-item .goal-details {
   margin-top: 10px;
+  text-align: left;
 }
 .goal-list .goal-item .goal-details p {
   margin: 10px 0;
@@ -129,10 +132,15 @@ input, select {
 .goal-list .goal-item .goal-details .add-step-form {
   margin-top: 10px;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 .goal-list .goal-item .goal-details .add-step-form input {
   flex: 1;
+}
+.goal-list .goal-item .goal-details .add-step-form button {
+  flex: 0 0 auto;
+  padding: 10px 20px;
 }
 .goal-list .goal-item .goal-details button {
   margin-top: 10px;

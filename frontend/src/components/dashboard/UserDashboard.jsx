@@ -1,11 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import {useNavigate} from 'react-router-dom';
+import {useEffect, useState} from "react";
 
 export function UserDashboard() {
     const navigate = useNavigate();
     const [goals, setGoals] = useState([]);
-    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
-    const [newStep, setNewStep] = useState({ title: '' });
+    const [newGoal, setNewGoal] = useState({title: '', description: ''});
+    const [newStep, setNewStep] = useState({title: ''});
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -56,7 +56,7 @@ export function UserDashboard() {
         if (response.ok) {
             const goal = await response.json();
             setGoals([...goals, goal]);
-            setNewGoal({ title: '', description: '' });
+            setNewGoal({title: '', description: ''});
         }
     };
 
@@ -73,8 +73,12 @@ export function UserDashboard() {
 
         if (response.ok) {
             const step = await response.json();
-            setGoals(goals.map(goal => goal.id === goalId ? { ...goal, steps: [...goal.steps, step] } : goal));
-            setNewStep({ title: '' });
+            setGoals(goals.map(goal =>
+                goal.id === goalId
+                    ? {...goal, steps: goal.steps ? [...goal.steps, step] : [step]}
+                    : goal
+            ));
+            setNewStep({title: ''});
         }
     };
 
@@ -105,7 +109,7 @@ export function UserDashboard() {
         if (response.ok) {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
+                    ? {...goal, steps: goal.steps.filter(step => step.id !== stepId)}
                     : goal
             ));
         }
@@ -126,17 +130,22 @@ export function UserDashboard() {
                     <div className="goal-list">
                         {goals.map(goal => (
                             <div key={goal.id} className="goal-item">
+
                                 <h3 onClick={() => setSelectedGoalId(goal.id === selectedGoalId ? null : goal.id)}>
                                     {goal.title}
                                 </h3>
+                                <button className={`button`} onClick={() => handleDeleteGoal(goal.id)}>Удалить цель
+                                </button>
                                 {selectedGoalId === goal.id && (
                                     <div className="goal-details">
                                         <p>{goal.description}</p>
                                         <ul className="step-list">
-                                            {goal.steps.map(step => (
+                                            {(goal.steps || []).map(step => (
                                                 <li key={step.id}>
                                                     {step.title}
-                                                    <button onClick={() => handleDeleteStep(goal.id, step.id)}>Удалить шаг</button>
+                                                    <button onClick={() =>
+                                                        handleDeleteStep(goal.id, step.id)}>Удалить шаг
+                                                    </button>
                                                 </li>
                                             ))}
                                         </ul>
@@ -145,11 +154,12 @@ export function UserDashboard() {
                                                 type="text"
                                                 placeholder="Название шага"
                                                 value={newStep.title}
-                                                onChange={(e) => setNewStep({ title: e.target.value })}
+                                                onChange={(e) => setNewStep({title: e.target.value})}
                                             />
-                                            <button onClick={() => handleAddStep(goal.id)}>Добавить шаг</button>
+                                            <button className={"button"} onClick={() => handleAddStep(goal.id)}>Добавить
+                                                шаг
+                                            </button>
                                         </div>
-                                        <button onClick={() => handleDeleteGoal(goal.id)}>Удалить цель</button>
                                     </div>
                                 )}
                             </div>
@@ -163,13 +173,13 @@ export function UserDashboard() {
                         type="text"
                         placeholder="Название цели"
                         value={newGoal.title}
-                        onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                        onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
                     />
                     <input
                         type="text"
                         placeholder="Описание цели"
                         value={newGoal.description}
-                        onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                        onChange={(e) => setNewGoal({...newGoal, description: e.target.value})}
                     />
                     <button onClick={handleAddGoal}>Добавить цель</button>
                 </div>
