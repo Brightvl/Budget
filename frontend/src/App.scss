@@ -1,12 +1,47 @@
 // Переменные
 $app-bg-color: #98728c; // Цвет фона приложения
 $container-bg-color: #fff; // Цвет фона контейнера
-$button-bg-color: #007bff; // Цвет фона кнопки
+$button-bg-color: #0978ec; // Цвет фона кнопки
 $button-hover-bg-color: #0056b3; // Цвет фона кнопки при наведении
+$button-goal-bg-color: #0978ec;
+$button-goal-hover-bg-color: #0056b3;
+$button-step-bg-color: #ac6790;
+$button-step-hover-bg-color: #5c0a48;
+$goal-bg-color: rgba(200, 188, 193, 0.72); // Цвет фона для целей (жёлтый)
+$step-bg-color: #bfadb8; // Цвет фона для шагов (оранжевый)
 $input-border-color: #ccc; // Цвет обводки поля ввода
 $box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Тень для контейнера
 $border-radius: 8px; // Радиус закругления углов
 $padding: 40px; // Внутренний отступ контейнера
+
+
+.logout-container {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+
+
+  .logout-icon {
+    color: $button-bg-color;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $button-hover-bg-color;
+    }
+  }
+
+  .logout-warning {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9em;
+    z-index: 1000;
+    white-space: nowrap;
+  }
+}
 
 // Миксин для кнопок
 @mixin button-style($bg-color, $hover-color) {
@@ -19,10 +54,8 @@ $padding: 40px; // Внутренний отступ контейнера
   margin-top: 10px;
   transition: background-color 0.3s;
 
-  & {
-    &:hover {
-      background-color: $hover-color;
-    }
+  &:hover {
+    background-color: $hover-color;
   }
 }
 
@@ -87,118 +120,106 @@ input, select {
 
   &__button {
     @include button-style($button-bg-color, $button-hover-bg-color);
-
-    & {
-      padding: 10px 20px; // Увеличиваем размер кнопки для соответствия input
-      border-radius: 0 4px 4px 0; // Закругленные углы справа
-    }
+    padding: 10px 20px; // Увеличиваем размер кнопки для соответствия input
+    border-radius: 0 4px 4px 0; // Закругленные углы справа
   }
 }
 
+// Стили для дашборда
 .dashboard-box {
+  position: relative;
   width: 80vh;
 
-  .header{
+  .header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
 
   }
-  .goat-box{
+
+  .goal-box {
     display: flex;
     flex-direction: column;
   }
 
-}
+  .goal-list {
+    margin-top: 20px;
 
-// Список целей
-.goal-list {
-  margin-top: 20px;
+    .goal-item {
+      display: block;
+      background-color: $goal-bg-color;
+      padding: 20px;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      margin-bottom: 20px;
+      cursor: pointer;
 
-  .goal-item {
-    background-color: $container-bg-color;
-    padding: 20px;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    margin-bottom: 20px;
-    cursor: pointer;
-
-    h3 {
-      margin: 0;
-      font-size: 1.2em;
-      color: $button-bg-color;
-    }
-
-    .goal-details {
-      margin-top: 10px;
-      text-align: left; // Выравнивание текста влево
-      p {
-        margin: 10px 0;
+      h3 {
+        margin: 0;
+        font-size: 1.2em;
         color: #333;
       }
 
-      .step-list {
-        list-style: none;
-        padding-left: 0;
-        margin: 10px 0;
+      .goal-details {
+        margin-top: 10px;
+        text-align: left;
 
-        li {
-          background: #f9f9f9;
-          padding: 10px;
-          border-radius: 4px;
-          margin-bottom: 8px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        &-description {
+          background-color: $goal-bg-color;
+        }
 
-          button {
-            @include button-style($button-bg-color, $button-hover-bg-color);
-            padding: 5px 10px;
-            font-size: 0.9em;
+        .step-list {
+          list-style: none;
+          padding-left: 0;
+          margin: 10px 0;
+
+          .li {
+            background: $step-bg-color;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .button {
+              @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+              padding: 5px 10px;
+              font-size: 0.9em;
+            }
           }
         }
-      }
 
-      .add-step-form {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        .add-step-form {
+          margin-top: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
 
-        input {
-          flex: 1;
+          input {
+            flex: 1;
+          }
+
+          button {
+            flex: 0 0 auto;
+            padding: 10px 20px; // Добавляем padding к кнопке
+          }
         }
 
         button {
-          flex: 0 0 auto;
-          padding: 10px 20px; // Добавляем padding к кнопке
+          margin-top: 10px;
+          width: 100%;
         }
-      }
-
-      button {
-        margin-top: 10px;
-        width: 100%;
       }
     }
   }
-
 }
 
-// Форма добавления цели
-.add-goal-form {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  input {
-    width: 100%;
-  }
-
-  button {
-    align-self: flex-start;
-  }
-}
-
+// Стили для панели авторизации
 .auth-box {
   width: 80vh;
+
   &-list {
     display: flex;
     flex-direction: column;
@@ -206,7 +227,7 @@ input, select {
   }
 }
 
-// регистрация
+// Стили для регистрации
 .registration-box {
   width: 80vh;
 
@@ -217,7 +238,7 @@ input, select {
   }
 }
 
-
+// Стили для отображения ошибок
 .error {
   &-border {
     border: 1px solid red; /* Красная граница для полей с ошибками */
@@ -230,4 +251,15 @@ input, select {
   }
 }
 
+.warning {
+  &-text {
+    color: #721c24;
 
+    font-size: 0.9em;
+    margin-top: 5px;
+
+    &__bg {
+      background-color: #f8d7da;
+    }
+  }
+}
