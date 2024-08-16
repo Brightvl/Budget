@@ -1,23 +1,24 @@
-import {useNavigate} from 'react-router-dom';
-import {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 
 export function UserDashboard() {
     const navigate = useNavigate();
     const [goals, setGoals] = useState([]);
-    const [newGoal, setNewGoal] = useState({title: '', description: ''});
-    const [newStep, setNewStep] = useState({title: ''});
+    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
+    const [newStep, setNewStep] = useState({ title: '' });
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isAddingGoal, setIsAddingGoal] = useState(false);
 
     useEffect(() => {
         const fetchGoals = async () => {
             const userId = localStorage.getItem('userId');
-            const token = localStorage.getItem('token'); // Получаем токен из localStorage
+            const token = localStorage.getItem('token');
             try {
                 const response = await fetch(`/api/goals/${userId}`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Используем токен в заголовке авторизации
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -56,7 +57,8 @@ export function UserDashboard() {
         if (response.ok) {
             const goal = await response.json();
             setGoals([...goals, goal]);
-            setNewGoal({title: '', description: ''});
+            setNewGoal({ title: '', description: '' });
+            setIsAddingGoal(false);
         }
     };
 
@@ -75,10 +77,10 @@ export function UserDashboard() {
             const step = await response.json();
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? {...goal, steps: goal.steps ? [...goal.steps, step] : [step]}
+                    ? { ...goal, steps: goal.steps ? [...goal.steps, step] : [step] }
                     : goal
             ));
-            setNewStep({title: ''});
+            setNewStep({ title: '' });
         }
     };
 
@@ -109,79 +111,84 @@ export function UserDashboard() {
         if (response.ok) {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? {...goal, steps: goal.steps.filter(step => step.id !== stepId)}
+                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
                     : goal
             ));
         }
     };
 
     return (
-        <div className="dashboard-container">
-            <header className="dashboard-header">
-                <h1>Добро пожаловать, {localStorage.getItem('userName')}!</h1>
-                <button onClick={handleLogout} className="button">Выйти</button>
-            </header>
+        <div className="dashboard-box">
+            <div className="container">
+                <header className="header">
+                    <h1>Добро пожаловать, {localStorage.getItem('userName')}!</h1>
+                    <button onClick={handleLogout} className="button">Выйти</button>
+                </header>
 
-            <div className="dashboard-content">
-                <h2>Ваши цели</h2>
-                {isLoading ? (
-                    <p>Загрузка...</p>
-                ) : goals.length > 0 ? (
-                    <div className="goal-list">
-                        {goals.map(goal => (
-                            <div key={goal.id} className="goal-item">
+                <div className="goal-box">
+                    <h2>Ваши цели</h2>
+                    {isLoading ? (
+                        <p>Загрузка...</p>
+                    ) : goals.length > 0 ? (
+                        <div className="goal-list">
+                            {goals.map(goal => (
+                                <div key={goal.id} className="goal-item">
 
-                                <h3 onClick={() => setSelectedGoalId(goal.id === selectedGoalId ? null : goal.id)}>
-                                    {goal.title}
-                                </h3>
-                                <button className={`button`} onClick={() => handleDeleteGoal(goal.id)}>Удалить цель
-                                </button>
-                                {selectedGoalId === goal.id && (
-                                    <div className="goal-details">
-                                        <p>{goal.description}</p>
-                                        <ul className="step-list">
-                                            {(goal.steps || []).map(step => (
-                                                <li key={step.id}>
-                                                    {step.title}
-                                                    <button onClick={() =>
-                                                        handleDeleteStep(goal.id, step.id)}>Удалить шаг
-                                                    </button>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <div className="add-step-form">
-                                            <input
-                                                type="text"
-                                                placeholder="Название шага"
-                                                value={newStep.title}
-                                                onChange={(e) => setNewStep({title: e.target.value})}
-                                            />
-                                            <button className={"button"} onClick={() => handleAddStep(goal.id)}>Добавить
-                                                шаг
-                                            </button>
+                                    <h3 onClick={() => setSelectedGoalId(goal.id === selectedGoalId ? null : goal.id)}>
+                                        {goal.title}
+                                    </h3>
+                                    <button className="button" onClick={() => handleDeleteGoal(goal.id)}>Удалить цель</button>
+                                    {selectedGoalId === goal.id && (
+                                        <div className="goal-details">
+                                            <p>{goal.description}</p>
+                                            <ul className="step-list">
+                                                {(goal.steps || []).map(step => (
+                                                    <li key={step.id}>
+                                                        {step.title}
+                                                        <button onClick={() =>
+                                                            handleDeleteStep(goal.id, step.id)}>Удалить шаг</button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div className="add-step-form">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Название шага"
+                                                    value={newStep.title}
+                                                    onChange={(e) => setNewStep({ title: e.target.value })}
+                                                />
+                                                <button className="button" onClick={() => handleAddStep(goal.id)}>Добавить шаг</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p>У вас ещё нет целей. Начните с добавления новой цели.</p>
-                )}
-                <div className="add-goal-form">
-                    <input
-                        type="text"
-                        placeholder="Название цели"
-                        value={newGoal.title}
-                        onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Описание цели"
-                        value={newGoal.description}
-                        onChange={(e) => setNewGoal({...newGoal, description: e.target.value})}
-                    />
-                    <button onClick={handleAddGoal}>Добавить цель</button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>У вас ещё нет целей. Начните с добавления новой цели.</p>
+                    )}
+
+                    <button className="button" onClick={() => setIsAddingGoal(!isAddingGoal)}>
+                        {isAddingGoal ? 'Отменить' : 'Добавить цель'}
+                    </button>
+
+                    {isAddingGoal && (
+                        <div className="add-goal-form">
+                            <input
+                                type="text"
+                                placeholder="Название цели"
+                                value={newGoal.title}
+                                onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Описание цели"
+                                value={newGoal.description}
+                                onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                            />
+                            <button className="button" onClick={handleAddGoal}>Сохранить цель</button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

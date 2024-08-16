@@ -40,7 +40,7 @@ $padding: 40px; // Внутренний отступ контейнера
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: $app-bg-color;
 }
 
@@ -51,7 +51,7 @@ $padding: 40px; // Внутренний отступ контейнера
   border-radius: $border-radius;
   box-shadow: $box-shadow;
   text-align: center;
-  max-width: 500px; // Ограничиваем максимальную ширину контейнера
+  max-width: 100%; // Ограничиваем максимальную ширину контейнера
 }
 
 // Кнопка
@@ -93,6 +93,19 @@ input, select {
       border-radius: 0 4px 4px 0; // Закругленные углы справа
     }
   }
+}
+
+.dashboard-box {
+  width: 80vh;
+
+  .header{
+
+  }
+  .goat-box{
+    display: flex;
+    flex-direction: column;
+  }
+
 }
 
 // Список целей
@@ -183,3 +196,38 @@ input, select {
     align-self: flex-start;
   }
 }
+
+.auth-box {
+  width: 80vh;
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+// регистрация
+.registration-box {
+  width: 80vh;
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+
+.error {
+  &-border {
+    border: 1px solid red; /* Красная граница для полей с ошибками */
+  }
+
+  &-text {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+}
+
+

@@ -1,9 +1,10 @@
+@charset "UTF-8";
 .app-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #98728c;
 }
 
@@ -13,7 +14,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 500px;
+  max-width: 100%;
 }
 
 .button {
@@ -74,6 +75,14 @@ input, select {
 .search-panel__button {
   padding: 10px 20px;
   border-radius: 0 4px 4px 0;
+}
+
+.dashboard-box {
+  width: 80vh;
+}
+.dashboard-box .goat-box {
+  display: flex;
+  flex-direction: column;
 }
 
 .goal-list {
@@ -158,6 +167,33 @@ input, select {
 }
 .add-goal-form button {
   align-self: flex-start;
+}
+
+.auth-box {
+  width: 80vh;
+}
+.auth-box-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.registration-box {
+  width: 80vh;
+}
+.registration-box-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.error-border {
+  border: 1px solid red; /* Красная граница для полей с ошибками */
+}
+.error-text {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 
 /*# sourceMappingURL=App.css.map */

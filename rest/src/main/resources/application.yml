@@ -1,8 +1,17 @@
+app:
+  name: app
+  db:
+    name: appdb
+    user: appUser
+    password: appPass
+    host: localhost
+    port: 5432
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/budgetdb
-    username: brightvl
-    password: brightPass
+    url: jdbc:postgresql://${app.db.host}:${app.db.port}/${app.db.name}
+    username: ${app.db.user}
+    password: ${app.db.password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,12 +27,14 @@ server:
 test:
   app:
     secret: "мой-длинный-ключ-для-HS256"
-    lifetime: 3600000  # Время жизни токена в миллисекундах (например, 1 час)
+    lifetime: 3600000  # Время жизни токена в миллисекундах
 
-#  docker run --name budgetdb -e POSTGRES_USER=brightvl -e POSTGRES_PASSWORD=brightPass -e POSTGRES_DB=budgetdb -p 5432:5432 -d postgres
-#  --name budget-postgres — задает имя контейнера.
+# Docker Command
+# docker run --name ${app.db.name} -e POSTGRES_USER=${app.db.user} -e POSTGRES_PASSWORD=${app.db.password} -e POSTGRES_DB=${app.db.name} -p ${app.db.port}:${app.db.port} -d postgres
+#  docker run --name appdb -e POSTGRES_USER=appUser -e POSTGRES_PASSWORD=appPass -e POSTGRES_DB=appdb -p 5432:5432 -d postgres
+#  --name — задает имя контейнера.
 #  -e POSTGRES_PASSWORD=yourPassword — устанавливает пароль для пользователя PostgreSQL.
 #  -e POSTGRES_USER=yourUsername — устанавливает имя пользователя.
-#  -e POSTGRES_DB=budgetdb — создает базу данных с именем budgetdb.
+#  -e POSTGRES_DB=app — создает базу данных с именем app.
 #  -p 5432:5432 — маппинг порта 5432 контейнера на порт 5432 хоста.
 #  -d postgres — запускает контейнер в фоновом режиме с последней версией PostgreSQL.
