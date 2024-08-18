@@ -1,9 +1,34 @@
+@charset "UTF-8";
+.logout-container {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+}
+.logout-container .logout-icon {
+  color: #0978ec;
+  transition: color 0.3s;
+}
+.logout-container .logout-icon:hover {
+  color: #0056b3;
+}
+.logout-container .logout-warning {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 0.9em;
+  z-index: 1000;
+  white-space: nowrap;
+}
+
 .app-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #98728c;
 }
 
@@ -13,10 +38,11 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 100%;
 }
 
 .button {
-  background-color: #007bff;
+  background-color: #0978ec;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -31,6 +57,7 @@
 .button-group {
   display: flex;
   gap: 20px;
+  justify-content: center;
 }
 
 input, select {
@@ -57,7 +84,7 @@ input, select {
   outline: none;
 }
 .search-panel__button {
-  background-color: #007bff;
+  background-color: #0978ec;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -65,13 +92,131 @@ input, select {
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s;
+  padding: 10px 20px;
+  border-radius: 0 4px 4px 0;
 }
 .search-panel__button:hover {
   background-color: #0056b3;
 }
-.search-panel__button {
+
+.dashboard-box {
+  position: relative;
+  width: 80vh;
+}
+.dashboard-box .header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.dashboard-box .goal-box {
+  display: flex;
+  flex-direction: column;
+}
+.dashboard-box .goal-list {
+  margin-top: 20px;
+}
+.dashboard-box .goal-list .goal-item {
+  display: block;
+  background-color: rgba(200, 188, 193, 0.72);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.dashboard-box .goal-list .goal-item h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+.dashboard-box .goal-list .goal-item .goal-details {
+  margin-top: 10px;
+  text-align: left;
+}
+.dashboard-box .goal-list .goal-item .goal-details-description {
+  background-color: rgba(200, 188, 193, 0.72);
+}
+.dashboard-box .goal-list .goal-item .goal-details .step-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0;
+}
+.dashboard-box .goal-list .goal-item .goal-details .step-list .li {
+  background: #bfadb8;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.dashboard-box .goal-list .goal-item .goal-details .step-list .li .button {
+  background-color: #ac6790;
+  color: white;
   padding: 10px 20px;
-  border-radius: 0 4px 4px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.dashboard-box .goal-list .goal-item .goal-details .step-list .li .button:hover {
+  background-color: #5c0a48;
+}
+.dashboard-box .goal-list .goal-item .goal-details .add-step-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dashboard-box .goal-list .goal-item .goal-details .add-step-form input {
+  flex: 1;
+}
+.dashboard-box .goal-list .goal-item .goal-details .add-step-form button {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+}
+.dashboard-box .goal-list .goal-item .goal-details button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.auth-box {
+  width: 80vh;
+}
+.auth-box-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.registration-box {
+  width: 80vh;
+}
+.registration-box-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.error-border {
+  border: 1px solid red; /* Красная граница для полей с ошибками */
+}
+.error-text {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.warning-text {
+  color: #721c24;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+.warning-text__bg {
+  background-color: #f8d7da;
 }
 
 /*# sourceMappingURL=App.css.map */

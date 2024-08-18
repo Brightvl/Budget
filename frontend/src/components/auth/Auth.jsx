@@ -1,9 +1,10 @@
-import {useNavigate} from 'react-router-dom';
-import {useState} from 'react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Auth() {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -12,11 +13,14 @@ export function Auth() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({login, password}),
+            body: JSON.stringify({ login, password }),
         });
 
         if (response.ok) {
-            const userData = await response.json(); // Получаем DTO из ответа
+            const jwtResponse = await response.json();
+            const userData = jwtResponse.user;
+            const token = jwtResponse.token;
+
             console.log('Login successful:', userData);
 
             localStorage.setItem('isLoggedIn', 'true');
@@ -25,6 +29,7 @@ export function Auth() {
             localStorage.setItem('userLogin', userData.login);
             localStorage.setItem('userEmail', userData.email);
             localStorage.setItem('userRole', userData.role);
+            localStorage.setItem('token', token); // Сохраняем токен в localStorage
 
             if (userData.role === 'ADMIN') {
                 console.log('Redirecting to admin dashboard');
@@ -33,44 +38,44 @@ export function Auth() {
                 console.log('Redirecting to user dashboard');
                 navigate('/dashboard'); // Перенаправляем обычного пользователя
             }
-        } else if (response.status === 401) {
-            console.error('Invalid login credentials');
-            alert('Неверный логин или пароль. Попробуйте еще раз.');
         } else {
             console.error('Login failed with status:', response.status);
-            alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+            setErrorMessage('Произошла ошибка. Возможно неверный логин или пароль.');
         }
     };
 
     const handleRegister = () => {
-        navigate('/register');  // Перенаправление на страницу регистрации
+        navigate('/register');
     };
 
     return (
-        <div className="container">
-            <h2>Авторизация</h2>
-            <div className="auth-form">
-                <div className="form-group">
-                    <input
-                        type="text"
-                        placeholder="Login"
-                        value={login}
-                        onChange={(e) => setLogin(e.target.value)}
-                        className="auth-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="auth-input"
-                    />
-                </div>
-                <div className="button-group">
-                    <button onClick={handleLogin} className="button">Login</button>
-                    <button onClick={handleRegister} className="button">Register</button>
+        <div className="auth-box">
+            <div className="container">
+                <h2>Авторизация</h2>
+                <div className="auth-box-list">
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            placeholder="Login"
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
+                            className="auth-input"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="auth-input"
+                        />
+                    </div>
+                    <div className="button-group">
+                        <button onClick={handleLogin} className="button">Login</button>
+                        <button onClick={handleRegister} className="button">Register</button>
+                    </div>
+                    {errorMessage && <p className="error-text">{errorMessage}</p>} {/* Вывод сообщения об ошибке */}
                 </div>
             </div>
         </div>
