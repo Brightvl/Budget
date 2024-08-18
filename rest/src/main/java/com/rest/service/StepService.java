@@ -16,16 +16,8 @@ public class StepService {
         this.stepRepository = stepRepository;
     }
 
-    public List<Step> getStepsByGoalId(Long goalId) {
-        return stepRepository.findByGoalId(goalId);
-    }
-
     public List<Step> getStepsByGoalIdAndUserId(Long goalId, Long userId) {
         return stepRepository.findByGoalIdAndGoalUserId(goalId, userId);
-    }
-
-    public Optional<Step> getStepByIdAndGoalId(Long stepId, Long goalId) {
-        return stepRepository.findByIdAndGoalId(stepId, goalId);
     }
 
     public Optional<Step> getStepByIdAndGoalIdAndUserId(Long stepId, Long goalId, Long userId) {
@@ -41,9 +33,9 @@ public class StepService {
     }
 
     public boolean deleteStepByIdAndGoalIdAndUserId(Long stepId, Long goalId, Long userId) {
-        Optional<Step> step = stepRepository.findByIdAndGoalIdAndGoalUserId(stepId, goalId, userId);
-        if (step.isPresent()) {
-            stepRepository.delete(step.get());
+        Optional<Step> stepOptional = stepRepository.findByIdAndGoalIdAndGoalUserId(stepId, goalId, userId);
+        if (stepOptional.isPresent()) {
+            stepRepository.delete(stepOptional.get());
             return true;
         }
         return false;

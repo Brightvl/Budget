@@ -2,7 +2,6 @@ package com.rest.controller;
 
 import com.rest.dto.GoalDTO;
 import com.rest.model.Goal;
-import com.rest.model.Step;
 import com.rest.model.auth.User;
 import com.rest.service.GoalService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,10 +27,10 @@ public class GoalController {
     public ResponseEntity<List<GoalDTO>> getGoalsByUser(@PathVariable Long userId) {
         Long currentUserId = getCurrentUserId();
         if (currentUserId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         List<Goal> goals = goalService.getGoalsByUserId(userId);
@@ -47,26 +45,29 @@ public class GoalController {
     public ResponseEntity<GoalDTO> getGoalById(@PathVariable Long userId, @PathVariable Long goalId) {
         Long currentUserId = getCurrentUserId();
         if (currentUserId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        return goalService.getGoalByIdAndUserId(goalId, userId)
-                .map(this::convertToGoalDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Optional<Goal> goalOptional = goalService.getGoalByIdAndUserId(goalId, userId);
+        if (goalOptional.isPresent()) {
+            GoalDTO goalDTO = convertToGoalDTO(goalOptional.get());
+            return ResponseEntity.ok(goalDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping("/{userId}")
     public ResponseEntity<GoalDTO> createGoal(@PathVariable Long userId, @RequestBody GoalDTO goalDTO) {
         Long currentUserId = getCurrentUserId();
         if (currentUserId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         Goal goal = convertToGoalEntity(goalDTO);
@@ -79,13 +80,20 @@ public class GoalController {
     public ResponseEntity<GoalDTO> updateGoal(@PathVariable Long userId, @PathVariable Long goalId, @RequestBody GoalDTO goalDTO) {
         Long currentUserId = getCurrentUserId();
         if (currentUserId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Goal goal = convertToGoalEntity(goalDTO);
+        // Создаем объект Goal без учета шагов
+        Goal goal = Goal.builder()
+                .title(goalDTO.getTitle())
+                .description(goalDTO.getDescription())
+                .isCompleted(goalDTO.getIsCompleted())
+                .startTime(goalDTO.getStartTime())
+                .build();
+
         Goal updatedGoal = goalService.updateGoal(userId, goalId, goal);
 
         if (updatedGoal == null) {
@@ -98,10 +106,10 @@ public class GoalController {
     public ResponseEntity<Void> deleteGoal(@PathVariable Long userId, @PathVariable Long goalId) {
         Long currentUserId = getCurrentUserId();
         if (currentUserId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401, если пользователь не аутентифицирован
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (!userId.equals(currentUserId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403, если доступ запрещен
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         boolean isDeleted = goalService.deleteGoal(userId, goalId);
@@ -127,8 +135,8 @@ public class GoalController {
                 .isCompleted(goal.getIsCompleted())
                 .startTime(goal.getStartTime())
                 .stepIds(goal.getSteps() != null ? goal.getSteps().stream()
-                        .map(Step::getId)
-                        .collect(Collectors.toList()) : new ArrayList<>())
+                        .map(step -> step.getId())
+                        .collect(Collectors.toList()) : null)
                 .build();
     }
 
