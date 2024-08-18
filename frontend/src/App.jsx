@@ -1,10 +1,10 @@
 import './App.scss';
-import { Welcome } from "./components/auth/Welcome";
+import { Welcome } from "./page/Welcome";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Auth } from "./components/auth/Auth";
-import { UserDashboard } from "./components/dashboard/UserDashboard";
-import { Register } from "./components/auth/Register";
-import AdminDashboard from "./components/dashboard/AdminDashboard";
+import { Auth } from "./page/auth/Auth";
+import { UserDashboard } from "./page/dashboard/UserDashboard";
+import { Register } from "./page/auth/Register";
+import AdminDashboard from "./page/dashboard/AdminDashboard";
 
 function App() {
     return (
