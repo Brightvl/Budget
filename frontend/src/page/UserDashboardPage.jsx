@@ -1,31 +1,34 @@
-import {useNavigate} from 'react-router-dom';
-import {useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
-export function UserDashboard() {
+export function UserDashboardPage() {
     const navigate = useNavigate();
+    const { user, logoutUser } = useContext(UserContext); // Используем контекст пользователя
     const [goals, setGoals] = useState([]);
-    const [newGoal, setNewGoal] = useState({title: '', description: ''});
+    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
     const [editingGoal, setEditingGoal] = useState(null); // Состояние для редактируемой цели
-    const [newStep, setNewStep] = useState({title: ''});
+    const [newStep, setNewStep] = useState({ title: '' });
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isAddingGoal, setIsAddingGoal] = useState(false);
     const [isAddingStep, setIsAddingStep] = useState(null);
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
-
     useEffect(() => {
-        fetchData('/api/goals/', setGoals, setIsLoading);
-    }, []);
+        if (!user) {
+            navigate('/auth');
+            return;
+        }
+        fetchData(`/api/goals/`, setGoals, setIsLoading);
+    }, [user, navigate]);
 
     const fetchData = async (url, setData, setLoading) => {
-        const userId = localStorage.getItem('userId');
-        const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`${url}${userId}`, {
+            const response = await fetch(`${url}${user.id}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${user.token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -43,12 +46,11 @@ export function UserDashboard() {
     };
 
     const postData = async (url, body, callback) => {
-        const token = localStorage.getItem('token');
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${user.token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(body),
@@ -61,26 +63,13 @@ export function UserDashboard() {
             console.error('Error posting data:', error);
         }
     };
-    const handleUpdateGoal = (goalId) => {
-        const updatedGoal = {
-            title: editingGoal.title || 'Цель не указана',
-            description: editingGoal.description || 'Нет описания'
-        };
-        postData(`/api/goals/${localStorage.getItem('userId')}/${goalId}`, updatedGoal, (updatedGoal) => {
-            setGoals(goals.map(goal =>
-                goal.id === goalId ? updatedGoal : goal
-            ));
-            setEditingGoal(null); // Закрыть режим редактирования после обновления
-        });
-    };
 
     const deleteData = async (url, callback) => {
-        const token = localStorage.getItem('token');
         try {
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${user.token}`
                 }
             });
             if (response.ok) {
@@ -92,7 +81,7 @@ export function UserDashboard() {
     };
 
     const handleLogout = () => {
-        localStorage.clear();
+        logoutUser(); // Очищаем данные пользователя в контексте
         navigate('/auth');
     };
 
@@ -101,10 +90,23 @@ export function UserDashboard() {
             title: newGoal.title || 'Цель не указана',
             description: newGoal.description || 'Нет описания'
         };
-        postData(`/api/goals/${localStorage.getItem('userId')}`, goal, (goal) => {
+        postData(`/api/goals/${user.id}`, goal, (goal) => {
             setGoals([...goals, goal]);
-            setNewGoal({title: '', description: ''});
+            setNewGoal({ title: '', description: '' });
             setIsAddingGoal(false);
+        });
+    };
+
+    const handleUpdateGoal = (goalId) => {
+        const updatedGoal = {
+            title: editingGoal.title || 'Цель не указана',
+            description: editingGoal.description || 'Нет описания'
+        };
+        postData(`/api/goals/${user.id}/${goalId}`, updatedGoal, (updatedGoal) => {
+            setGoals(goals.map(goal =>
+                goal.id === goalId ? updatedGoal : goal
+            ));
+            setEditingGoal(null); // Закрыть режим редактирования после обновления
         });
     };
 
@@ -115,16 +117,16 @@ export function UserDashboard() {
         postData(`/api/goals/${goalId}/steps`, step, (step) => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? {...goal, steps: goal.steps ? [...goal.steps, step] : [step]}
+                    ? { ...goal, steps: goal.steps ? [...goal.steps, step] : [step] }
                     : goal
             ));
-            setNewStep({title: ''});
+            setNewStep({ title: '' });
             setIsAddingStep(null); // Скрыть поле добавления шага после его добавления
         });
     };
 
     const handleDeleteGoal = (goalId) => {
-        deleteData(`/api/goals/${localStorage.getItem('userId')}/${goalId}`, () => {
+        deleteData(`/api/goals/${user.id}/${goalId}`, () => {
             setGoals(goals.filter(goal => goal.id !== goalId));
         });
     };
@@ -133,7 +135,7 @@ export function UserDashboard() {
         deleteData(`/api/goals/${goalId}/steps/${stepId}`, () => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? {...goal, steps: goal.steps.filter(step => step.id !== stepId)}
+                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
                     : goal
             ));
         });
@@ -152,27 +154,24 @@ export function UserDashboard() {
                         width="24"
                         height="24"
                         className="logout-icon"
-                        style={{cursor: 'pointer'}}
+                        style={{ cursor: 'pointer' }}
                     >
-                        <path fill="none" d="M0 0h24v24H0z"/>
-                        <path fill="currentColor"
-                              d="M18.36 6.64a1 1 0 0 1 0 1.41L13.41 12l4.95 4.95a1 1 0 1 1-1.41 1.41L12 13.41l-4.95 4.95a1 1 0 0 1-1.41-1.41L10.59 12 5.64 7.05a1 1 0 0 1 1.41-1.41L12 10.59l4.95-4.95a1 1 0 0 1 1.41 0z"/>
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path fill="currentColor" d="M18.36 6.64a1 1 0 0 1 0 1.41L13.41 12l4.95 4.95a1 1 0 1 1-1.41 1.41L12 13.41l-4.95 4.95a1 1 0 0 1-1.41-1.41L10.59 12 5.64 7.05a1 1 0 0 1 1.41-1.41L12 10.59l4.95-4.95a1 1 0 0 1 1.41 0z" />
                     </svg>
                     {showLogoutWarning && (
-                        <div className="logout-warning warning-text warning-text__bg">Вы уверены, что хотите
-                            выйти?</div>
+                        <div className="logout-warning warning-text warning-text__bg">Вы уверены, что хотите выйти?</div>
                     )}
                 </div>
 
-
                 <header className="header">
-                    <h1>Добро пожаловать, {localStorage.getItem('userName')}!</h1>
-
+                    <h1>Добро пожаловать, {user?.username}!</h1>
                 </header>
 
-
                 <div className="goal-box">
-                    {isLoading ? (<p>Загрузка...</p>) : goals.length > 0 ? (
+                    {isLoading ? (
+                        <p>Загрузка...</p>
+                    ) : goals.length > 0 ? (
                         <div className="goal-list">
                             {goals.map(goal => (
                                 <div
@@ -183,7 +182,7 @@ export function UserDashboard() {
                                             setSelectedGoalId(goal.id);
                                         }
                                     }}
-                                    style={{cursor: goal.id !== selectedGoalId ? 'pointer' : 'default'}}
+                                    style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
                                 >
                                     <h3
                                         onClick={() => {
@@ -191,7 +190,7 @@ export function UserDashboard() {
                                                 setSelectedGoalId(null);
                                             }
                                         }}
-                                        style={{cursor: goal.id === selectedGoalId ? 'pointer' : 'default'}}
+                                        style={{ cursor: goal.id === selectedGoalId ? 'pointer' : 'default' }}
                                     >
                                         {goal.title}
                                     </h3>
@@ -203,13 +202,13 @@ export function UserDashboard() {
                                                     <input
                                                         type="text"
                                                         value={editingGoal.title}
-                                                        onChange={(e) => setEditingGoal({...editingGoal, title: e.target.value})}
+                                                        onChange={(e) => setEditingGoal({ ...editingGoal, title: e.target.value })}
                                                         placeholder="Название цели"
                                                     />
                                                     <input
                                                         type="text"
                                                         value={editingGoal.description}
-                                                        onChange={(e) => setEditingGoal({...editingGoal, description: e.target.value})}
+                                                        onChange={(e) => setEditingGoal({ ...editingGoal, description: e.target.value })}
                                                         placeholder="Описание цели"
                                                     />
                                                     <button className="button" onClick={(e) => {
@@ -236,12 +235,10 @@ export function UserDashboard() {
                                                             goal.steps.map(step => (
                                                                 <li className="li" key={step.id}>
                                                                     {step.title}
-                                                                    <button className={`button`}
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            handleDeleteStep(goal.id, step.id);
-                                                                        }}
-                                                                    >
+                                                                    <button className="button" onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDeleteStep(goal.id, step.id);
+                                                                    }}>
                                                                         Удалить шаг
                                                                     </button>
                                                                 </li>
@@ -287,11 +284,9 @@ export function UserDashboard() {
                                     )}
                                 </div>
                             ))}
-
                         </div>
                     ) : (
-                        <p className={`warning-text warning-text__bg`}>У вас ещё нет целей. Начните с добавления новой
-                            цели.</p>
+                        <p className="warning-text warning-text__bg">У вас ещё нет целей. Начните с добавления новой цели.</p>
                     )}
 
                     <button className="button" onClick={() => setIsAddingGoal(!isAddingGoal)}>
@@ -304,13 +299,13 @@ export function UserDashboard() {
                                 type="text"
                                 placeholder="Название цели"
                                 value={newGoal.title}
-                                onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
+                                onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
                             />
                             <input
                                 type="text"
                                 placeholder="Описание цели"
                                 value={newGoal.description}
-                                onChange={(e) => setNewGoal({...newGoal, description: e.target.value})}
+                                onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
                             />
                             <button className="button" onClick={handleAddGoal}>Сохранить цель</button>
                         </div>
