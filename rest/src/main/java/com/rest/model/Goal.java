@@ -33,6 +33,4 @@ public class Goal {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    // Цель не должна управлять шагами напрямую
 }
