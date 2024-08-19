@@ -1,5 +1,5 @@
-// src/components/GoalItem.jsx
-import AddStepForm from "./AddStepForm";
+import AddStepForm from './AddStepForm';
+import { useState } from 'react';
 
 export default function GoalItem({
                                      goal,
@@ -12,7 +12,9 @@ export default function GoalItem({
         handleUpdateGoal,
         handleDeleteGoal,
         handleAddStep,
-        handleDeleteStep
+        handleDeleteStep,
+        handleToggleStepCompletion,
+        handleUpdateStep
     } = handlers;
 
     const {
@@ -21,8 +23,14 @@ export default function GoalItem({
         isAddingStep,
         setIsAddingStep,
         newStep,
-        setNewStep
+        setNewStep,
+        editingStep,
+        setEditingStep
     } = formStates;
+
+    const completedSteps = (goal.steps || []).filter(step => step.completed).length;
+    const totalSteps = goal.steps?.length || 0;
+    const completionPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
     return (
         <div
@@ -43,8 +51,9 @@ export default function GoalItem({
                 }}
                 style={{ cursor: goal.id === selectedGoalId ? 'pointer' : 'default' }}
             >
-                {goal.title}
+                {goal.title} ({completionPercentage.toFixed(0)}%)
             </h3>
+            <p>Дата создания: {new Date(goal.startTime).toLocaleString()}</p>
 
             {selectedGoalId === goal.id && (
                 <div className="goal-details">
@@ -85,13 +94,48 @@ export default function GoalItem({
                                 {(goal.steps || []).length > 0 ? (
                                     goal.steps.map(step => (
                                         <li className="li" key={step.id}>
-                                            {step.title}
-                                            <button className="button" onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteStep(goal.id, step.id);
-                                            }}>
-                                                Удалить шаг
-                                            </button>
+                                            {editingStep && editingStep.id === step.id ? (
+                                                <>
+                                                    <input
+                                                        type="text"
+                                                        value={editingStep.title}
+                                                        onChange={(e) => setEditingStep({ ...editingStep, title: e.target.value })}
+                                                        placeholder="Название шага"
+                                                    />
+                                                    <button className="button" onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleUpdateStep(goal.id, step.id);
+                                                    }}>
+                                                        Сохранить
+                                                    </button>
+                                                    <button className="button" onClick={() => setEditingStep(null)}>
+                                                        Отменить
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {step.title} - {step.completed ? "Завершено" : "В процессе"}
+                                                    <p>Время начала шага: {new Date(step.startTime).toLocaleString()}</p>
+                                                    <button className="button" onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleToggleStepCompletion(goal.id, step.id);
+                                                    }}>
+                                                        {step.completed ? "Отметить как невыполненный" : "Отметить как выполненный"}
+                                                    </button>
+                                                    <button className="button" onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setEditingStep(step);
+                                                    }}>
+                                                        Редактировать шаг
+                                                    </button>
+                                                    <button className="button" onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteStep(goal.id, step.id);
+                                                    }}>
+                                                        Удалить шаг
+                                                    </button>
+                                                </>
+                                            )}
                                         </li>
                                     ))
                                 ) : (

@@ -1,8 +1,7 @@
-// src/page/UserDashboardPage.jsx
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { fetchData, postData, deleteData, putData } from "../services/apiService";
+import { deleteData, fetchData, postData, putData } from "../services/apiService";
 import Header from "../components/Header";
 import GoalList from "../components/GoalList";
 import LogoutButton from "../components/LogoutButton";
@@ -16,6 +15,7 @@ export function UserDashboardPage() {
     const [newGoal, setNewGoal] = useState({ title: '', description: '' });
     const [editingGoal, setEditingGoal] = useState(null);
     const [newStep, setNewStep] = useState({ title: '' });
+    const [editingStep, setEditingStep] = useState(null);  // Добавлено состояние для редактирования шага
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isAddingGoal, setIsAddingGoal] = useState(false);
@@ -33,7 +33,9 @@ export function UserDashboardPage() {
     const handleAddGoal = () => {
         const goal = {
             title: newGoal.title || 'Цель не указана',
-            description: newGoal.description || 'Нет описания'
+            description: newGoal.description || 'Нет описания',
+            startTime: new Date().toISOString(),  // Добавляем время создания
+            steps: []
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
             setGoals([...goals, goal]);
@@ -57,16 +59,59 @@ export function UserDashboardPage() {
 
     const handleAddStep = (goalId) => {
         const step = {
-            title: newStep.title || 'Шаг не указан'
+            title: newStep.title || 'Шаг не указан',
+            startTime: new Date().toISOString(),  // Добавляем время начала
+            completed: false
         };
-        postData(`/api/goals/${goalId}/steps`, user, step, (step) => {
+        postData(`/api/goals/${goalId}/steps`,
+            user,
+            step,
+            (step) => {
+                setGoals(goals.map(goal =>
+                    goal.id === goalId ? {
+                        ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
+                    } : goal
+                ));
+
+                setNewStep({ title: '' });
+                setIsAddingStep(null);
+            });
+    };
+
+    const handleToggleStepCompletion = (goalId, stepId) => {
+        const goal = goals.find(g => g.id === goalId);
+        const step = goal.steps.find(s => s.id === stepId);
+
+        const updatedStep = { ...step, completed: !step.completed };
+
+        putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? { ...goal, steps: goal.steps ? [...goal.steps, step] : [step] }
+                    ? {
+                        ...goal,
+                        steps: goal.steps.map(step => step.id === stepId ? updatedStep : step)
+                    }
                     : goal
             ));
-            setNewStep({ title: '' });
-            setIsAddingStep(null);
+        });
+    };
+
+    const handleUpdateStep = (goalId, stepId) => {
+        const goal = goals.find(g => g.id === goalId);
+        const step = goal.steps.find(s => s.id === stepId);
+
+        const updatedStep = { ...editingStep };
+
+        putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
+            setGoals(goals.map(goal =>
+                goal.id === goalId
+                    ? {
+                        ...goal,
+                        steps: goal.steps.map(step => step.id === stepId ? updatedStep : step)
+                    }
+                    : goal
+            ));
+            setEditingStep(null);
         });
     };
 
@@ -93,6 +138,8 @@ export function UserDashboardPage() {
         setIsAddingStep,
         newStep,
         setNewStep,
+        editingStep,  // Добавлено состояние для редактирования шага
+        setEditingStep
     };
 
     const handlers = {
@@ -100,6 +147,8 @@ export function UserDashboardPage() {
         handleDeleteGoal,
         handleAddStep,
         handleDeleteStep,
+        handleToggleStepCompletion,
+        handleUpdateStep
     };
 
     return (
