@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { fetchData, postData, deleteData } from "../services/apiService";
+import {fetchData, postData, deleteData, putData} from "../services/apiService";
 import Header from "../components/Header";
 import GoalList from "../components/GoalList";
 import LogoutButton from "../components/LogoutButton";
@@ -47,13 +47,14 @@ export function UserDashboardPage() {
             title: editingGoal.title || 'Цель не указана',
             description: editingGoal.description || 'Нет описания'
         };
-        postData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
+        putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
             setGoals(goals.map(goal =>
                 goal.id === goalId ? updatedGoal : goal
             ));
             setEditingGoal(null);
         });
     };
+
 
     const handleAddStep = (goalId) => {
         const step = {

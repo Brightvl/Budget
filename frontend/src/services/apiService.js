@@ -39,7 +39,26 @@ export const postData = async (url, user, body, callback) => {
         console.error('Error posting data:', error);
     }
 };
-
+export const putData = async (url, user, body, callback) => {
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            callback(data);
+        } else {
+            console.error('Failed to update data:', response.status);
+        }
+    } catch (error) {
+        console.error('Error updating data:', error);
+    }
+};
 export const deleteData = async (url, user, callback) => {
     try {
         const response = await fetch(url, {
