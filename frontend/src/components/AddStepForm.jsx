@@ -1,5 +1,7 @@
 // src/components/AddStepForm.jsx
-export default function AddStepForm({ newStep, setNewStep, handleAddStep }) {
+export default function AddStepForm({ stepData, handleAddStep }) {
+    const { newStep, setNewStep } = stepData;
+
     return (
         <>
             <input

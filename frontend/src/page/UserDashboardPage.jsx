@@ -2,12 +2,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import {fetchData, postData, deleteData, putData} from "../services/apiService";
+import { fetchData, postData, deleteData, putData } from "../services/apiService";
 import Header from "../components/Header";
 import GoalList from "../components/GoalList";
 import LogoutButton from "../components/LogoutButton";
 import AddGoalForm from "../components/AddGoalForm";
-import {handleLogout} from "../utils/authUtils.js";
+import { handleLogout } from "../utils/authUtils.js";
 
 export function UserDashboardPage() {
     const navigate = useNavigate();
@@ -55,7 +55,6 @@ export function UserDashboardPage() {
         });
     };
 
-
     const handleAddStep = (goalId) => {
         const step = {
             title: newStep.title || 'Шаг не указан'
@@ -87,6 +86,22 @@ export function UserDashboardPage() {
         });
     };
 
+    const formStates = {
+        editingGoal,
+        setEditingGoal,
+        isAddingStep,
+        setIsAddingStep,
+        newStep,
+        setNewStep,
+    };
+
+    const handlers = {
+        handleUpdateGoal,
+        handleDeleteGoal,
+        handleAddStep,
+        handleDeleteStep,
+    };
+
     return (
         <div className="dashboard-box">
             <div className="container">
@@ -104,16 +119,8 @@ export function UserDashboardPage() {
                             goals={goals}
                             selectedGoalId={selectedGoalId}
                             setSelectedGoalId={setSelectedGoalId}
-                            handleUpdateGoal={handleUpdateGoal}
-                            handleDeleteGoal={handleDeleteGoal}
-                            handleAddStep={handleAddStep}
-                            handleDeleteStep={handleDeleteStep}
-                            editingGoal={editingGoal}
-                            setEditingGoal={setEditingGoal}
-                            isAddingStep={isAddingStep}
-                            setIsAddingStep={setIsAddingStep}
-                            newStep={newStep}
-                            setNewStep={setNewStep}
+                            handlers={handlers}
+                            formStates={formStates}
                         />
                     )}
                     <button className="button" onClick={() => setIsAddingGoal(!isAddingGoal)}>
@@ -121,8 +128,7 @@ export function UserDashboardPage() {
                     </button>
                     {isAddingGoal && (
                         <AddGoalForm
-                            newGoal={newGoal}
-                            setNewGoal={setNewGoal}
+                            goalData={{ newGoal, setNewGoal }}
                             handleAddGoal={handleAddGoal}
                         />
                     )}

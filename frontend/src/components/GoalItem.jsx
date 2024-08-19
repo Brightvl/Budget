@@ -3,19 +3,27 @@ import AddStepForm from "./AddStepForm";
 
 export default function GoalItem({
                                      goal,
+                                     handlers,
+                                     formStates,
                                      selectedGoalId,
-                                     setSelectedGoalId,
-                                     handleUpdateGoal,
-                                     handleDeleteGoal,
-                                     handleAddStep,
-                                     handleDeleteStep,
-                                     editingGoal,
-                                     setEditingGoal,
-                                     isAddingStep,
-                                     setIsAddingStep,
-                                     newStep,
-                                     setNewStep,
+                                     setSelectedGoalId
                                  }) {
+    const {
+        handleUpdateGoal,
+        handleDeleteGoal,
+        handleAddStep,
+        handleDeleteStep
+    } = handlers;
+
+    const {
+        editingGoal,
+        setEditingGoal,
+        isAddingStep,
+        setIsAddingStep,
+        newStep,
+        setNewStep
+    } = formStates;
+
     return (
         <div
             key={goal.id}
@@ -102,8 +110,7 @@ export default function GoalItem({
                             </button>
                         ) : (
                             <AddStepForm
-                                newStep={newStep}
-                                setNewStep={setNewStep}
+                                stepData={{ newStep, setNewStep }}
                                 handleAddStep={() => handleAddStep(goal.id)}
                             />
                         )}

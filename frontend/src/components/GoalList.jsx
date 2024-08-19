@@ -6,16 +6,8 @@ export default function GoalList(props) {
         goals,
         selectedGoalId,
         setSelectedGoalId,
-        handleUpdateGoal,
-        handleDeleteGoal,
-        handleAddStep,
-        handleDeleteStep,
-        editingGoal,
-        setEditingGoal,
-        isAddingStep,
-        setIsAddingStep,
-        newStep,
-        setNewStep,
+        handlers,
+        formStates
     } = props;
 
     return (
@@ -26,16 +18,8 @@ export default function GoalList(props) {
                     goal={goal}
                     selectedGoalId={selectedGoalId}
                     setSelectedGoalId={setSelectedGoalId}
-                    handleUpdateGoal={handleUpdateGoal}
-                    handleDeleteGoal={handleDeleteGoal}
-                    handleAddStep={handleAddStep}
-                    handleDeleteStep={handleDeleteStep}
-                    editingGoal={editingGoal}
-                    setEditingGoal={setEditingGoal}
-                    isAddingStep={isAddingStep}
-                    setIsAddingStep={setIsAddingStep}
-                    newStep={newStep}
-                    setNewStep={setNewStep}
+                    handlers={handlers}
+                    formStates={formStates}
                 />
             ))}
         </div>

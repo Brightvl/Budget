@@ -1,5 +1,7 @@
 // src/components/AddGoalForm.jsx
-export default function AddGoalForm({ newGoal, setNewGoal, handleAddGoal }) {
+export default function AddGoalForm({ goalData, handleAddGoal }) {
+    const { newGoal, setNewGoal } = goalData;
+
     return (
         <div className="add-goal-form">
             <input
