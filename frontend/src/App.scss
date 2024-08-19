@@ -66,7 +66,7 @@ $padding: 40px; // Внутренний отступ контейнера
   &-group {
     display: flex;
     gap: 20px;
-    justify-content: center; // Центрируем группу кнопок
+    justify-content: center;
   }
 }
 
@@ -98,21 +98,32 @@ input, select {
 }
 
 // Стили для дашборда
-.dashboard-box {
+.dashboardBox {
   position: relative;
-  width: 80vh;
+  width: 50%;
 
   .header {
     display: flex;
-    justify-content: space-around;
     align-items: center;
 
 
+  }
+  .dashboardButton {
+    @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+    padding: 5px 10px;
+    font-size: 0.9em;
+    width: 50%;
   }
 
   .goal-box {
     display: flex;
     flex-direction: column;
+    .goalButton {
+      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+      padding: 5px 10px;
+      font-size: 0.9em;
+      width: 50%;
+    }
   }
 
   .goal-list {
@@ -155,11 +166,7 @@ input, select {
             flex-direction: column;
             justify-content: space-between;
 
-            .button {
-              @include button-style($button-step-bg-color, $button-step-hover-bg-color);
-              padding: 5px 10px;
-              font-size: 0.9em;
-            }
+
           }
         }
 
@@ -173,13 +180,13 @@ input, select {
             flex: 1;
           }
 
-          button {
+          .button {
             flex: 0 0 auto;
             padding: 10px 20px; // Добавляем padding к кнопке
           }
         }
 
-        button {
+        .button {
           margin-top: 10px;
           width: 100%;
         }

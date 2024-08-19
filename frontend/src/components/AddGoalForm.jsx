@@ -1,5 +1,4 @@
-// src/components/AddGoalForm.jsx
-export default function AddGoalForm({ goalData, handleAddGoal }) {
+export default function AddGoalForm({ goalData, handleAddGoal, handleCancel }) {
     const { newGoal, setNewGoal } = goalData;
 
     return (
@@ -17,6 +16,9 @@ export default function AddGoalForm({ goalData, handleAddGoal }) {
                 onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
             />
             <button className="button" onClick={handleAddGoal}>Сохранить цель</button>
+            <button className="button" onClick={handleCancel}>
+                Отменить
+            </button>
         </div>
     );
 }

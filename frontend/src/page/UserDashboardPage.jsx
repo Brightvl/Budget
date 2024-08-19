@@ -15,7 +15,7 @@ export function UserDashboardPage() {
     const [newGoal, setNewGoal] = useState({ title: '', description: '' });
     const [editingGoal, setEditingGoal] = useState(null);
     const [newStep, setNewStep] = useState({ title: '' });
-    const [editingStep, setEditingStep] = useState(null);  // Добавлено состояние для редактирования шага
+    const [editingStep, setEditingStep] = useState(null);
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isAddingGoal, setIsAddingGoal] = useState(false);
@@ -34,7 +34,7 @@ export function UserDashboardPage() {
         const goal = {
             title: newGoal.title || 'Цель не указана',
             description: newGoal.description || 'Нет описания',
-            startTime: new Date().toISOString(),  // Добавляем время создания
+            startTime: new Date().toISOString(),
             steps: []
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
@@ -44,11 +44,19 @@ export function UserDashboardPage() {
         });
     };
 
+    const handleCancelAddGoal = () => {
+        setIsAddingGoal(false);
+    };
+
     const handleUpdateGoal = (goalId) => {
+        const currentGoal = goals.find(goal => goal.id === goalId);
+
         const updatedGoal = {
             title: editingGoal.title || 'Цель не указана',
-            description: editingGoal.description || 'Нет описания'
+            description: editingGoal.description || 'Нет описания',
+            startTime: currentGoal.startTime,  // Включаем время старта
         };
+
         putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
             setGoals(goals.map(goal =>
                 goal.id === goalId ? updatedGoal : goal
@@ -57,10 +65,11 @@ export function UserDashboardPage() {
         });
     };
 
+
     const handleAddStep = (goalId) => {
         const step = {
             title: newStep.title || 'Шаг не указан',
-            startTime: new Date().toISOString(),  // Добавляем время начала
+            startTime: new Date().toISOString(),
             completed: false
         };
         postData(`/api/goals/${goalId}/steps`,
@@ -72,7 +81,6 @@ export function UserDashboardPage() {
                         ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
                     } : goal
                 ));
-
                 setNewStep({ title: '' });
                 setIsAddingStep(null);
             });
@@ -131,20 +139,26 @@ export function UserDashboardPage() {
         });
     };
 
-    const formStates = {
+    // Сгруппированные хэндлеры для целей и шагов
+    const goalHandlers = {
+        handleUpdateGoal,
+        handleDeleteGoal,
+    };
+
+// code snippet from UserDashboardPage.jsx
+    const goalStates = {
         editingGoal,
         setEditingGoal,
-        isAddingStep,
-        setIsAddingStep,
+        isAddingStep,  // Проверяем, передается ли правильно
+        setIsAddingStep,  // Проверяем, передается ли правильно
         newStep,
         setNewStep,
-        editingStep,  // Добавлено состояние для редактирования шага
+        editingStep,
         setEditingStep
     };
 
-    const handlers = {
-        handleUpdateGoal,
-        handleDeleteGoal,
+
+    const stepHandlers = {
         handleAddStep,
         handleDeleteStep,
         handleToggleStepCompletion,
@@ -152,7 +166,7 @@ export function UserDashboardPage() {
     };
 
     return (
-        <div className="dashboard-box">
+        <div className="dashboardBox">
             <div className="container">
                 <LogoutButton
                     handleLogout={handleLogout}
@@ -168,21 +182,24 @@ export function UserDashboardPage() {
                             goals={goals}
                             selectedGoalId={selectedGoalId}
                             setSelectedGoalId={setSelectedGoalId}
-                            handlers={handlers}
-                            formStates={formStates}
+                            goalHandlers={goalHandlers}  // Передаем хэндлеры
+                            goalStates={goalStates}
+                            stepHandlers={stepHandlers}
                         />
                     )}
-                    <button className="button" onClick={() => setIsAddingGoal(!isAddingGoal)}>
-                        {isAddingGoal ? 'Отменить' : 'Добавить цель'}
-                    </button>
                     {isAddingGoal && (
                         <AddGoalForm
                             goalData={{ newGoal, setNewGoal }}
                             handleAddGoal={handleAddGoal}
+                            handleCancel={handleCancelAddGoal}
                         />
                     )}
+                    <button className="dashboardButton" onClick={() => setIsAddingGoal(!isAddingGoal)}>
+                        {isAddingGoal ? 'Отменить' : 'Добавить цель'}
+                    </button>
                 </div>
             </div>
         </div>
     );
+
 }

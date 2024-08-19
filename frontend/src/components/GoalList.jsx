@@ -1,15 +1,6 @@
-// src/components/GoalList.jsx
 import GoalItem from "./GoalItem";
 
-export default function GoalList(props) {
-    const {
-        goals,
-        selectedGoalId,
-        setSelectedGoalId,
-        handlers,
-        formStates
-    } = props;
-
+export default function GoalList({ goals, selectedGoalId, setSelectedGoalId, goalHandlers, goalStates, stepHandlers }) {
     return (
         <div className="goal-list">
             {goals.map(goal => (
@@ -18,8 +9,9 @@ export default function GoalList(props) {
                     goal={goal}
                     selectedGoalId={selectedGoalId}
                     setSelectedGoalId={setSelectedGoalId}
-                    handlers={handlers}
-                    formStates={formStates}
+                    goalHandlers={goalHandlers}  // Передаем хэндлеры для целей
+                    goalStates={goalStates}      // Передаем состояния для целей
+                    stepHandlers={stepHandlers}  // Передаем хэндлеры для шагов
                 />
             ))}
         </div>
