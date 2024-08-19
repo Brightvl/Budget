@@ -9,16 +9,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com</groupId>
-    <artifactId>Budget</artifactId>
+    <artifactId>Goal</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>habit</name>
-    <description>habit</description>
 
     <developers>
         <developer/>
     </developers>
     <modules>
-        <module>rest</module>
+        <module>backend</module>
 <!--        <module>eureka-server</module>-->
     </modules>
     <properties>

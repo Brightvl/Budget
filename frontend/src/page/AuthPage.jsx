@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/userContext.jsx";
+import { UserContext } from "../context/UserContext.jsx";
 
 export function AuthPage() {
     const [login, setLogin] = useState('');

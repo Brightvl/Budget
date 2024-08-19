@@ -5,7 +5,9 @@ import { AuthPage } from "./page/AuthPage.jsx";
 import { UserDashboardPage } from "./page/UserDashboardPage.jsx";
 import { RegisterPage } from "./page/RegisterPage.jsx";
 import AdminDashboardPage from "./page/AdminDashboardPage.jsx";
-import { UserProvider } from './context/userContext.jsx'; // Импортируем провайдер
+import {UserProvider} from "./context/UserContext.jsx";
+
+
 
 function App() {
     return (
