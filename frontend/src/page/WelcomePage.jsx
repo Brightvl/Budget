@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const Welcome = () => {
+const WelcomePage = () => {
     const navigate = useNavigate();
 
     const handleGetStarted = () => {
@@ -32,4 +32,4 @@ const Welcome = () => {
     );
 }
 
-export { Welcome };
+export { WelcomePage };
