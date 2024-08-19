@@ -26,6 +26,4 @@ public class Step {
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = false)
     private Goal goal;
-
-    // Шаги работают только с собственными полями
 }
