@@ -99,11 +99,13 @@ input, select {
 .dashboardBox .dashboardButton:hover {
   background-color: #5c0a48;
 }
-.dashboardBox .goal-box {
-  display: flex;
-  flex-direction: column;
+
+.goalFormBox {
+  border: 2px solid #fd0b0b;
+  border-radius: 8px;
+  padding: 10px;
 }
-.dashboardBox .goal-box .goalButton {
+.goalFormButton {
   background-color: #ac6790;
   color: white;
   padding: 10px 20px;
@@ -114,65 +116,143 @@ input, select {
   transition: background-color 0.3s;
   padding: 5px 10px;
   font-size: 0.9em;
-  width: 50%;
 }
-.dashboardBox .goal-box .goalButton:hover {
+.goalFormButton:hover {
   background-color: #5c0a48;
 }
-.dashboardBox .goal-list {
-  margin-top: 20px;
+.goalFormButtonGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
-.dashboardBox .goal-list .goal-item {
+.goalFormButtonDelete {
+  background-color: #7c1c65;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.goalFormButtonDelete:hover {
+  background-color: #5c0a48;
+}
+.goalFormInput {
+  width: 80%;
+}
+.goalFormInputGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.goalItem {
   display: block;
-  background-color: rgba(200, 188, 193, 0.72);
+  border: 2px solid #bd95b9;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   cursor: pointer;
 }
-.dashboardBox .goal-list .goal-item h3 {
-  margin: 0;
-  font-size: 1.2em;
-  color: #333;
-}
-.dashboardBox .goal-list .goal-item .goal-details {
-  margin-top: 10px;
-  text-align: left;
-}
-.dashboardBox .goal-list .goal-item .goal-details-description {
-  background-color: rgba(200, 188, 193, 0.72);
-}
-.dashboardBox .goal-list .goal-item .goal-details .step-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 10px 0;
-}
-.dashboardBox .goal-list .goal-item .goal-details .step-list .li {
-  background: #bfadb8;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.dashboardBox .goal-list .goal-item .goal-details .add-step-form {
-  margin-top: 10px;
+.goalItemDetails {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.dashboardBox .goal-list .goal-item .goal-details .add-step-form input {
-  flex: 1;
+.stepBox {
+  padding: 10px;
 }
-.dashboardBox .goal-list .goal-item .goal-details .add-step-form .button {
-  flex: 0 0 auto;
+.stepUl {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.stepUlli {
+  border: 2px solid #67425d;
+  padding-block: 5px;
+  border-radius: 8px;
+}
+.stepFormBox {
+  border: 2px solid #fd0b0b;
+  border-radius: 8px;
+  padding: 10px;
+}
+.stepFormButton {
+  background-color: #ac6790;
+  color: white;
   padding: 10px 20px;
-}
-.dashboardBox .goal-list .goal-item .goal-details .button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   margin-top: 10px;
-  width: 100%;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.stepFormButton:hover {
+  background-color: #5c0a48;
+}
+.stepFormButtonStatus {
+  background-color: #ac6790;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.stepFormButtonStatus:hover {
+  background-color: #5c0a48;
+}
+.stepFormButtonDelete {
+  background-color: #7c1c65;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+.stepFormButtonDelete:hover {
+  background-color: #5c0a48;
+}
+.stepFormButtonGroup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.stepFormInput {
+  width: 80%;
+}
+.stepFormInputGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.stepItem {
+  display: block;
+  border: 2px solid #bd95b9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .auth-box {

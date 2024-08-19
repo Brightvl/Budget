@@ -1,18 +1,26 @@
 // Переменные
 $app-bg-color: #98728c; // Цвет фона приложения
 $container-bg-color: #fff; // Цвет фона контейнера
+
 $button-bg-color: #0978ec; // Цвет фона кнопки
 $button-hover-bg-color: #0056b3; // Цвет фона кнопки при наведении
 $button-goal-bg-color: #0978ec;
 $button-goal-hover-bg-color: #0056b3;
 $button-step-bg-color: #ac6790;
 $button-step-hover-bg-color: #5c0a48;
-$goal-bg-color: rgba(200, 188, 193, 0.72); // Цвет фона для целей (жёлтый)
-$step-bg-color: #bfadb8; // Цвет фона для шагов (оранжевый)
+$button-delete-color: #7c1c65;
+$button-delete-hover-bg-color: #5c0a48;
+
+$goal-bg-color: rgba(170, 10, 77, 0.72); // Цвет фона для целей
+$step-bg-color: #bfadb8; // Цвет фона для шагов
 $input-border-color: #ccc; // Цвет обводки поля ввода
 $box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Тень для контейнера
 $border-radius: 8px; // Радиус закругления углов
 $padding: 40px; // Внутренний отступ контейнера
+$border-goal-color: #bd95b9;
+$border-goal-active-color: #fd0b0b;
+
+$border-step-color: #67425d;
 
 
 // Миксин для кнопок
@@ -105,95 +113,158 @@ input, select {
   .header {
     display: flex;
     align-items: center;
-
-
   }
+
   .dashboardButton {
     @include button-style($button-step-bg-color, $button-step-hover-bg-color);
     padding: 5px 10px;
     font-size: 0.9em;
     width: 50%;
   }
+}
 
-  .goal-box {
-    display: flex;
-    flex-direction: column;
-    .goalButton {
+.goal {
+  &Form {
+    &Box {
+      border: 2px solid $border-goal-active-color;
+      border-radius: $border-radius;
+      padding: 10px;
+    }
+    &Button {
       @include button-style($button-step-bg-color, $button-step-hover-bg-color);
       padding: 5px 10px;
       font-size: 0.9em;
-      width: 50%;
-    }
-  }
 
-  .goal-list {
-    margin-top: 20px;
 
-    .goal-item {
-      display: block;
-      background-color: $goal-bg-color;
-      padding: 20px;
-      border-radius: $border-radius;
-      box-shadow: $box-shadow;
-      margin-bottom: 20px;
-      cursor: pointer;
-
-      h3 {
-        margin: 0;
-        font-size: 1.2em;
-        color: #333;
+      &Group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
       }
+      &Delete{
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+        padding: 5px 10px;
+        font-size: 0.9em;
 
-      .goal-details {
-        margin-top: 10px;
-        text-align: left;
+      }
+    }
 
-        &-description {
-          background-color: $goal-bg-color;
-        }
+    &Input {
+      width: 80%;
 
-        .step-list {
-          list-style: none;
-          padding-left: 0;
-          margin: 10px 0;
-
-          .li {
-            background: $step-bg-color;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-
-          }
-        }
-
-        .add-step-form {
-          margin-top: 10px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-
-          input {
-            flex: 1;
-          }
-
-          .button {
-            flex: 0 0 auto;
-            padding: 10px 20px; // Добавляем padding к кнопке
-          }
-        }
-
-        .button {
-          margin-top: 10px;
-          width: 100%;
-        }
+      &Group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
     }
   }
+
+  &Item {
+    display: block;
+    border: 2px solid $border-goal-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+    &Details{
+display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &Description {
+
+    }
+  }
+
 }
+
+.step {
+  &Box {
+
+    padding: 10px;
+  }
+
+  &Ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &li {
+      border: 2px solid $border-step-color;
+      padding-block: 5px;
+      border-radius: $border-radius;
+    }
+  }
+
+
+  &Form {
+    &Box {
+      border: 2px solid $border-goal-active-color;
+      border-radius: $border-radius;
+      padding: 10px;
+    }
+
+    &Button {
+      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+      padding: 5px 10px;
+      font-size: 0.9em;
+
+
+      &Status{
+        @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+        padding: 5px 10px;
+        font-size: 0.9em;
+
+      }
+      &Delete{
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+        padding: 5px 10px;
+        font-size: 0.9em;
+
+      }
+
+      &Group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      }
+    }
+
+    &Input {
+      width: 80%;
+
+      &Group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &Item {
+    display: block;
+    border: 2px solid $border-goal-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+  }
+
+}
+
 
 // Стили для панели авторизации
 .auth-box {
@@ -242,6 +313,7 @@ input, select {
     }
   }
 }
+
 .logout-container {
   position: absolute;
   right: 2%;

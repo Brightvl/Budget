@@ -9,9 +9,9 @@ export default function GoalList({ goals, selectedGoalId, setSelectedGoalId, goa
                     goal={goal}
                     selectedGoalId={selectedGoalId}
                     setSelectedGoalId={setSelectedGoalId}
-                    goalHandlers={goalHandlers}  // Передаем хэндлеры для целей
-                    goalStates={goalStates}      // Передаем состояния для целей
-                    stepHandlers={stepHandlers}  // Передаем хэндлеры для шагов
+                    goalHandlers={goalHandlers}
+                    goalStates={goalStates}
+                    stepHandlers={stepHandlers}
                 />
             ))}
         </div>

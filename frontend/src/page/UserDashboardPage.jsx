@@ -174,7 +174,7 @@ export function UserDashboardPage() {
                     setShowLogoutWarning={setShowLogoutWarning}
                 />
                 <Header username={user?.username} />
-                <div className="goal-box">
+                <div className="goalBox">
                     {isLoading ? (
                         <p>Загрузка...</p>
                     ) : (

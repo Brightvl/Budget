@@ -19,8 +19,8 @@ export default function GoalItem({
 
     return (
         <div
+            className="goalItem"
             key={goal.id}
-            className="goal-item"
             onClick={() => {
                 if (goal.id !== selectedGoalId) {
                     setSelectedGoalId(goal.id);
@@ -28,7 +28,7 @@ export default function GoalItem({
             }}
             style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
         >
-            <h3
+            <h2
                 onClick={() => {
                     if (goal.id === selectedGoalId) {
                         setSelectedGoalId(null);
@@ -37,11 +37,11 @@ export default function GoalItem({
                 style={{ cursor: goal.id === selectedGoalId ? 'pointer' : 'default' }}
             >
                 {goal.title} ({completionPercentage.toFixed(0)}%)
-            </h3>
-            <p>Дата создания: {new Date(goal.startTime).toLocaleString()}</p>
+            </h2>
+            <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
 
             {selectedGoalId === goal.id && (
-                <div className="goal-details">
+                <div className="goalItemDetails">
                     {editingGoal && editingGoal.id === goal.id ? (
                         <>
                             <input
@@ -67,29 +67,30 @@ export default function GoalItem({
                             </button>
                         </>
                     ) : (
-                        <>
-                            <p className="goal-details-description">{goal.description}</p>
-                            <button className="button" onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingGoal(goal);
-                            }}>
-                                Изменить цель
-                            </button>
-
-                            <StepList
-                                goalId={goal.id}
-                                steps={goal.steps}
-                                stepHandlers={stepHandlers}
-                                stepStates={goalStates}  // Используем goalStates для шагов
-                            />
-                        </>
+                        <div>
+                            <h3 className="goalItemDescription"> Описание: {goal.description}</h3>
+                            <div className="goalFormButtonGroup">
+                                <button className="goalFormButton" onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingGoal(goal);
+                                }}>
+                                    Изменить цель
+                                </button>
+                                <button className="goalFormButtonDelete" onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteGoal(goal.id);
+                                }}>
+                                    Удалить цель
+                                </button>
+                            </div>
+                        </div>
                     )}
-                    <button className="button" onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteGoal(goal.id);
-                    }}>
-                        Удалить цель
-                    </button>
+                    <StepList
+                        goalId={goal.id}
+                        steps={goal.steps}
+                        stepHandlers={stepHandlers}
+                        stepStates={goalStates}
+                    />
                 </div>
             )}
         </div>
