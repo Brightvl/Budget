@@ -52,8 +52,9 @@ export default function StepList({
                                 </div>
                             ) : (
                                 <>
-                                    {step.title} - {step.completed ? "Завершено" : "В процессе"}
-                                    <br/>
+                                    <h2>
+                                        {step.title} - {step.completed ? "Завершено" : "В процессе"}
+                                    </h2>
                                     <button className="stepFormButtonStatus" onClick={(e) => {
                                         e.stopPropagation();
                                         handleToggleStepCompletion(goalId, step.id);
