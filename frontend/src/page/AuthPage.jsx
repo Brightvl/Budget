@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext.jsx";
 
-export function Auth() {
+export function AuthPage() {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const { loginUser } = useContext(UserContext); // Используем контекст
 
     const handleLogin = async () => {
         const response = await fetch('/api/users/login', {
@@ -23,13 +25,7 @@ export function Auth() {
 
             console.log('Login successful:', userData);
 
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userId', userData.id);
-            localStorage.setItem('userName', userData.username);
-            localStorage.setItem('userLogin', userData.login);
-            localStorage.setItem('userEmail', userData.email);
-            localStorage.setItem('userRole', userData.role);
-            localStorage.setItem('token', token); // Сохраняем токен в localStorage
+            loginUser(userData, token); // Сохраняем данные пользователя в контексте
 
             if (userData.role === 'ADMIN') {
                 console.log('Redirecting to admin dashboard');

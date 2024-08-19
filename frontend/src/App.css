@@ -1,28 +1,4 @@
 @charset "UTF-8";
-.logout-container {
-  position: absolute;
-  right: 2%;
-  top: 2%;
-}
-.logout-container .logout-icon {
-  color: #0978ec;
-  transition: color 0.3s;
-}
-.logout-container .logout-icon:hover {
-  color: #0056b3;
-}
-.logout-container .logout-warning {
-  position: absolute;
-  top: 30px;
-  right: 0;
-  padding: 5px 10px;
-  border-radius: 4px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  font-size: 0.9em;
-  z-index: 1000;
-  white-space: nowrap;
-}
-
 .app-container {
   display: flex;
   justify-content: center;
@@ -217,6 +193,30 @@ input, select {
 }
 .warning-text__bg {
   background-color: #f8d7da;
+}
+
+.logout-container {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+}
+.logout-container .logout-icon {
+  color: #0978ec;
+  transition: color 0.3s;
+}
+.logout-container .logout-icon:hover {
+  color: #0056b3;
+}
+.logout-container .logout-warning {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 0.9em;
+  z-index: 1000;
+  white-space: nowrap;
 }
 
 /*# sourceMappingURL=App.css.map */

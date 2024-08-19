@@ -15,34 +15,6 @@ $border-radius: 8px; // Радиус закругления углов
 $padding: 40px; // Внутренний отступ контейнера
 
 
-.logout-container {
-  position: absolute;
-  right: 2%;
-  top: 2%;
-
-
-  .logout-icon {
-    color: $button-bg-color;
-    transition: color 0.3s;
-
-    &:hover {
-      color: $button-hover-bg-color;
-    }
-  }
-
-  .logout-warning {
-    position: absolute;
-    top: 30px;
-    right: 0;
-    padding: 5px 10px;
-    border-radius: 4px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 0.9em;
-    z-index: 1000;
-    white-space: nowrap;
-  }
-}
-
 // Миксин для кнопок
 @mixin button-style($bg-color, $hover-color) {
   background-color: $bg-color;
@@ -261,5 +233,32 @@ input, select {
     &__bg {
       background-color: #f8d7da;
     }
+  }
+}
+.logout-container {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+
+
+  .logout-icon {
+    color: $button-bg-color;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $button-hover-bg-color;
+    }
+  }
+
+  .logout-warning {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9em;
+    z-index: 1000;
+    white-space: nowrap;
   }
 }

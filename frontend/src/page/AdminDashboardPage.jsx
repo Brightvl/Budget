@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-function AdminDashboard() {
+function AdminDashboardPage() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -16,10 +16,12 @@ function AdminDashboard() {
             </header>
             <div className="dashboard-content">
                 <p>Здесь можно управлять пользователями и просматривать статистику.</p>
-                {/* Добавьте необходимые элементы для административной панели */}
+                {
+
+                }
             </div>
         </div>
     );
 }
 
-export default AdminDashboard;
+export default AdminDashboardPage;
