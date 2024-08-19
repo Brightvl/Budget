@@ -1,11 +1,9 @@
 // src/utils/authUtils.js
-
-/**
- * Удаляем запись о том что пользователь авторизован
- * @param navigate переход на главную
- */
-export const handleLogout = (navigate) => {
-    localStorage.removeItem('isLoggedIn');
-    navigate('/');
+export const handleLogout = (navigate, logoutUser) => {
+    if (typeof logoutUser === 'function') {
+        logoutUser(); // Очищаем данные пользователя в контексте
+        navigate('/auth');
+    } else {
+        console.error("logoutUser is not a function");
+    }
 };
-

@@ -1,24 +1,27 @@
 import './App.scss';
-import { Welcome } from "./page/Welcome";
+import { WelcomePage } from "./page/WelcomePage.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Auth } from "./page/auth/Auth";
-import { UserDashboard } from "./page/dashboard/UserDashboard";
-import { Register } from "./page/auth/Register";
-import AdminDashboard from "./page/dashboard/AdminDashboard";
+import { AuthPage } from "./page/AuthPage.jsx";
+import { UserDashboardPage } from "./page/UserDashboardPage.jsx";
+import { RegisterPage } from "./page/RegisterPage.jsx";
+import AdminDashboardPage from "./page/AdminDashboardPage.jsx";
+import { UserProvider } from './context/userContext.jsx'; // Импортируем провайдер
 
 function App() {
     return (
-        <Router>
-            <div className="app-container">
-                <Routes>
-                    <Route path="/" element={<Welcome />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/dashboard" element={<UserDashboard />} />
-                    <Route path="/admin" element={<AdminDashboard />} />
-                </Routes>
-            </div>
-        </Router>
+        <UserProvider> {/* Оборачиваем приложение в UserProvider */}
+            <Router>
+                <div className="app-container">
+                    <Routes>
+                        <Route path="/" element={<WelcomePage />} />
+                        <Route path="/auth" element={<AuthPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/dashboard" element={<UserDashboardPage />} />
+                        <Route path="/admin" element={<AdminDashboardPage />} />
+                    </Routes>
+                </div>
+            </Router>
+        </UserProvider>
     );
 }
 

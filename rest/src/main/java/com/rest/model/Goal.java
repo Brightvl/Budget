@@ -28,10 +28,9 @@ public class Goal {
     private LocalDateTime startTime = LocalDateTime.now();
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Step> steps = new ArrayList<>(); // Инициализация пустым списком
+    private List<Step> steps = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }
-

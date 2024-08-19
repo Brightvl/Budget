@@ -24,6 +24,6 @@ public class Step {
     private LocalDateTime startTime = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "goal_id")
+    @JoinColumn(name = "goal_id", nullable = false)
     private Goal goal;
 }

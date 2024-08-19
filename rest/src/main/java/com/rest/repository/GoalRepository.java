@@ -10,9 +10,7 @@ import java.util.Optional;
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
 
-    // Найти все цели по ID пользователя
     List<Goal> findByUserId(Long userId);
 
-    // Найти цель по ID цели и ID пользователя
     Optional<Goal> findByIdAndUserId(Long goalId, Long userId);
 }
