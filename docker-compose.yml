@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -15,6 +17,7 @@ services:
       SERVER_PORT: 8080
       JWT_SECRET: "мой-длинный-ключ-для-HS256"
       JWT_LIFETIME: 3600000
+      ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:5173"
     depends_on:
       - db
     networks:
@@ -25,7 +28,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      VITE_API_BASE_URL: http://localhost:8080
+      VITE_API_BASE_URL: http://backend:8080
     depends_on:
       - backend
     networks:
@@ -41,6 +44,8 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - app-network
+    ports:
+      - "5432:5432"
 
 networks:
   app-network:

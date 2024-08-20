@@ -1,0 +1,22 @@
+# База данных
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    show-sql: ${SPRING_JPA_SHOW_SQL}
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
+
+server:
+  port: ${SERVER_PORT}
+
+# JWT Configuration
+test:
+  app:
+    secret: ${JWT_SECRET}
+    lifetime: ${JWT_LIFETIME}
