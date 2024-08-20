@@ -3,6 +3,12 @@ spring:
     active: remote
 
 
+# JWT Configuration
+test:
+  app:
+    secret: "мой-длинный-ключ-для-HS256"
+    lifetime: 3600000  # Время жизни токена в миллисекундах
+
 # Docker Command
 # docker run --name ${app.db.name} -e POSTGRES_USER=${app.db.user} -e POSTGRES_PASSWORD=${app.db.password} -e POSTGRES_DB=${app.db.name} -p ${app.db.port}:${app.db.port} -d postgres
 #  docker run --name appdb -e POSTGRES_USER=appUser -e POSTGRES_PASSWORD=appPass -e POSTGRES_DB=appdb -p 5432:5432 -d postgres

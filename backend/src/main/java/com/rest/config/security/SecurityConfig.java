@@ -29,9 +29,6 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenFilter tokenFilter;
 
-    @Value("${ALLOWED_ORIGINS}")
-    private String allowedOrigins;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -58,21 +55,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        if (StringUtils.hasText(allowedOrigins)) {
-            for (String origin : allowedOrigins.split(",")) {
-                configuration.addAllowedOriginPattern(origin.trim());
-            }
-        }
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedOriginPattern("http://localhost:5173"); // Разрешаем все источники
+        configuration.addAllowedOriginPattern("http://localhost:3000"); // Разрешаем все источники
+        configuration.addAllowedMethod("*"); // Разрешаем все методы
+        configuration.addAllowedHeader("*"); // Разрешаем все заголовки
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
