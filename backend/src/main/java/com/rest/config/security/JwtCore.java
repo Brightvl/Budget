@@ -18,7 +18,10 @@ public class JwtCore {
     @Value("${test.app.lifetime}")
     private Long lifetime;
 
-    // Инициализация секретного ключа из строки при создании компонента
+    /**
+     * Инициализация секретного ключа из строки при создании компонента
+     * @param secret Ключевое слово
+     */
     public JwtCore(@Value("${test.app.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
