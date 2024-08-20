@@ -17,6 +17,7 @@ services:
       SERVER_PORT: 8080
       JWT_SECRET: "Рандомный-ключ-для-HS256"
       JWT_LIFETIME: 3600000
+      ALLOWED_ORIGINS: "http://localhost:3000,http://localhost:5173"
     depends_on:
       - db
     networks:
