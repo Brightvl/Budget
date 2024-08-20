@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -13,7 +15,7 @@ services:
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
       SERVER_PORT: 8080
-      JWT_SECRET: "мой-длинный-ключ-для-HS256"
+      JWT_SECRET: "Рандомный-ключ-для-HS256"
       JWT_LIFETIME: 3600000
     depends_on:
       - db
@@ -23,7 +25,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:80"
+      - "5173:80"
     environment:
       VITE_API_BASE_URL: http://localhost:8080
     depends_on:
@@ -41,6 +43,8 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - app-network
+    ports:
+      - "5432:5432"
 
 networks:
   app-network:
