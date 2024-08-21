@@ -9,7 +9,7 @@ import {
 
 export function RegisterPage() {
     const [login, setLogin] = useState('');
-    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
@@ -32,7 +32,7 @@ export function RegisterPage() {
             }
         }
 
-        if (!username) {
+        if (!name) {
             errors.push('Пожалуйста, введите имя пользователя.');
         }
 
@@ -77,7 +77,7 @@ export function RegisterPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ login, username, email, password }), // role не отправляется
+                body: JSON.stringify({ login, name, email, password }), // role не отправляется
             });
 
             if (response.ok) {
@@ -112,9 +112,9 @@ export function RegisterPage() {
                     <input
                         type="text"
                         placeholder="Имя пользователя"
-                        value={username}
+                        value={name}
                         onChange={(e) => {
-                            setUsername(e.target.value);
+                            setName(e.target.value);
                             setGeneralErrors(generalErrors.filter(error => error !== 'Пожалуйста, введите имя пользователя.'));
                         }}
                         className={generalErrors.includes('Пожалуйста, введите имя пользователя.') ? 'error-border' : ''}

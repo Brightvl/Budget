@@ -40,9 +40,18 @@ export const UserProvider = ({ children }) => {
         setRole(null);  // Очищаем роль пользователя
         localStorage.removeItem('token');
     };
+    const updateUserInContext = (updatedUser) => {
+        setUser((prevUser) => ({
+            ...prevUser,
+            ...updatedUser,
+        }));
+        if (updatedUser.role) {
+            setRole(updatedUser.role);
+        }
+    };
 
     return (
-        <UserContext.Provider value={{ user, role, loginUser, logoutUser }}>
+        <UserContext.Provider value={{ user, role, loginUser, logoutUser, updateUserInContext }}>
             {children}
         </UserContext.Provider>
     );

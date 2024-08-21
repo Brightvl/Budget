@@ -29,8 +29,8 @@ public class AdminController {
         return users.stream()
                 .map(user -> new UserDTO(
                         user.getId(),
-                        user.getUsername(),
                         user.getLogin(),
+                        user.getName(),
                         user.getEmail(),
                         user.getRole(),
                         user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
@@ -43,8 +43,8 @@ public class AdminController {
         Optional<User> userOpt = userService.getUserById(id);
         return userOpt.map(user -> ResponseEntity.ok(new UserDTO(
                         user.getId(),
-                        user.getUsername(),
                         user.getLogin(),
+                        user.getName(),
                         user.getEmail(),
                         user.getRole(),
                         user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
@@ -79,8 +79,8 @@ public class AdminController {
         Optional<User> userOpt = userService.getUserByLogin(login);
         return userOpt.map(user -> ResponseEntity.ok(new UserDTO(
                         user.getId(),
-                        user.getUsername(),
                         user.getLogin(),
+                        user.getName(),
                         user.getEmail(),
                         user.getRole(),
                         user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
@@ -102,7 +102,7 @@ public class AdminController {
             }
         }
 
-        user.setUsername(userDTO.getUsername());
+        user.setName(userDTO.getName()); // Обновление имени пользователя
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
 
@@ -111,7 +111,7 @@ public class AdminController {
         UserDTO updatedUserDTO = new UserDTO(
                 updatedUser.getId(),
                 updatedUser.getLogin(),
-                updatedUser.getUsername(),
+                updatedUser.getName(), // Передача обновленного имени
                 updatedUser.getEmail(),
                 updatedUser.getRole(),
                 updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
@@ -119,6 +119,7 @@ public class AdminController {
 
         return ResponseEntity.ok(updatedUserDTO);
     }
+
 
     @PutMapping("/users/{id}/reset-password")
     public ResponseEntity<Void> resetUserPassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {

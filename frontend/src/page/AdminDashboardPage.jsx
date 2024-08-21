@@ -71,13 +71,17 @@ function AdminDashboardPage() {
             console.log('Updating user with data:', selectedUser); // Логирование данных
             try {
                 const token = localStorage.getItem('token');
-                await updateUser(selectedUser.id, selectedUser, token);
+                const updatedUser = await updateUser(selectedUser.id, selectedUser, token);
+                setSelectedUser(updatedUser); // Обновляем состояние с новыми данными
+                updateUserInContext(updatedUser); // Обновляем контекст с новыми данными
                 setErrorMessage('Данные пользователя обновлены.');
             } catch (error) {
                 setErrorMessage('Не удалось обновить данные пользователя.');
             }
         }
     };
+
+
 
 
     const handleResetPassword = async () => {
@@ -125,8 +129,8 @@ function AdminDashboardPage() {
                         <label>Имя пользователя:</label>
                         <input
                             type="text"
-                            value={selectedUser.username}
-                            onChange={(e) => setSelectedUser({ ...selectedUser, username: e.target.value })}
+                            value={selectedUser.name}
+                            onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })}
                             placeholder="Имя пользователя"
                         />
                         <label>Email:</label>
