@@ -10,16 +10,16 @@ import java.util.List;
 @Setter
 public class UserDTO {
     private Long id;
-    private String username;
+    private String name;
     private String login;
     private String email;
     private Role role;
     private List<Long> goalIds;
 
-    public UserDTO(Long id, String login, String username, String email, Role role, List<Long> goalIds) {
+    public UserDTO(Long id, String login, String name, String email, Role role, List<Long> goalIds) {
         this.id = id;
         this.login = login;
-        this.username = username;
+        this.name = name;
         this.email = email;
         this.role = role;
         this.goalIds = goalIds;

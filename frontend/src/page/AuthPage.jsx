@@ -33,6 +33,7 @@ export function AuthPage() {
             if (response.ok) {
                 const jwtResponse = await response.json();
                 const token = jwtResponse.token;
+
                 const userData = jwtResponse.user;
 
                 // Сохраняем данные пользователя в контексте и токен в localStorage

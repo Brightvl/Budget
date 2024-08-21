@@ -41,7 +41,7 @@ public class UserController {
 
         User user = new User();
         user.setLogin(userDTO.getLogin());
-        user.setUsername(userDTO.getUsername());
+        user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole() != null ? userDTO.getRole() : Role.USER);
 
@@ -74,7 +74,7 @@ public class UserController {
         UserDTO userDTO = new UserDTO(
                 authenticatedUser.getId(),
                 authenticatedUser.getLogin(),
-                authenticatedUser.getUsername(),
+                authenticatedUser.getName(),
                 authenticatedUser.getEmail(),
                 authenticatedUser.getRole(),
                 authenticatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
@@ -91,7 +91,7 @@ public class UserController {
         UserDTO userDTO = new UserDTO(
                 user.getId(),
                 user.getLogin(),
-                user.getUsername(),
+                user.getName(),
                 user.getEmail(),
                 user.getRole(),
                 user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
@@ -109,7 +109,7 @@ public class UserController {
         UserDTO userDTO = new UserDTO(
                 user.getId(),
                 user.getLogin(),
-                user.getUsername(),
+                user.getName(),
                 user.getEmail(),
                 user.getRole(),
                 user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())

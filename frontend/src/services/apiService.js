@@ -88,6 +88,8 @@ export const updateUser = async (userId, user, token) => {
     if (!response.ok) {
         throw new Error('Failed to update user');
     }
+
+    return response.json(); // Возвращаем обновленные данные пользователя
 };
 export const deleteUser = async (userId, token) => {
     const response = await fetch(`/api/admin/users/${userId}`, {
