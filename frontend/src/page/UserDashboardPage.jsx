@@ -8,6 +8,9 @@ import LogoutButton from "../components/LogoutButton";
 import AddGoalForm from "../components/AddGoalForm";
 import { handleLogout } from "../utils/authUtils.js";
 
+
+
+
 export function UserDashboardPage() {
     const navigate = useNavigate();
     const { user, logoutUser } = useContext(UserContext);
@@ -23,13 +26,16 @@ export function UserDashboardPage() {
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
     useEffect(() => {
-        // Проверяем наличие пользователя
         if (!user) {
             navigate('/auth');
             return;
         }
-        // Загружаем данные
-        fetchData(`/api/goals/`, user, setGoals, setIsLoading);
+
+        fetchData(`/api/goals/`, user, setGoals, setIsLoading)
+            .catch(() => {
+                logoutUser();
+                navigate('/auth');
+            });
     }, [user, navigate]);
 
     const handleAddGoal = () => {

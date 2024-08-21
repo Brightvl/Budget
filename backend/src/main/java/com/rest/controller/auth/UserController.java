@@ -98,6 +98,24 @@ public class UserController {
         );
         return ResponseEntity.ok(userDTO);
     }
+    @GetMapping("/current")
+    public ResponseEntity<UserDTO> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+
+        User user = userService.getUserByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDTO userDTO = new UserDTO(
+                user.getId(),
+                user.getLogin(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+        );
+        return ResponseEntity.ok(userDTO);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
