@@ -1,7 +1,7 @@
-// src/pages/AuthPage.jsx
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/UserContext.jsx";
+import { validateToken } from "../services/apiService"; // Предполагается, что эта функция проверяет токен
 
 export function AuthPage() {
     const [login, setLogin] = useState('');
@@ -9,6 +9,18 @@ export function AuthPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const { loginUser } = useContext(UserContext);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            validateToken(token).then(isValid => {
+                if (isValid) {
+                    // Если токен действителен, перенаправляем пользователя
+                    navigate('/dashboard');
+                }
+            });
+        }
+    }, [navigate]);
 
     const handleLogin = async () => {
         try {
@@ -25,62 +37,40 @@ export function AuthPage() {
                 const token = jwtResponse.token;
                 const userData = jwtResponse.user;
 
-                console.log('Login successful:', userData);
-
-                // Сохраняем данные пользователя и токен в контексте
+                // Сохраняем данные пользователя в контексте и токен в localStorage
                 loginUser(userData, token);
 
-                // Проверка перенаправления
-                console.log('Navigating to dashboard...');
+                // Перенаправление на нужную страницу
                 if (userData.role === 'ADMIN') {
                     navigate('/admin');
                 } else {
                     navigate('/dashboard');
                 }
             } else {
-                console.error('Login failed with status:', response.status);
-                setErrorMessage('Произошла ошибка. Возможно неверный логин или пароль.');
+                setErrorMessage('Неверный логин или пароль.');
             }
         } catch (error) {
-            console.error('Error during login:', error);
-            setErrorMessage('Произошла ошибка при выполнении входа.');
+            setErrorMessage('Ошибка при авторизации.');
         }
     };
 
-    const handleRegister = () => {
-        navigate('/register');
-    };
-
     return (
-        <div className="auth-box">
-            <div className="container">
-                <h2>Авторизация</h2>
-                <div className="auth-box-list">
-                    <div className="form-group">
-                        <input
-                            type="text"
-                            placeholder="Login"
-                            value={login}
-                            onChange={(e) => setLogin(e.target.value)}
-                            className="auth-input"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="auth-input"
-                        />
-                    </div>
-                    <div className="button-group">
-                        <button onClick={handleLogin} className="button">Login</button>
-                        <button onClick={handleRegister} className="button">Register</button>
-                    </div>
-                    {errorMessage && <p className="error-text">{errorMessage}</p>}
-                </div>
-            </div>
+        <div className="container">
+            <h2>Вход</h2>
+            <input
+                type="text"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                placeholder="Логин"
+            />
+            <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Пароль"
+            />
+            <button onClick={handleLogin}>Войти</button>
+            {errorMessage && <p>{errorMessage}</p>}
         </div>
     );
 }

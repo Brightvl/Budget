@@ -4,15 +4,9 @@ const WelcomePage = () => {
     const navigate = useNavigate();
 
     const handleGetStarted = () => {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const userRole = localStorage.getItem('userRole');
-
-        if (isLoggedIn) {
-            if (userRole === 'ADMIN') {
-                navigate('/admin');
-            } else {
-                navigate('/dashboard');
-            }
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/dashboard');
         } else {
             navigate('/auth');
         }

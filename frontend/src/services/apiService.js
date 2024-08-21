@@ -1,4 +1,3 @@
-// src/services/apiService.js
 export const fetchData = async (url, user, setData, setLoading) => {
     try {
         const response = await fetch(`${url}${user.id}`, {
@@ -39,6 +38,7 @@ export const postData = async (url, user, body, callback) => {
         console.error('Error posting data:', error);
     }
 };
+
 export const putData = async (url, user, body, callback) => {
     try {
         const response = await fetch(url, {
@@ -59,6 +59,7 @@ export const putData = async (url, user, body, callback) => {
         console.error('Error updating data:', error);
     }
 };
+
 export const deleteData = async (url, user, callback) => {
     try {
         const response = await fetch(url, {
@@ -88,3 +89,23 @@ export async function fetchUserData(token) {
         throw new Error('Failed to fetch user data');
     }
 }
+
+export const validateToken = async (token) => {
+    try {
+        const response = await fetch('/api/token/validate', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error('Token validation failed:', error);
+        return false;
+    }
+};

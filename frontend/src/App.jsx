@@ -11,7 +11,7 @@ import {UserProvider} from "./context/UserContext.jsx";
 
 function App() {
     return (
-        <UserProvider> {/* Оборачиваем приложение в UserProvider */}
+        <UserProvider>
             <Router>
                 <div className="app-container">
                     <Routes>

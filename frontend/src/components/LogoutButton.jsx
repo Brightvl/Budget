@@ -1,4 +1,3 @@
-// src/components/LogoutButton.jsx
 import LogoutIcon from '../assets/svg/LogoutIcon.svg';
 
 export default function LogoutButton({ handleLogout, showLogoutWarning, setShowLogoutWarning }) {

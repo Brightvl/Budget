@@ -1,31 +1,40 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
+import { validateToken, fetchUserData } from '../services/apiService';
 
 export const UserContext = createContext();
 
-// Создаем провайдер для управления состоянием пользователя
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    // При загрузке приложения проверяем, есть ли данные в localStorage
     useEffect(() => {
-        // Восстановление состояния пользователя из localStorage при загрузке страницы
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
+        const token = localStorage.getItem('token');
+        if (token) {
+            validateToken(token).then(isValid => {
+                if (isValid) {
+                    fetchUserData(token)
+                        .then(userData => {
+                            setUser({ ...userData, token });
+                        })
+                        .catch(() => {
+                            localStorage.removeItem('token');
+                            setUser(null);
+                        });
+                } else {
+                    localStorage.removeItem('token');
+                    setUser(null);
+                }
+            });
         }
     }, []);
 
-    // авторизация
     const loginUser = (userData, token) => {
-        const userWithToken = { ...userData, token };
-        setUser(userWithToken);
-        localStorage.setItem('user', JSON.stringify(userWithToken));
+        setUser({ ...userData, token });
+        localStorage.setItem('token', token);
     };
 
     const logoutUser = () => {
         setUser(null);
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
     };
 
     return (
