@@ -68,6 +68,7 @@ function AdminDashboardPage() {
 
     const handleUpdateUser = async () => {
         if (selectedUser) {
+            console.log('Updating user with data:', selectedUser); // Логирование данных
             try {
                 const token = localStorage.getItem('token');
                 await updateUser(selectedUser.id, selectedUser, token);
@@ -77,6 +78,7 @@ function AdminDashboardPage() {
             }
         }
     };
+
 
     const handleResetPassword = async () => {
         if (selectedUser && newPassword) {
@@ -113,6 +115,13 @@ function AdminDashboardPage() {
                 {selectedUser && (
                     <div className="edit-user">
                         <h3>Редактирование пользователя</h3>
+                        <label>Логин:</label>
+                        <input
+                            type="text"
+                            value={selectedUser.login}
+                            onChange={(e) => setSelectedUser({ ...selectedUser, login: e.target.value })}
+                            placeholder="Логин"
+                        />
                         <label>Имя пользователя:</label>
                         <input
                             type="text"
@@ -151,6 +160,7 @@ function AdminDashboardPage() {
             </div>
         </div>
     );
+
 }
 
 export default AdminDashboardPage;
