@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 
 export const UserContext = createContext();
 
@@ -6,12 +6,26 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
+    // При загрузке приложения проверяем, есть ли данные в localStorage
+    useEffect(() => {
+        // Восстановление состояния пользователя из localStorage при загрузке страницы
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+        }
+    }, []);
+
+    // авторизация
     const loginUser = (userData, token) => {
-        setUser({ ...userData, token });
+        const userWithToken = { ...userData, token };
+        setUser(userWithToken);
+        localStorage.setItem('user', JSON.stringify(userWithToken));
     };
 
     const logoutUser = () => {
         setUser(null);
+        localStorage.removeItem('user');
     };
 
     return (

@@ -74,3 +74,17 @@ export const deleteData = async (url, user, callback) => {
         console.error('Error deleting data:', error);
     }
 };
+
+export async function fetchUserData(token) {
+    const response = await fetch('/api/users/current', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw new Error('Failed to fetch user data');
+    }
+}

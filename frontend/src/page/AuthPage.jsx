@@ -1,42 +1,49 @@
+// src/pages/AuthPage.jsx
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext.jsx";
+import { UserContext } from "../context/UserContext";
 
 export function AuthPage() {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    const { loginUser } = useContext(UserContext); // Используем контекст
+    const { loginUser } = useContext(UserContext);
 
     const handleLogin = async () => {
-        const response = await fetch('/api/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ login, password }),
-        });
+        try {
+            const response = await fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ login, password }),
+            });
 
-        if (response.ok) {
-            const jwtResponse = await response.json();
-            const userData = jwtResponse.user;
-            const token = jwtResponse.token;
+            if (response.ok) {
+                const jwtResponse = await response.json();
+                const token = jwtResponse.token;
+                const userData = jwtResponse.user;
 
-            console.log('Login successful:', userData);
+                console.log('Login successful:', userData);
 
-            loginUser(userData, token); // Сохраняем данные пользователя в контексте
+                // Сохраняем данные пользователя и токен в контексте
+                loginUser(userData, token);
 
-            if (userData.role === 'ADMIN') {
-                console.log('Redirecting to admin dashboard');
-                navigate('/admin'); // Перенаправляем администратора
+                // Проверка перенаправления
+                console.log('Navigating to dashboard...');
+                if (userData.role === 'ADMIN') {
+                    navigate('/admin');
+                } else {
+                    navigate('/dashboard');
+                }
             } else {
-                console.log('Redirecting to user dashboard');
-                navigate('/dashboard'); // Перенаправляем обычного пользователя
+                console.error('Login failed with status:', response.status);
+                setErrorMessage('Произошла ошибка. Возможно неверный логин или пароль.');
             }
-        } else {
-            console.error('Login failed with status:', response.status);
-            setErrorMessage('Произошла ошибка. Возможно неверный логин или пароль.');
+        } catch (error) {
+            console.error('Error during login:', error);
+            setErrorMessage('Произошла ошибка при выполнении входа.');
         }
     };
 
@@ -71,7 +78,7 @@ export function AuthPage() {
                         <button onClick={handleLogin} className="button">Login</button>
                         <button onClick={handleRegister} className="button">Register</button>
                     </div>
-                    {errorMessage && <p className="error-text">{errorMessage}</p>} {/* Вывод сообщения об ошибке */}
+                    {errorMessage && <p className="error-text">{errorMessage}</p>}
                 </div>
             </div>
         </div>

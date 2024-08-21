@@ -23,10 +23,12 @@ export function UserDashboardPage() {
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
     useEffect(() => {
+        // Проверяем наличие пользователя
         if (!user) {
             navigate('/auth');
             return;
         }
+        // Загружаем данные
         fetchData(`/api/goals/`, user, setGoals, setIsLoading);
     }, [user, navigate]);
 
@@ -169,7 +171,7 @@ export function UserDashboardPage() {
         <div className="dashboardBox">
             <div className="container">
                 <LogoutButton
-                    handleLogout={handleLogout}
+                    handleLogout={() => handleLogout(navigate, logoutUser)}
                     showLogoutWarning={showLogoutWarning}
                     setShowLogoutWarning={setShowLogoutWarning}
                 />
