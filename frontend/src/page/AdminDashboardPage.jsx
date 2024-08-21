@@ -1,24 +1,120 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { fetchUserByLogin, validateToken, deleteUser, updateUser } from "../services/apiService";
 
 function AdminDashboardPage() {
     const navigate = useNavigate();
+    const { role, logoutUser } = useContext(UserContext);
+    const [login, setLogin] = useState('');
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (role !== 'ADMIN') {
+            navigate('/auth');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (token) {
+            validateToken(token).then(isValid => {
+                if (!isValid) {
+                    navigate('/auth');
+                }
+            }).catch(() => {
+                setErrorMessage('Ошибка при проверке токена.');
+                navigate('/auth');
+            });
+        } else {
+            navigate('/auth');
+        }
+    }, [navigate, role]);
+
+    const handleSearch = async () => {
+        try {
+            setIsLoading(true);
+            setErrorMessage('');
+            const token = localStorage.getItem('token');
+            const user = await fetchUserByLogin(login, token);
+            setSelectedUser(user);
+        } catch (error) {
+            setErrorMessage('Пользователь не найден.');
+            setSelectedUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleLogout = () => {
-        localStorage.clear();  // Очищаем localStorage при выходе
-        navigate('/auth');     // Перенаправляем на страницу авторизации
+        logoutUser(); // Очищаем контекст и localStorage
+        navigate('/auth');
+    };
+
+    const handleDeleteUser = async () => {
+        if (selectedUser) {
+            try {
+                const token = localStorage.getItem('token');
+                await deleteUser(selectedUser.id, token);
+                setSelectedUser(null);
+                setErrorMessage('Пользователь удален.');
+            } catch (error) {
+                setErrorMessage('Не удалось удалить пользователя.');
+            }
+        }
+    };
+
+    const handleUpdateUser = async () => {
+        if (selectedUser) {
+            try {
+                const token = localStorage.getItem('token');
+                await updateUser(selectedUser.id, selectedUser, token);
+                setErrorMessage('Данные пользователя обновлены.');
+            } catch (error) {
+                setErrorMessage('Не удалось обновить данные пользователя.');
+            }
+        }
     };
 
     return (
-        <div className="dashboard-container">
+        <div className="container">
             <header className="dashboard-header">
                 <h1>Административная панель</h1>
                 <button onClick={handleLogout} className="button">Выйти</button>
             </header>
             <div className="dashboard-content">
-                <p>Здесь можно управлять пользователями и просматривать статистику.</p>
-                {
-
-                }
+                {errorMessage && <p className="error">{errorMessage}</p>}
+                <div className="search-user">
+                    <input
+                        type="text"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        placeholder="Введите логин пользователя"
+                    />
+                    <button onClick={handleSearch} disabled={isLoading}>
+                        {isLoading ? 'Поиск...' : 'Найти пользователя'}
+                    </button>
+                </div>
+                {selectedUser && (
+                    <div className="edit-user">
+                        <h3>Редактирование пользователя</h3>
+                        <input
+                            type="text"
+                            value={selectedUser.username}
+                            onChange={(e) => setSelectedUser({ ...selectedUser, username: e.target.value })}
+                            placeholder="Имя пользователя"
+                        />
+                        <input
+                            type="email"
+                            value={selectedUser.email}
+                            onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
+                            placeholder="Email"
+                        />
+                        <button onClick={handleUpdateUser}>Сохранить</button>
+                        <button onClick={handleDeleteUser}>Удалить пользователя</button>
+                    </div>
+                )}
             </div>
         </div>
     );

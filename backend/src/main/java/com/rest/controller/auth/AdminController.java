@@ -1,6 +1,7 @@
 package com.rest.controller.auth;
 
 import com.rest.dto.auth.UserDTO;
+import com.rest.model.Goal;
 import com.rest.model.auth.User;
 import com.rest.service.auth.UserService;
 import org.springframework.http.HttpStatus;
@@ -71,4 +72,49 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/users/login/{login}")
+    public ResponseEntity<UserDTO> getUserByLogin(@PathVariable String login) {
+        Optional<User> userOpt = userService.getUserByLogin(login);
+        return userOpt.map(user -> ResponseEntity.ok(new UserDTO(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getLogin(),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                )))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        Optional<User> userOpt = userService.getUserById(id);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            // Обновляем поля пользователя на основе полученного DTO
+            user.setUsername(userDTO.getUsername());
+            user.setLogin(userDTO.getLogin());
+            user.setEmail(userDTO.getEmail());
+            user.setRole(userDTO.getRole());
+
+            User updatedUser = userService.updateUser(id, user);
+
+            UserDTO updatedUserDTO = new UserDTO(
+                    updatedUser.getId(),
+                    updatedUser.getLogin(),
+                    updatedUser.getUsername(),
+                    updatedUser.getEmail(),
+                    updatedUser.getRole(),
+                    updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+            );
+
+            return ResponseEntity.ok(updatedUserDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 }

@@ -1,23 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
-import { deleteData, fetchData, postData, putData } from "../services/apiService";
+import {useContext, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {UserContext} from "../context/UserContext";
+import {deleteData, fetchData, postData, putData} from "../services/apiService";
 import Header from "../components/Header";
 import GoalList from "../components/GoalList";
 import LogoutButton from "../components/LogoutButton";
 import AddGoalForm from "../components/AddGoalForm";
-import { handleLogout } from "../utils/authUtils.js";
-
-
+import {handleLogout} from "../utils/authUtils.js";
 
 
 export function UserDashboardPage() {
     const navigate = useNavigate();
-    const { user, logoutUser } = useContext(UserContext);
+    const {user, role, logoutUser} = useContext(UserContext);
     const [goals, setGoals] = useState([]);
-    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
+    const [newGoal, setNewGoal] = useState({title: '', description: ''});
     const [editingGoal, setEditingGoal] = useState(null);
-    const [newStep, setNewStep] = useState({ title: '' });
+    const [newStep, setNewStep] = useState({title: ''});
     const [editingStep, setEditingStep] = useState(null);
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +24,11 @@ export function UserDashboardPage() {
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
     useEffect(() => {
+        if (role !== 'USER') {
+            navigate('/auth');
+            return;
+        }
+
         if (!user) {
             navigate('/auth');
             return;
@@ -47,7 +50,7 @@ export function UserDashboardPage() {
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
             setGoals([...goals, goal]);
-            setNewGoal({ title: '', description: '' });
+            setNewGoal({title: '', description: ''});
             setIsAddingGoal(false);
         });
     };
@@ -89,7 +92,7 @@ export function UserDashboardPage() {
                         ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
                     } : goal
                 ));
-                setNewStep({ title: '' });
+                setNewStep({title: ''});
                 setIsAddingStep(null);
             });
     };
@@ -98,7 +101,7 @@ export function UserDashboardPage() {
         const goal = goals.find(g => g.id === goalId);
         const step = goal.steps.find(s => s.id === stepId);
 
-        const updatedStep = { ...step, completed: !step.completed };
+        const updatedStep = {...step, completed: !step.completed};
 
         putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
@@ -116,7 +119,7 @@ export function UserDashboardPage() {
         const goal = goals.find(g => g.id === goalId);
         const step = goal.steps.find(s => s.id === stepId);
 
-        const updatedStep = { ...editingStep };
+        const updatedStep = {...editingStep};
 
         putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
@@ -141,7 +144,7 @@ export function UserDashboardPage() {
         deleteData(`/api/goals/${goalId}/steps/${stepId}`, user, () => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
+                    ? {...goal, steps: goal.steps.filter(step => step.id !== stepId)}
                     : goal
             ));
         });
@@ -181,7 +184,7 @@ export function UserDashboardPage() {
                     showLogoutWarning={showLogoutWarning}
                     setShowLogoutWarning={setShowLogoutWarning}
                 />
-                <Header username={user?.username} />
+                <Header username={user?.username}/>
                 <div className="goalBox">
                     {isLoading ? (
                         <p>Загрузка...</p>
@@ -197,7 +200,7 @@ export function UserDashboardPage() {
                     )}
                     {isAddingGoal && (
                         <AddGoalForm
-                            goalData={{ newGoal, setNewGoal }}
+                            goalData={{newGoal, setNewGoal}}
                             handleAddGoal={handleAddGoal}
                             handleCancel={handleCancelAddGoal}
                         />
