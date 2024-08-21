@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { fetchUserByLogin, validateToken, deleteUser, updateUser } from "../services/apiService";
+import { fetchUserByLogin, validateToken, deleteUser, updateUser, resetPassword } from "../services/apiService";
 
 function AdminDashboardPage() {
     const navigate = useNavigate();
@@ -10,6 +10,7 @@ function AdminDashboardPage() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
 
     useEffect(() => {
         if (role !== 'ADMIN') {
@@ -77,6 +78,19 @@ function AdminDashboardPage() {
         }
     };
 
+    const handleResetPassword = async () => {
+        if (selectedUser && newPassword) {
+            try {
+                const token = localStorage.getItem('token');
+                await resetPassword(selectedUser.id, newPassword, token);
+                setErrorMessage('Пароль пользователя сброшен.');
+                setNewPassword('');
+            } catch (error) {
+                setErrorMessage('Не удалось сбросить пароль.');
+            }
+        }
+    };
+
     return (
         <div className="container">
             <header className="dashboard-header">
@@ -99,20 +113,39 @@ function AdminDashboardPage() {
                 {selectedUser && (
                     <div className="edit-user">
                         <h3>Редактирование пользователя</h3>
+                        <label>Имя пользователя:</label>
                         <input
                             type="text"
                             value={selectedUser.username}
                             onChange={(e) => setSelectedUser({ ...selectedUser, username: e.target.value })}
                             placeholder="Имя пользователя"
                         />
+                        <label>Email:</label>
                         <input
                             type="email"
                             value={selectedUser.email}
                             onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
                             placeholder="Email"
                         />
+                        <label>Роль:</label>
+                        <select
+                            value={selectedUser.role}
+                            onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
+                        >
+                            <option value="USER">USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
                         <button onClick={handleUpdateUser}>Сохранить</button>
                         <button onClick={handleDeleteUser}>Удалить пользователя</button>
+
+                        <h3>Сброс пароля</h3>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="Введите новый пароль"
+                        />
+                        <button onClick={handleResetPassword}>Сбросить пароль</button>
                     </div>
                 )}
             </div>

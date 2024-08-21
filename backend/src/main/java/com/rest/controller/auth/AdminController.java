@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -89,32 +90,40 @@ public class AdminController {
 
     @PutMapping("/users/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        Optional<User> userOpt = userService.getUserById(id);
+        User user = userService.getUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-
-            // Обновляем поля пользователя на основе полученного DTO
-            user.setUsername(userDTO.getUsername());
-            user.setLogin(userDTO.getLogin());
-            user.setEmail(userDTO.getEmail());
-            user.setRole(userDTO.getRole());
-
-            User updatedUser = userService.updateUser(id, user);
-
-            UserDTO updatedUserDTO = new UserDTO(
-                    updatedUser.getId(),
-                    updatedUser.getLogin(),
-                    updatedUser.getUsername(),
-                    updatedUser.getEmail(),
-                    updatedUser.getRole(),
-                    updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
-            );
-
-            return ResponseEntity.ok(updatedUserDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        // Проверка на уникальность логина
+        if (!userDTO.getLogin().equals(user.getLogin())) {
+            if (userService.getUserByLogin(userDTO.getLogin()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            } else {
+                user.setLogin(userDTO.getLogin());
+            }
         }
+
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setRole(userDTO.getRole());
+
+        User updatedUser = userService.updateUser(id, user);
+
+        UserDTO updatedUserDTO = new UserDTO(
+                updatedUser.getId(),
+                updatedUser.getLogin(),
+                updatedUser.getUsername(),
+                updatedUser.getEmail(),
+                updatedUser.getRole(),
+                updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+        );
+
+        return ResponseEntity.ok(updatedUserDTO);
     }
 
+    @PutMapping("/users/{id}/reset-password")
+    public ResponseEntity<Void> resetUserPassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {
+        String newPassword = passwordRequest.get("password");
+        userService.resetUserPassword(id, newPassword);
+        return ResponseEntity.ok().build();
+    }
 }

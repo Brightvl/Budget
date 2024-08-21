@@ -149,3 +149,17 @@ export const fetchUserByLogin = async (login, token) => {
 
     return response.json();
 };
+export const resetPassword = async (userId, newPassword, token) => {
+    const response = await fetch(`/api/admin/users/${userId}/reset-password`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: newPassword })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to reset password');
+    }
+};
