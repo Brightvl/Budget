@@ -33,14 +33,25 @@ public class UserService {
         User user = getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(userDetails.getUsername());
-        user.setLogin(userDetails.getLogin());
+        user.setUsername(userDetails.getUsername()); // Обновление имени пользователя
+        user.setLogin(userDetails.getLogin()); // Обновление логина
         user.setEmail(userDetails.getEmail());
-        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-        }
+        user.setRole(userDetails.getRole());
+
+        return userRepository.save(user); // Сохранение изменений
+    }
+
+
+    public User resetUserPassword(Long id, String newPassword) {
+        User user = getUserById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Хеширование нового пароля
+        user.setPassword(passwordEncoder.encode(newPassword));
+
         return userRepository.save(user);
     }
+
 
     public void deleteUser(Long id) {
         User user = getUserById(id)

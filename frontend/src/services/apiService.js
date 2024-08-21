@@ -75,7 +75,32 @@ export const deleteData = async (url, user, callback) => {
         console.error('Error deleting data:', error);
     }
 };
+export const updateUser = async (userId, user, token) => {
+    const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    });
 
+    if (!response.ok) {
+        throw new Error('Failed to update user');
+    }
+};
+export const deleteUser = async (userId, token) => {
+    const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to delete user');
+    }
+};
 export async function fetchUserData(token) {
     const response = await fetch('/api/users/current', {
         method: 'GET',
@@ -107,5 +132,34 @@ export const validateToken = async (token) => {
     } catch (error) {
         console.error('Token validation failed:', error);
         return false;
+    }
+};
+export const fetchUserByLogin = async (login, token) => {
+    const response = await fetch(`/api/admin/users/login/${login}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch user by login');
+    }
+
+    return response.json();
+};
+export const resetPassword = async (userId, newPassword, token) => {
+    const response = await fetch(`/api/admin/users/${userId}/reset-password`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: newPassword })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to reset password');
     }
 };
