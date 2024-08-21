@@ -98,30 +98,22 @@ public class UserController {
         );
         return ResponseEntity.ok(userDTO);
     }
+    @GetMapping("/current")
+    public ResponseEntity<UserDTO> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        User user = userService.getUserById(id)
+        User user = userService.getUserByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!userDTO.getLogin().equals(user.getLogin()) && userService.getUserByLogin(userDTO.getLogin()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
-
-        user.setLogin(userDTO.getLogin());
-        user.setEmail(userDTO.getEmail());
-        user.setRole(userDTO.getRole());
-
-        User updatedUser = userService.updateUser(id, user);
-
-        UserDTO updatedUserDTO = new UserDTO(
-                updatedUser.getId(),
-                updatedUser.getLogin(),
-                updatedUser.getUsername(),
-                updatedUser.getEmail(),
-                updatedUser.getRole(),
-                updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+        UserDTO userDTO = new UserDTO(
+                user.getId(),
+                user.getLogin(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
         );
-        return ResponseEntity.ok(updatedUserDTO);
+        return ResponseEntity.ok(userDTO);
     }
 }
