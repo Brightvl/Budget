@@ -1,5 +1,3 @@
-// src/utils/validation.js
-
 export const validateEmail = (email) => {
     if (!email) {
         return 'Пожалуйста, введите email.';

@@ -55,21 +55,24 @@ export function AuthPage() {
 
     return (
         <div className="container">
-            <h2>Вход</h2>
-            <input
-                type="text"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-                placeholder="Логин"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Пароль"
-            />
-            <button onClick={handleLogin}>Войти</button>
-            {errorMessage && <p>{errorMessage}</p>}
+            <div className="authBox">
+                <h2>Вход</h2>
+                <input
+                    type="text"
+                    value={login}
+                    onChange={(e) => setLogin(e.target.value)}
+                    placeholder="Логин"
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Пароль"
+                />
+                <button className={"button"} onClick={handleLogin}>Войти</button>
+                <button className={"button"} onClick={() => navigate('/register')}>Регистрация</button>
+                {errorMessage && <p className={"error-text"}>{errorMessage}</p>}
+            </div>
         </div>
     );
 }

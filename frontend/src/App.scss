@@ -2,8 +2,8 @@
 $app-bg-color: #98728c; // Цвет фона приложения
 $container-bg-color: #fff; // Цвет фона контейнера
 
-$button-bg-color: #0978ec; // Цвет фона кнопки
-$button-hover-bg-color: #0056b3; // Цвет фона кнопки при наведении
+$button-bg-color: #9f4186; // Цвет фона кнопки
+$button-hover-bg-color: #6e0b55; // Цвет фона кнопки при наведении
 $button-goal-bg-color: #0978ec;
 $button-goal-hover-bg-color: #0056b3;
 $button-step-bg-color: #ac6790;
@@ -31,7 +31,6 @@ $border-step-color: #67425d;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
   transition: background-color 0.3s;
 
   &:hover {
@@ -41,7 +40,6 @@ $border-step-color: #67425d;
 
 // Миксин для полей ввода
 @mixin input-style($border-color) {
-  width: 100%;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid $border-color;
@@ -87,15 +85,15 @@ input, select {
 .search-panel {
   display: flex;
   align-items: center;
-  justify-content: flex-start; // Выравнивание влево
-  max-width: 500px; // Устанавливаем максимальную ширину для панели поиска
-  margin: 20px auto; // Центрируем панель на странице
+  justify-content: flex-start;
+  max-width: 500px;
+  margin: 20px auto;
 
   &__input {
     @include input-style($input-border-color);
-    flex: 1; // Заставляем input занимать всю доступную ширину
-    border-radius: 4px 0 0 4px; // Закругленные углы слева
-    outline: none; // Убираем синюю рамку при фокусе
+    flex: 1;
+    border-radius: 4px 0 0 4px;
+    outline: none;
   }
 
   &__button {
@@ -130,6 +128,7 @@ input, select {
   }
 }
 
+// Стили для целей
 .goal {
   &Form {
     &Box {
@@ -191,6 +190,7 @@ input, select {
 
 }
 
+// Стили для шагов
 .step {
   &Box {
     padding: 10px;
@@ -274,14 +274,13 @@ input, select {
 
 
 // Стили для панели авторизации
-.auth-box {
+.authBox {
   width: 80vh;
 
-  &-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
 }
 
 // Стили для регистрации
@@ -298,22 +297,17 @@ input, select {
 // Стили для отображения ошибок
 .error {
   &-border {
-    border: 1px solid red; /* Красная граница для полей с ошибками */
+    border: 1px solid red;
   }
 
   &-text {
     color: red;
-    font-size: 0.9em;
-    margin-top: 5px;
   }
 }
 
 .warning {
   &-text {
     color: #721c24;
-
-    font-size: 0.9em;
-    margin-top: 5px;
 
     &__bg {
       background-color: #f8d7da;
@@ -346,5 +340,113 @@ input, select {
     font-size: 0.9em;
     z-index: 1000;
     white-space: nowrap;
+  }
+}
+
+// страница Админа
+// Стили для административной панели
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: $container-bg-color;
+  border-bottom: 2px solid $input-border-color;
+
+
+  .button {
+    @include button-style($button-bg-color, $button-hover-bg-color);
+    padding: 10px 20px;
+  }
+}
+
+.dashboardContent {
+  padding: $padding;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .error {
+    @extend .error-text;
+    margin-bottom: 20px;
+  }
+
+  .searchUser {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    .searchInput {
+      @include input-style($input-border-color);
+      flex: 1;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+    }
+
+    .searchButton {
+      @include button-style($button-bg-color, $button-hover-bg-color);
+      border-radius: 0 4px 4px 0;
+      padding: 10px 20px;
+    }
+  }
+
+  .editUser {
+    border: 1px solid $input-border-color;
+    padding: $padding;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    h3 {
+      margin-top: 0;
+      color: $button-bg-color;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      @include input-style($input-border-color);
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .buttonGroup {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+
+      .button {
+        @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+        padding: 10px;
+        font-size: 0.9em;
+      }
+
+      .deleteButton {
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+      }
+    }
+
+    .resetPasswordSection {
+      margin-top: 20px;
+
+      h3 {
+        margin-top: 0;
+      }
+
+      .resetPasswordInput {
+        @include input-style($input-border-color);
+        margin-bottom: 10px;
+        width: 100%;
+      }
+
+      .resetPasswordButton {
+        @include button-style($button-bg-color, $button-hover-bg-color);
+        padding: 10px;
+      }
+    }
   }
 }

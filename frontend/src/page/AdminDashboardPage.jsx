@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { fetchUserByLogin, validateToken, deleteUser, updateUser, resetPassword } from "../services/apiService";
 
+
 function AdminDashboardPage() {
     const navigate = useNavigate();
     const { role, logoutUser } = useContext(UserContext);
@@ -73,16 +74,13 @@ function AdminDashboardPage() {
                 const token = localStorage.getItem('token');
                 const updatedUser = await updateUser(selectedUser.id, selectedUser, token);
                 setSelectedUser(updatedUser); // Обновляем состояние с новыми данными
-                updateUserInContext(updatedUser); // Обновляем контекст с новыми данными
+                // updateUserInContext(updatedUser); // Обновляем контекст с новыми данными, если нужно
                 setErrorMessage('Данные пользователя обновлены.');
             } catch (error) {
                 setErrorMessage('Не удалось обновить данные пользователя.');
             }
         }
     };
-
-
-
 
     const handleResetPassword = async () => {
         if (selectedUser && newPassword) {
@@ -98,73 +96,83 @@ function AdminDashboardPage() {
     };
 
     return (
-        <div className="container">
-            <header className="dashboard-header">
-                <h1>Административная панель</h1>
-                <button onClick={handleLogout} className="button">Выйти</button>
-            </header>
-            <div className="dashboard-content">
-                {errorMessage && <p className="error">{errorMessage}</p>}
-                <div className="search-user">
-                    <input
-                        type="text"
-                        value={login}
-                        onChange={(e) => setLogin(e.target.value)}
-                        placeholder="Введите логин пользователя"
-                    />
-                    <button onClick={handleSearch} disabled={isLoading}>
-                        {isLoading ? 'Поиск...' : 'Найти пользователя'}
-                    </button>
-                </div>
-                {selectedUser && (
-                    <div className="edit-user">
-                        <h3>Редактирование пользователя</h3>
-                        <label>Логин:</label>
+        <div className={"container"}>
+            <div className="adminDashboardPage">
+                <header className="dashboardHeader">
+                    <h1>Административная панель</h1>
+                    <button onClick={handleLogout} className="button">Выйти</button>
+                </header>
+                <div className="dashboardContent">
+                    {errorMessage && <p className="error">{errorMessage}</p>}
+                    <div className="searchUser">
                         <input
                             type="text"
-                            value={selectedUser.login}
-                            onChange={(e) => setSelectedUser({ ...selectedUser, login: e.target.value })}
-                            placeholder="Логин"
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
+                            placeholder="Введите логин пользователя"
+                            className="searchInput"
                         />
-                        <label>Имя пользователя:</label>
-                        <input
-                            type="text"
-                            value={selectedUser.name}
-                            onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })}
-                            placeholder="Имя пользователя"
-                        />
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            value={selectedUser.email}
-                            onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
-                            placeholder="Email"
-                        />
-                        <label>Роль:</label>
-                        <select
-                            value={selectedUser.role}
-                            onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                        >
-                            <option value="USER">USER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
-                        <button onClick={handleUpdateUser}>Сохранить</button>
-                        <button onClick={handleDeleteUser}>Удалить пользователя</button>
-
-                        <h3>Сброс пароля</h3>
-                        <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="Введите новый пароль"
-                        />
-                        <button onClick={handleResetPassword}>Сбросить пароль</button>
+                        <button onClick={handleSearch} disabled={isLoading} className="searchButton">
+                            {isLoading ? 'Поиск...' : 'Найти пользователя'}
+                        </button>
                     </div>
-                )}
+                    {selectedUser && (
+                        <div className="editUser">
+                            <h3>Редактирование пользователя</h3>
+                            <label>Логин:</label>
+                            <input
+                                type="text"
+                                value={selectedUser.login}
+                                onChange={(e) => setSelectedUser({...selectedUser, login: e.target.value})}
+                                placeholder="Логин"
+                            />
+                            <label>Имя пользователя:</label>
+                            <input
+                                type="text"
+                                value={selectedUser.name}
+                                onChange={(e) => setSelectedUser({...selectedUser, name: e.target.value})}
+                                placeholder="Имя пользователя"
+                            />
+                            <label>Email:</label>
+                            <input
+                                type="email"
+                                value={selectedUser.email}
+                                onChange={(e) => setSelectedUser({...selectedUser, email: e.target.value})}
+                                placeholder="Email"
+                            />
+                            <label>Роль:</label>
+                            <select
+                                value={selectedUser.role}
+                                onChange={(e) => setSelectedUser({...selectedUser, role: e.target.value})}
+                            >
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                            <div className="buttonGroup">
+                                <button onClick={handleUpdateUser}>Сохранить</button>
+                                <button onClick={handleDeleteUser} className="deleteButton">Удалить пользователя
+                                </button>
+                            </div>
+
+                            <div className="resetPasswordSection">
+                                <h3>Сброс пароля</h3>
+                                <input
+                                    type="password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    placeholder="Введите новый пароль"
+                                    className="resetPasswordInput"
+                                />
+                                <button onClick={handleResetPassword} className="resetPasswordButton">Сбросить пароль
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
-    );
 
+    );
 }
 
 export default AdminDashboardPage;

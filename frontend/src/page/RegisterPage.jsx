@@ -24,7 +24,7 @@ export function RegisterPage() {
         const errors = [];
 
         if (!login) {
-            errors.push('Пожалуйста, введите логин.');
+            errors.push('Введите логин.');
         } else {
             const loginError = await checkLoginExists(login, setIsLoginChecking);
             if (loginError) {
@@ -33,7 +33,7 @@ export function RegisterPage() {
         }
 
         if (!name) {
-            errors.push('Пожалуйста, введите имя пользователя.');
+            errors.push('Введите имя пользователя.');
         }
 
         const emailValidationError = validateEmail(email);
@@ -57,7 +57,7 @@ export function RegisterPage() {
         }
 
         if (password !== confirmPassword) {
-            const passwordErrorText = 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.';
+            const passwordErrorText = 'Пароли не совпадают. Попробуйте еще раз.';
             setPasswordError(passwordErrorText);
             errors.push(passwordErrorText);
         } else {
@@ -77,7 +77,7 @@ export function RegisterPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ login, name, email, password }), // role не отправляется
+                body: JSON.stringify({ login, name, email, password }),
             });
 
             if (response.ok) {
@@ -105,9 +105,9 @@ export function RegisterPage() {
                         value={login}
                         onChange={(e) => {
                             setLogin(e.target.value);
-                            setGeneralErrors(generalErrors.filter(error => error !== 'Пожалуйста, введите логин.'));
+                            setGeneralErrors(generalErrors.filter(error => error !== 'Введите логин.'));
                         }}
-                        className={generalErrors.includes('Пожалуйста, введите логин.') ? 'error-border' : ''}
+                        className={generalErrors.includes('Введите логин.') ? 'error-border' : ''}
                     />
                     <input
                         type="text"
@@ -115,9 +115,9 @@ export function RegisterPage() {
                         value={name}
                         onChange={(e) => {
                             setName(e.target.value);
-                            setGeneralErrors(generalErrors.filter(error => error !== 'Пожалуйста, введите имя пользователя.'));
+                            setGeneralErrors(generalErrors.filter(error => error !== 'Введите имя пользователя.'));
                         }}
-                        className={generalErrors.includes('Пожалуйста, введите имя пользователя.') ? 'error-border' : ''}
+                        className={generalErrors.includes('Введите имя пользователя.') ? 'error-border' : ''}
                     />
                     <input
                         type="email"

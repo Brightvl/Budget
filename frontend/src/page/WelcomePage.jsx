@@ -15,10 +15,10 @@ const WelcomePage = () => {
     return (
         <header className="container">
             <h1>Цели</h1>
-            <div className="text">
+            <h4 className="text">
                 <p>Достигни поставленных целей</p>
                 <p>Ставь себе задачи по силам</p>
-            </div>
+            </h4>
             <button className="button" onClick={handleGetStarted}>
                 Начать
             </button>
