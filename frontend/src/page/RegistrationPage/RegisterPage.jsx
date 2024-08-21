@@ -5,7 +5,7 @@ import {
     validatePassword,
     checkLoginExists,
     checkEmailExists
-} from '../utils/validation.js';
+} from '../../utils/validation.js';
 
 export function RegisterPage() {
     const [login, setLogin] = useState('');

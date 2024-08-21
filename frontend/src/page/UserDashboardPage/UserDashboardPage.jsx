@@ -1,13 +1,13 @@
 import {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {UserContext} from "../context/UserContext";
-import {deleteData, fetchData, postData, putData} from "../services/apiService";
-import Header from "../components/Header";
-import GoalList from "../components/GoalList";
-import LogoutButton from "../components/LogoutButton";
-import AddGoalForm from "../components/AddGoalForm";
-import {handleLogout} from "../utils/authUtils.js";
-
+import {UserContext} from "../../context/UserContext.jsx";
+import {deleteData, fetchData, postData, putData} from "../../services/apiService.js";
+import Header from "../../components/Header.jsx";
+import GoalList from "../../components/GoalList.jsx";
+import LogoutButton from "../../components/LogoutButton.jsx";
+import AddGoalForm from "../../components/AddGoalForm.jsx";
+import {handleLogout} from "../../utils/authUtils.js";
+import "./userDashboardPage.scss"
 
 export function UserDashboardPage() {
     const navigate = useNavigate();

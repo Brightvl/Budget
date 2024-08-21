@@ -1,0 +1,169 @@
+@import "../../App";
+$button-gradient-bg-color: linear-gradient(135deg, #0978ec, #0056b3);
+.dashboardButton {
+  padding: 5px 10px;
+  font-size: 0.9em;
+  width: 50%;
+  @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+}
+
+// Стили для дашборда
+.dashboardBox {
+  position: relative;
+  width: 50%;
+
+  .header {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Стили для целей
+.goal {
+  &Form {
+    &Box {
+      border: 2px solid $border-goal-active-color;
+      border-radius: $border-radius;
+      padding: 10px;
+    }
+
+    &Button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+
+      &Group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      &Delete {
+        padding: 5px 10px;
+        font-size: 0.9em;
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+      }
+    }
+
+    &Input {
+      width: 80%;
+
+      &Group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &Item {
+    background: linear-gradient(180deg, #f4a8a8, #bab0b7, #685565);
+    display: block;
+    border: 2px solid $border-goal-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+    &Details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    &Description {
+
+    }
+  }
+
+}
+
+// Стили для шагов
+.step {
+  &Box {
+    padding: 10px;
+
+  }
+
+  &Ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &li {
+      border: 2px solid $border-step-color;
+      padding-block: 5px;
+      border-radius: $border-radius;
+    }
+  }
+
+
+  &Form {
+
+    &Box {
+
+      border: 2px solid $border-goal-active-color;
+      border-radius: $border-radius;
+      padding: 10px;
+
+    }
+
+    &Button {
+      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+      padding: 5px 10px;
+      font-size: 0.9em;
+
+
+      &Status {
+
+        @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+        padding: 5px 10px;
+        font-size: 0.9em;
+
+      }
+
+      &Delete {
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+        padding: 5px 10px;
+        font-size: 0.9em;
+
+      }
+
+      &Group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      }
+    }
+
+    &Input {
+      width: 80%;
+
+      &Group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &Item {
+    display: block;
+    border: 2px solid $border-goal-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+  }
+
+}

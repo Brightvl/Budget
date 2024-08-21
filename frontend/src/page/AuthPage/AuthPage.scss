@@ -1,0 +1,10 @@
+@import "../../App";
+// Стили для панели авторизации
+.authBox {
+  width: 80vh;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}

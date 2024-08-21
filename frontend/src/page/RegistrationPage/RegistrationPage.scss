@@ -1,0 +1,12 @@
+@import "../../App";
+
+// Стили для регистрации
+.registration-box {
+  width: 80vh;
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

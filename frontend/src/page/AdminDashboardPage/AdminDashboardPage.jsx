@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
-import { fetchUserByLogin, validateToken, deleteUser, updateUser, resetPassword } from "../services/apiService";
-
+import { UserContext } from "../../context/UserContext.jsx";
+import { fetchUserByLogin, validateToken, deleteUser, updateUser, resetPassword } from "../../services/apiService.js";
+import "./AdminDashboardPage.scss"
 
 function AdminDashboardPage() {
     const navigate = useNavigate();
