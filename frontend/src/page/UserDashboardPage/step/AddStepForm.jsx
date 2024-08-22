@@ -17,3 +17,10 @@ export default function AddStepForm({ stepData, handleAddStep }) {
         </>
     );
 }
+
+{/*<StepList*/}
+{/*    goalId={goal.id}*/}
+{/*    steps={goal.steps}*/}
+{/*    stepHandlers={stepHandlers}*/}
+{/*    stepStates={goalStates}*/}
+{/*/>*/}

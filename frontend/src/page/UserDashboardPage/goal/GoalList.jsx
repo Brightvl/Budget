@@ -1,8 +1,8 @@
-import GoalItem from "./GoalItem";
+import GoalItem from "./GoalItem.jsx";
 
 export default function GoalList({ goals, selectedGoalId, setSelectedGoalId, goalHandlers, goalStates, stepHandlers }) {
     return (
-        <div className="goal-list">
+        <div className="goalList">
             {goals.map(goal => (
                 <GoalItem
                     key={goal.id}

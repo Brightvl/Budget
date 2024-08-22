@@ -2,7 +2,7 @@ export default function AddGoalForm({ goalData, handleAddGoal, handleCancel }) {
     const { newGoal, setNewGoal } = goalData;
 
     return (
-        <div className="goalFormBox">
+        <div className="goalFormContainer">
             <div className="goalFormInputGroup"></div>
             <input
                 className={"goalFormInput"}
@@ -20,7 +20,7 @@ export default function AddGoalForm({ goalData, handleAddGoal, handleCancel }) {
             />
             <div className="goalFormButtonGroup">
                 <button className="goalFormButton" onClick={handleAddGoal}>Сохранить цель</button>
-                <button className="goalFormButton" onClick={handleCancel}>
+                <button className="goalFormButtonDelete" onClick={handleCancel}>
                     Отменить
                 </button>
             </div>

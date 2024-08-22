@@ -1,6 +1,6 @@
 // code snippet from StepList.jsx
 import React from 'react';
-import AddStepForm from './AddStepForm';
+import AddStepForm from './AddStepForm.jsx';
 
 export default function StepList({
                                      goalId,

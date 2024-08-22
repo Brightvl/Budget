@@ -3,9 +3,9 @@ import {useNavigate} from "react-router-dom";
 import {UserContext} from "../../context/UserContext.jsx";
 import {deleteData, fetchData, postData, putData} from "../../services/apiService.js";
 import Header from "../../components/Header.jsx";
-import GoalList from "../../components/GoalList.jsx";
+import GoalList from "./goal/GoalList.jsx";
 import LogoutButton from "../../components/LogoutButton.jsx";
-import AddGoalForm from "../../components/AddGoalForm.jsx";
+import AddGoalForm from "./goal/AddGoalForm.jsx";
 import {handleLogout} from "../../utils/authUtils.js";
 import "./userDashboardPage.scss"
 
@@ -59,20 +59,17 @@ export function UserDashboardPage() {
         setIsAddingGoal(false);
     };
 
-    const handleUpdateGoal = (goalId) => {
-        const currentGoal = goals.find(goal => goal.id === goalId);
-
-        const updatedGoal = {
-            title: editingGoal.title || 'Цель не указана',
-            description: editingGoal.description || 'Нет описания',
-            startTime: currentGoal.startTime,  // Включаем время старта
-        };
-
-        putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
-            setGoals(goals.map(goal =>
-                goal.id === goalId ? updatedGoal : goal
-            ));
-            setEditingGoal(null);
+    const handleUpdateGoal = (goalId, updatedGoal) => {
+        return new Promise((resolve, reject) => {
+            putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
+                setGoals(goals.map(goal =>
+                    goal.id === goalId ? updatedGoal : goal
+                ));
+                setEditingGoal(null);
+                resolve(); // Сохранение успешно
+            }).catch(error => {
+                reject(error); // Сохранение не удалось
+            });
         });
     };
 
@@ -150,7 +147,6 @@ export function UserDashboardPage() {
         });
     };
 
-    // Сгруппированные хэндлеры для целей и шагов
     const goalHandlers = {
         handleUpdateGoal,
         handleDeleteGoal,
@@ -167,7 +163,6 @@ export function UserDashboardPage() {
         setEditingStep
     };
 
-
     const stepHandlers = {
         handleAddStep,
         handleDeleteStep,
@@ -176,27 +171,37 @@ export function UserDashboardPage() {
     };
 
     return (
-        <div className="dashboardBox">
-            <div className="container">
+        <div className="container">
+            <div className="dashboardBox">
                 <LogoutButton
                     handleLogout={() => handleLogout(navigate, logoutUser)}
                     showLogoutWarning={showLogoutWarning}
                     setShowLogoutWarning={setShowLogoutWarning}
                 />
                 <Header name={user?.name}/>
-                <div className="goalBox">
-                    {isLoading ? (
-                        <p>Загрузка...</p>
-                    ) : (
-                        <GoalList
-                            goals={goals}
-                            selectedGoalId={selectedGoalId}
-                            setSelectedGoalId={setSelectedGoalId}
-                            goalHandlers={goalHandlers}  // Передаем хэндлеры
-                            goalStates={goalStates}
-                            stepHandlers={stepHandlers}
-                        />
+
+                {/*Список целей*/}
+                {isLoading ? (
+                    <p>Загрузка...</p>
+                ) : (
+                    <GoalList
+                        goals={goals}
+                        selectedGoalId={selectedGoalId}
+                        setSelectedGoalId={setSelectedGoalId}
+                        goalHandlers={goalHandlers}
+                        goalStates={goalStates}
+                        stepHandlers={stepHandlers}
+                    />
+                )}
+
+                {/*Добавления цели*/}
+                <div className="goalFormBox">
+                    {!isAddingGoal && (
+                        <button className="dashboardButton" onClick={() => setIsAddingGoal(!isAddingGoal)}>
+                            Добавить цель
+                        </button>
                     )}
+
                     {isAddingGoal && (
                         <AddGoalForm
                             goalData={{newGoal, setNewGoal}}
@@ -204,12 +209,9 @@ export function UserDashboardPage() {
                             handleCancel={handleCancelAddGoal}
                         />
                     )}
-                    <button className="dashboardButton" onClick={() => setIsAddingGoal(!isAddingGoal)}>
-                        {isAddingGoal ? 'Отменить' : 'Добавить цель'}
-                    </button>
                 </div>
+
             </div>
         </div>
     );
-
 }

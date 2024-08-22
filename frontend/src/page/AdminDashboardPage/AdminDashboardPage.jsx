@@ -4,6 +4,8 @@ import {UserContext} from "../../context/UserContext.jsx";
 import {deleteUser, fetchUserByLogin, resetPassword, updateUser, validateToken} from "../../services/apiService.js";
 import "./AdminDashboardPage.scss"
 import LogoutButton from "../../components/LogoutButton.jsx";
+import EditUser from "../../components/EditUser";
+import ResetPasswordSection from "../../components/ResetPasswordSection.jsx";
 
 function AdminDashboardPage() {
     const navigate = useNavigate();
@@ -38,6 +40,7 @@ function AdminDashboardPage() {
             navigate('/auth');
         }
     }, [navigate, role]);
+
     const checkAdminCredentials = async () => {
         const token = localStorage.getItem('token');
         try {
@@ -49,6 +52,7 @@ function AdminDashboardPage() {
             console.error('Ошибка при проверке учетных данных администратора:', error);
         }
     };
+
     const handleSearch = async () => {
         try {
             setIsLoading(true);
@@ -65,8 +69,21 @@ function AdminDashboardPage() {
     };
 
     const handleLogout = () => {
-        logoutUser(); // Очищаем контекст и localStorage
+        logoutUser();
         navigate('/auth');
+    };
+
+    const handleUpdateUser = async () => {
+        if (selectedUser) {
+            try {
+                const token = localStorage.getItem('token');
+                const updatedUser = await updateUser(selectedUser.id, selectedUser, token);
+                setSelectedUser(updatedUser);
+                setErrorMessage('Данные пользователя обновлены.');
+            } catch (error) {
+                setErrorMessage('Не удалось обновить данные пользователя.');
+            }
+        }
     };
 
     const handleDeleteUser = async () => {
@@ -78,21 +95,6 @@ function AdminDashboardPage() {
                 setErrorMessage('Пользователь удален.');
             } catch (error) {
                 setErrorMessage('Не удалось удалить пользователя.');
-            }
-        }
-    };
-
-    const handleUpdateUser = async () => {
-        if (selectedUser) {
-            console.log('Updating user with data:', selectedUser); // Логирование данных
-            try {
-                const token = localStorage.getItem('token');
-                const updatedUser = await updateUser(selectedUser.id, selectedUser, token);
-                setSelectedUser(updatedUser); // Обновляем состояние с новыми данными
-                // updateUserInContext(updatedUser); // Обновляем контекст с новыми данными, если нужно
-                setErrorMessage('Данные пользователя обновлены.');
-            } catch (error) {
-                setErrorMessage('Не удалось обновить данные пользователя.');
             }
         }
     };
@@ -110,7 +112,6 @@ function AdminDashboardPage() {
         }
     };
 
-
     return (
         <div className={"container"}>
             <div className="adminDashboardPage">
@@ -126,7 +127,6 @@ function AdminDashboardPage() {
                     {errorMessage && <p className="error">{errorMessage}</p>}
                     {adminWarning && <p className="warning">{adminWarning}</p>}
 
-
                     <div className="searchPanel">
                         <input
                             className="searchInput"
@@ -138,70 +138,26 @@ function AdminDashboardPage() {
                         <button onClick={handleSearch} disabled={isLoading} className="searchButton">
                             {isLoading ? 'Поиск...' : 'Найти пользователя'}
                         </button>
-
-                    </div>                        {selectedUser && (
-                    <div className="editUser">
-                        <h3>Редактирование пользователя</h3>
-                        <label>Логин:</label>
-                        <input
-                            type="text"
-                            value={selectedUser.login}
-                            onChange={(e) => setSelectedUser({...selectedUser, login: e.target.value})}
-                            placeholder="Логин"
-                        />
-                        <label>Имя пользователя:</label>
-                        <input
-                            type="text"
-                            value={selectedUser.name}
-                            onChange={(e) => setSelectedUser({...selectedUser, name: e.target.value})}
-                            placeholder="Имя пользователя"
-                        />
-                        <label>Email:</label>
-                        <input
-                            type="email"
-                            value={selectedUser.email}
-                            onChange={(e) => setSelectedUser({...selectedUser, email: e.target.value})}
-                            placeholder="Email"
-                        />
-                        <label>Роль:</label>
-                        <select
-                            value={selectedUser.role}
-                            onChange={(e) => setSelectedUser({...selectedUser, role: e.target.value})}
-                        >
-                            <option value="USER">USER</option>
-                            <option value="ADMIN">ADMIN</option>
-                        </select>
-                        <div className="buttonGroup">
-                            <button
-                                className={"button"}
-                                onClick={handleUpdateUser}>Сохранить
-                            </button>
-                            <button
-                                className="deleteButton"
-                                onClick={handleDeleteUser}>Удалить пользователя
-                            </button>
-                        </div>
-
-
                     </div>
-                )}
 
-                    <div className="resetPasswordSection">
-                        <h3>Сброс пароля</h3>
-                        <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="Введите новый пароль"
-                            className="resetPasswordInput"
-                        />
-                        <button onClick={handleResetPassword} className="resetPasswordButton">Сбросить пароль
-                        </button>
-                    </div>
+                    {selectedUser && (
+                        <>
+                            <EditUser
+                                selectedUser={selectedUser}
+                                setSelectedUser={setSelectedUser}
+                                handleUpdateUser={handleUpdateUser}
+                                handleDeleteUser={handleDeleteUser}
+                            />
+                            <ResetPasswordSection
+                                newPassword={newPassword}
+                                setNewPassword={setNewPassword}
+                                handleResetPassword={handleResetPassword}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div>
-
     );
 }
 
