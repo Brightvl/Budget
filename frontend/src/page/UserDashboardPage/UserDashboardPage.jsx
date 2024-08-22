@@ -15,7 +15,7 @@ export function UserDashboardPage() {
     const [goals, setGoals] = useState([]);
     const [newGoal, setNewGoal] = useState({ title: '', description: '' });
     const [editingGoal, setEditingGoal] = useState(null);
-    const [newStep, setNewStep] = useState({ title: '' });
+    const [newStep, setNewStep] = useState({ title: '', description: '' });
     const [editingStep, setEditingStep] = useState(null);
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -76,6 +76,7 @@ export function UserDashboardPage() {
     const handleAddStep = (goalId) => {
         const step = {
             title: newStep.title || 'Шаг не указан',
+            description: newStep.description || 'Нет описания',
             startTime: new Date().toISOString(),
             completed: false
         };
@@ -85,7 +86,7 @@ export function UserDashboardPage() {
                     ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
                 } : goal
             ));
-            setNewStep({ title: '' });
+            setNewStep({ title: '', description: '' });
             setIsAddingStep(null);
         });
     };
@@ -108,10 +109,8 @@ export function UserDashboardPage() {
         });
     };
 
-    const handleUpdateStep = (goalId, stepId, title) => {
-        const updatedStep = { ...editingStep, title };
-
-        putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
+    const handleUpdateStep = (goalId, stepId, updatedStep) => {
+        return putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
                     ? {
@@ -123,6 +122,7 @@ export function UserDashboardPage() {
             setEditingStep(null);
         });
     };
+
 
     const handleDeleteGoal = (goalId) => {
         deleteData(`/api/goals/${user.id}/${goalId}`, user, () => {

@@ -45,7 +45,7 @@ export default function GoalItem({
             {/* Развернутое состояние */}
             {selectedGoalId === goal.id && (
                 <div className="goalItemDetails">
-                    <div className="goalActions">
+                    <div className="Actions">
                         <MinusIcon
                             onClick={(e) => {
                                 e.stopPropagation();

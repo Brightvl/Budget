@@ -13,8 +13,8 @@ export default function EditableStepField({ value, onSave }) {
 
     const handleSave = () => {
         onSave(inputValue)
-            .then(() => setIsEditing(false)) // Закрываем окно редактирования после успешного сохранения
-            .catch((error) => console.error('Failed to save:', error)); // Обработка ошибок при сохранении
+            .then(() => setIsEditing(false))
+            .catch((error) => console.error('Failed to save:', error));
     };
 
     return (

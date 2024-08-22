@@ -7,11 +7,11 @@ export default function AddStepForm({ stepData, handleAddStep }) {
     return (
         <div className="addStepForm">
             <input
-                className={"stepFormInput"}
+                className="stepFormInput"
                 type="text"
                 placeholder="Название шага"
                 value={newStep.title}
-                onChange={(e) => setNewStep({ title: e.target.value })}
+                onChange={(e) => setNewStep({ ...newStep, title: e.target.value })}
             />
             <CheckIcon onClick={handleAddStep} />
         </div>

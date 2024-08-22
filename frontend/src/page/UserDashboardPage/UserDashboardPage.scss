@@ -12,6 +12,11 @@ $border-goal-active-color: #733365;
 $border-step-color: #67425d;
 
 
+.Actions {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
 .dashboardButton {
   padding: 5px 10px;
   font-size: 0.9em;
@@ -112,11 +117,7 @@ $border-step-color: #67425d;
     }
   }
 
-  &Actions {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-  }
+
 
 }
 
@@ -194,7 +195,7 @@ $border-step-color: #67425d;
   }
 
   &Item {
-    display: block;
+    position: relative;
     border: 2px solid $border-goal-color;
     padding: 20px;
     border-radius: $border-radius;
