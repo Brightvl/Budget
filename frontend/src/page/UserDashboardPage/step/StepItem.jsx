@@ -58,6 +58,7 @@ export default function StepItem({
                                 handleToggleStepCompletion(goalId, step.id);
                             }}
                             className={step.completed ? "completed" : ""}
+                            style={{ color: step.completed ? 'green' : 'red' }}
                         />
                     </div>
                 </div>

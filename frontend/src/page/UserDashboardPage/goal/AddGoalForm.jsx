@@ -3,7 +3,6 @@ export default function AddGoalForm({ goalData, handleAddGoal, handleCancel }) {
 
     return (
         <div className="goalFormContainer">
-            <div className="goalFormInputGroup"></div>
             <input
                 className={"goalFormInput"}
                 type="text"

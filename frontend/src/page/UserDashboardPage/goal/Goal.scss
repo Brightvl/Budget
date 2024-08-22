@@ -1,0 +1,94 @@
+@import "../../../App";
+
+
+$button-goal-bg-color: #ac6790;
+$button-goal-hover-bg-color: #5c0a48;
+$goal-bg-color: rgba(170, 10, 77, 0.72); // Цвет фона для целей
+$border-goal-color: #bd95b9;
+$border-goal-active-color: #733365;
+// Стили для целей
+.goal {
+  &List {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &Form {
+    &Container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+
+    }
+
+    &Box {
+      border: 2px solid $border-goal-active-color;
+      border-radius: $border-radius;
+      padding: 10px;
+    }
+
+    &Button {
+      padding: 5px 10px;
+      font-size: 0.9em;
+      @include button-style($button-goal-bg-color, $button-goal-hover-bg-color);
+
+      &Group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      &Delete {
+        padding: 5px 10px;
+        font-size: 0.9em;
+        @include button-style($button-delete-color, $button-delete-hover-bg-color);
+      }
+    }
+
+    &Input {
+      width: 80%;
+
+      &Group {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &Item {
+    position: relative;
+    border: 2px solid $border-goal-color;
+    padding: 20px;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+    cursor: pointer;
+
+    &Details {
+      gap: 10px;
+    }
+
+    &Info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      gap: 4px;
+
+    }
+
+    &Steps {
+
+      padding: 10px 0;
+
+      border-radius: $border-radius;
+      margin-top: 10px;
+    }
+  }
+}

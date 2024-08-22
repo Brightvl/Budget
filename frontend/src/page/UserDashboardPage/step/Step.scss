@@ -1,0 +1,48 @@
+@import "../../../App";
+
+$button-step-bg-color: #ac6790;
+$button-step-hover-bg-color: #5c0a48;
+$step-bg-color: #000000; // Цвет фона для шагов
+$border-step-color: #67425d;
+
+// Стили для шагов
+.step {
+  &AddBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid $border-step-color;
+    border-radius: $border-radius;
+    padding: 8px;
+  }
+
+  &List {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+
+    &Ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      &li {
+        padding-block: 5px;
+        border-radius: $border-radius;
+      }
+    }
+  }
+
+
+  &Item {
+    border: 1px solid $border-step-color;
+    border-radius: $border-radius;
+    &Details {
+    position: relative;
+    }
+  }
+}

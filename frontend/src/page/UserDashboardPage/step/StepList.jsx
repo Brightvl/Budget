@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import StepItem from './StepItem.jsx';
-import AddStepForm from './AddStepForm.jsx';
 
 export default function StepList({
                                      goalId,
@@ -13,16 +12,8 @@ export default function StepList({
     const {
         handleToggleStepCompletion,
         handleDeleteStep,
-        handleUpdateStep,
-        handleAddStep
+        handleUpdateStep
     } = stepHandlers;
-
-    const {
-        isAddingStep,
-        setIsAddingStep,
-        newStep,
-        setNewStep
-    } = stepStates;
 
     const handleToggleSelectStep = (stepId) => {
         setSelectedStepId(selectedStepId === stepId ? null : stepId);
@@ -30,8 +21,7 @@ export default function StepList({
 
     return (
         <div className="stepBox">
-            <h1>Шаги</h1>
-            <ul className="stepUl">
+            <ul className="stepList">
                 {(steps || []).map(step => (
                     <StepItem
                         key={step.id}
@@ -45,19 +35,6 @@ export default function StepList({
                     />
                 ))}
             </ul>
-
-            <div className="add-step-form">
-                {!isAddingStep ? (
-                    <button className="stepFormButton" onClick={() => setIsAddingStep(goalId)}>
-                        Добавить шаг
-                    </button>
-                ) : (
-                    <AddStepForm
-                        stepData={{ newStep, setNewStep }}
-                        handleAddStep={() => handleAddStep(goalId)}
-                    />
-                )}
-            </div>
         </div>
     );
 }

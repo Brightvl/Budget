@@ -3,6 +3,7 @@ import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
+import AddStepForm from '../step/AddStepForm.jsx'; // Импортируем AddStepForm
 
 export default function GoalItem({
                                      goal,
@@ -21,8 +22,8 @@ export default function GoalItem({
 
     const saveField = (field, value) => {
         const updatedGoal = { ...goal, [field]: value };
-        setEditingGoal(null); // Очищаем состояние редактирования
-        return handleUpdateGoal(goal.id, updatedGoal); // Возвращаем Promise, чтобы отследить завершение сохранения
+        setEditingGoal(null);
+        return handleUpdateGoal(goal.id, updatedGoal);
     };
 
     return (
@@ -44,42 +45,62 @@ export default function GoalItem({
 
             {/* Развернутое состояние */}
             {selectedGoalId === goal.id && (
-                <div className="goalItemDetails">
-                    <div className="Actions">
-                        <MinusIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedGoalId(null);
-                            }}
-                        />
-                        <TrashIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteGoal(goal.id);
-                            }}
-                        />
+                <>
+                    <div className="goalItemDetails">
+                        <div className="Actions">
+                            <MinusIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedGoalId(null);
+                                }}
+                            />
+                            <TrashIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteGoal(goal.id);
+                                }}
+                            />
+                        </div>
+
+                        <div className="goalItemInfo">
+                            <EditableField
+                                value={goal.title}
+                                onSave={(value) => saveField('title', value)}
+                            />
+                            <EditableField
+                                value={goal.description}
+                                onSave={(value) => saveField('description', value)}
+                            />
+                            <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
+                        </div>
                     </div>
 
-                    <div className="goalItemInfo">
-                        <EditableField
-                            value={goal.title}
-                            onSave={(value) => saveField('title', value)}
+                    <div className="goalItemSteps">
+                        <StepList
+                            goalId={goal.id}
+                            steps={goal.steps}
+                            stepHandlers={stepHandlers}
+                            stepStates={goalStates}
                         />
-                        <EditableField
-                            value={goal.description}
-                            onSave={(value) => saveField('description', value)}
-                        />
-                        <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
-                    </div>
 
-                    <StepList
-                        goalId={goal.id}
-                        steps={goal.steps}
-                        stepHandlers={stepHandlers}
-                        stepStates={goalStates}
-                    />
-                </div>
+
+                    </div>
+                    {/* Добавляем AddStepForm после списка шагов */}
+                    <div className="add-step-form">
+                        {!goalStates.isAddingStep ? (
+                            <button className="stepFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
+                                Добавить шаг
+                            </button>
+                        ) : (
+                            <AddStepForm
+                                stepData={{newStep: goalStates.newStep, setNewStep: goalStates.setNewStep}}
+                                handleAddStep={() => stepHandlers.handleAddStep(goal.id)}
+                            />
+                        )}
+                    </div>
+                </>
             )}
         </div>
     );
 }
+

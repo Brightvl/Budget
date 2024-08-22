@@ -57,11 +57,11 @@ export function AuthPage() {
 
     return (
         <div className="container">
-            <div className="header">
-                <h1>Добро пожаловать</h1>
-            </div>
+
             <div className="authBox">
-                <h2>Вход</h2>
+                <div className="header">
+                    <h1>Добро пожаловать</h1>
+                </div>
                 <input
                     type="text"
                     value={login}

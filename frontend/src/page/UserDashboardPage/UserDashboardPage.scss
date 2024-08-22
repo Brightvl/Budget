@@ -1,15 +1,9 @@
 @import "../../App";
-
+@import "./goal/Goal";
+@import "./step/Step";
 
 $button-goal-bg-color: #0978ec;
 $button-goal-hover-bg-color: #0056b3;
-$button-step-bg-color: #ac6790;
-$button-step-hover-bg-color: #5c0a48;
-$goal-bg-color: rgba(170, 10, 77, 0.72); // Цвет фона для целей
-$step-bg-color: #bfadb8; // Цвет фона для шагов
-$border-goal-color: #bd95b9;
-$border-goal-active-color: #733365;
-$border-step-color: #67425d;
 
 
 .Actions {
@@ -17,11 +11,12 @@ $border-step-color: #67425d;
   right: 8px;
   top: 8px;
 }
+
 .dashboardButton {
   padding: 5px 10px;
   font-size: 0.9em;
 
-  @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+  //@include button-style($button-step-bg-color, $button-step-hover-bg-color);
 }
 
 .container {
@@ -39,170 +34,6 @@ $border-step-color: #67425d;
   }
 }
 
-// Стили для целей
-.goal {
-  &List {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  &Form {
-    &Container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-    }
-
-    &Box {
-      border: 2px solid $border-goal-active-color;
-      border-radius: $border-radius;
-      padding: 10px;
-    }
-
-    &Button {
-      padding: 5px 10px;
-      font-size: 0.9em;
-      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
-
-      &Group {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-      }
-
-      &Delete {
-        padding: 5px 10px;
-        font-size: 0.9em;
-        @include button-style($button-delete-color, $button-delete-hover-bg-color);
-      }
-    }
-
-    &Input {
-      width: 80%;
-
-      &Group {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-
-  &Item {
-    position: relative;
-    border: 2px solid $border-goal-color;
-    padding: 20px;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    margin-bottom: 20px;
-    cursor: pointer;
-
-    &Details {
-
-
-      gap: 10px;
-    }
-
-    &Info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: start;
-      gap: 4px;
-    }
-  }
 
 
 
-}
-
-// Стили для шагов
-.step {
-  &Box {
-    padding: 10px;
-
-  }
-
-  &Ul {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    &li {
-      padding-block: 5px;
-      border-radius: $border-radius;
-    }
-  }
-
-
-  &Form {
-
-    &Box {
-
-      border: 2px solid $border-goal-active-color;
-      border-radius: $border-radius;
-      padding: 10px;
-
-    }
-
-    &Button {
-      @include button-style($button-step-bg-color, $button-step-hover-bg-color);
-      padding: 5px 10px;
-      font-size: 0.9em;
-
-
-      &Status {
-
-        @include button-style($button-step-bg-color, $button-step-hover-bg-color);
-        padding: 5px 10px;
-        font-size: 0.9em;
-
-      }
-
-      &Delete {
-        @include button-style($button-delete-color, $button-delete-hover-bg-color);
-        padding: 5px 10px;
-        font-size: 0.9em;
-
-      }
-
-      &Group {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-      }
-    }
-
-    &Input {
-      width: 80%;
-
-      &Group {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-
-  &Item {
-    position: relative;
-    border: 2px solid $border-goal-color;
-    padding: 20px;
-    border-radius: $border-radius;
-    box-shadow: $box-shadow;
-    margin-bottom: 20px;
-    cursor: pointer;
-
-  }
-
-}

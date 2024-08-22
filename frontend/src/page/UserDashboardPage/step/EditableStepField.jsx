@@ -18,9 +18,9 @@ export default function EditableStepField({ value, onSave }) {
     };
 
     return (
-        <div className="editableField">
+        <div className="stepForm">
             {isEditing ? (
-                <div className="editableInputGroup">
+                <div className="stepFormInputGroup">
                     <input
                         type="text"
                         value={inputValue}
