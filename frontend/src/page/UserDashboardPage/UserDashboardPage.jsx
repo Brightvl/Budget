@@ -1,21 +1,21 @@
-import {useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {UserContext} from "../../context/UserContext.jsx";
-import {deleteData, fetchData, postData, putData} from "../../services/apiService.js";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext.jsx";
+import { fetchData, postData, putData, deleteData } from "../../services/apiService.js";
 import Header from "../../components/Header.jsx";
 import GoalList from "./goal/GoalList.jsx";
 import LogoutButton from "../../components/LogoutButton.jsx";
 import AddGoalForm from "./goal/AddGoalForm.jsx";
-import {handleLogout} from "../../utils/authUtils.js";
-import "./userDashboardPage.scss"
+import { handleLogout } from "../../utils/authUtils.js";
+import "./userDashboardPage.scss";
 
 export function UserDashboardPage() {
     const navigate = useNavigate();
-    const {user, role, logoutUser} = useContext(UserContext);
+    const { user, role, logoutUser } = useContext(UserContext);
     const [goals, setGoals] = useState([]);
-    const [newGoal, setNewGoal] = useState({title: '', description: ''});
+    const [newGoal, setNewGoal] = useState({ title: '', description: '' });
     const [editingGoal, setEditingGoal] = useState(null);
-    const [newStep, setNewStep] = useState({title: ''});
+    const [newStep, setNewStep] = useState({ title: '' });
     const [editingStep, setEditingStep] = useState(null);
     const [selectedGoalId, setSelectedGoalId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ export function UserDashboardPage() {
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
             setGoals([...goals, goal]);
-            setNewGoal({title: '', description: ''});
+            setNewGoal({ title: '', description: '' });
             setIsAddingGoal(false);
         });
     };
@@ -66,13 +66,12 @@ export function UserDashboardPage() {
                     goal.id === goalId ? updatedGoal : goal
                 ));
                 setEditingGoal(null);
-                resolve(); // Сохранение успешно
+                resolve();
             }).catch(error => {
-                reject(error); // Сохранение не удалось
+                reject(error);
             });
         });
     };
-
 
     const handleAddStep = (goalId) => {
         const step = {
@@ -80,25 +79,22 @@ export function UserDashboardPage() {
             startTime: new Date().toISOString(),
             completed: false
         };
-        postData(`/api/goals/${goalId}/steps`,
-            user,
-            step,
-            (step) => {
-                setGoals(goals.map(goal =>
-                    goal.id === goalId ? {
-                        ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
-                    } : goal
-                ));
-                setNewStep({title: ''});
-                setIsAddingStep(null);
-            });
+        postData(`/api/goals/${goalId}/steps`, user, step, (step) => {
+            setGoals(goals.map(goal =>
+                goal.id === goalId ? {
+                    ...goal, steps: goal.steps ? [...goal.steps, step] : [step]
+                } : goal
+            ));
+            setNewStep({ title: '' });
+            setIsAddingStep(null);
+        });
     };
 
     const handleToggleStepCompletion = (goalId, stepId) => {
         const goal = goals.find(g => g.id === goalId);
         const step = goal.steps.find(s => s.id === stepId);
 
-        const updatedStep = {...step, completed: !step.completed};
+        const updatedStep = { ...step, completed: !step.completed };
 
         putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
@@ -112,11 +108,8 @@ export function UserDashboardPage() {
         });
     };
 
-    const handleUpdateStep = (goalId, stepId) => {
-        const goal = goals.find(g => g.id === goalId);
-        const step = goal.steps.find(s => s.id === stepId);
-
-        const updatedStep = {...editingStep};
+    const handleUpdateStep = (goalId, stepId, title) => {
+        const updatedStep = { ...editingStep, title };
 
         putData(`/api/goals/${goalId}/steps/${stepId}`, user, updatedStep, (updatedStep) => {
             setGoals(goals.map(goal =>
@@ -141,7 +134,7 @@ export function UserDashboardPage() {
         deleteData(`/api/goals/${goalId}/steps/${stepId}`, user, () => {
             setGoals(goals.map(goal =>
                 goal.id === goalId
-                    ? {...goal, steps: goal.steps.filter(step => step.id !== stepId)}
+                    ? { ...goal, steps: goal.steps.filter(step => step.id !== stepId) }
                     : goal
             ));
         });
@@ -178,9 +171,8 @@ export function UserDashboardPage() {
                     showLogoutWarning={showLogoutWarning}
                     setShowLogoutWarning={setShowLogoutWarning}
                 />
-                <Header name={user?.name}/>
+                <Header name={user?.name} />
 
-                {/*Список целей*/}
                 {isLoading ? (
                     <p>Загрузка...</p>
                 ) : (
@@ -194,7 +186,6 @@ export function UserDashboardPage() {
                     />
                 )}
 
-                {/*Добавления цели*/}
                 <div className="goalFormBox">
                     {!isAddingGoal && (
                         <button className="dashboardButton" onClick={() => setIsAddingGoal(!isAddingGoal)}>
@@ -204,13 +195,12 @@ export function UserDashboardPage() {
 
                     {isAddingGoal && (
                         <AddGoalForm
-                            goalData={{newGoal, setNewGoal}}
+                            goalData={{ newGoal, setNewGoal }}
                             handleAddGoal={handleAddGoal}
                             handleCancel={handleCancelAddGoal}
                         />
                     )}
                 </div>
-
             </div>
         </div>
     );

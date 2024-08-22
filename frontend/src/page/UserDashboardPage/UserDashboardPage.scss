@@ -19,7 +19,7 @@ $border-step-color: #67425d;
   @include button-style($button-step-bg-color, $button-step-hover-bg-color);
 }
 
-.container{
+.container {
   position: relative;
 }
 
@@ -29,27 +29,28 @@ $border-step-color: #67425d;
   gap: 16px;
   width: 400px;
 
-  .icon{
+  .icon {
     width: 20px;
   }
 }
 
 // Стили для целей
 .goal {
-  &List{
+  &List {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
   &Form {
-    &Container{
+    &Container {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 8px;
     }
+
     &Box {
       border: 2px solid $border-goal-active-color;
       border-radius: $border-radius;
@@ -88,7 +89,7 @@ $border-step-color: #67425d;
   }
 
   &Item {
-    display: block;
+    position: relative;
     border: 2px solid $border-goal-color;
     padding: 20px;
     border-radius: $border-radius;
@@ -97,14 +98,24 @@ $border-step-color: #67425d;
     cursor: pointer;
 
     &Details {
-      display: flex;
-      flex-direction: column;
+
+
       gap: 10px;
     }
 
-    &Description {
-
+    &Info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      gap: 4px;
     }
+  }
+
+  &Actions {
+    position: absolute;
+    right: 8px;
+    top: 8px;
   }
 
 }
@@ -125,7 +136,6 @@ $border-step-color: #67425d;
     gap: 5px;
 
     &li {
-      border: 2px solid $border-step-color;
       padding-block: 5px;
       border-radius: $border-radius;
     }

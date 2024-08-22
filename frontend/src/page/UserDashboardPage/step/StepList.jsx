@@ -1,5 +1,7 @@
-// code snippet from StepList.jsx
 import React from 'react';
+import EditableStepField from './EditableStepField.jsx';
+import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
+import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import AddStepForm from './AddStepForm.jsx';
 
 export default function StepList({
@@ -25,77 +27,41 @@ export default function StepList({
     } = stepStates;
 
     return (
-        <div className={"stepBox"}>
+        <div className="stepBox">
             <h1>Шаги</h1>
             <ul className="stepUl">
                 {(steps || []).length > 0 ? (
                     steps.map(step => (
                         <li className="stepUlli" key={step.id}>
                             {editingStep && editingStep.id === step.id ? (
-                                <div>
-                                    <input
-                                        className={"stepFormInput"}
-                                        type="text"
-                                        value={editingStep.title}
-                                        onChange={(e) => setEditingStep({ ...editingStep, title: e.target.value })}
-                                        placeholder="Название шага"
-                                    />
-                                    <button className="stepFormButton" onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleUpdateStep(goalId, step.id);
-                                    }}>
-                                        Сохранить
-                                    </button>
-                                    <button className="stepFormButton" onClick={() => setEditingStep(null)}>
-                                        Отменить
-                                    </button>
-                                </div>
+                                <EditableStepField
+                                    value={editingStep.title}
+                                    onSave={(value) => handleUpdateStep(goalId, step.id, value)}
+                                />
                             ) : (
-                                <>
+                                <div className="stepItem">
                                     <h2>
                                         {step.title} - {step.completed ? "Завершено" : "В процессе"}
                                     </h2>
-                                    <button className="stepFormButtonStatus" onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleToggleStepCompletion(goalId, step.id);
-                                    }}>
-                                        {step.completed ? "Отметить как невыполненный" : "Отметить как выполненный"}
-                                    </button>
-                                    <p>Время начала шага: {new Date(step.startTime).toLocaleDateString()}</p>
-
-                                    <div className="stepFormButtonGroup">
-                                        <button className="stepFormButton" onClick={(e) => {
-                                            e.stopPropagation();
-                                            setEditingStep(step);
-                                        }}>
-                                            Редактировать шаг
-                                        </button>
-                                        <button className="stepFormButtonDelete" onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteStep(goalId, step.id);
-                                        }}>
-                                            Удалить шаг
-                                        </button>
+                                    <div className="stepActions">
+                                        <CheckIcon onClick={() => handleToggleStepCompletion(goalId, step.id)} />
+                                        <TrashIcon onClick={() => handleDeleteStep(goalId, step.id)} />
                                     </div>
-
-                                </>
+                                    <p>Время начала шага: {new Date(step.startTime).toLocaleDateString()}</p>
+                                </div>
                             )}
                         </li>
                     ))
                 ) : (
                     <div>
-                        <p className="warning-text warning-text__bg">Вы ещё не добавили шагов для достижения этой
-                            цели.</p>
+                        <p className="warning-text warning-text__bg">Вы ещё не добавили шагов для достижения этой цели.</p>
                     </div>
                 )}
             </ul>
 
             <div className="add-step-form">
                 {!isAddingStep ? (
-                    <button className="stepFormButton" onClick={(e) => {
-                        e.stopPropagation();
-                        setIsAddingStep(goalId);  // Ошибка здесь
-                    }}>
+                    <button className="stepFormButton" onClick={() => setIsAddingStep(goalId)}>
                         Добавить шаг
                     </button>
                 ) : (

@@ -60,7 +60,7 @@ export default function GoalItem({
                         />
                     </div>
 
-                    <div className="goalInfo">
+                    <div className="goalItemInfo">
                         <EditableField
                             value={goal.title}
                             onSave={(value) => saveField('title', value)}
