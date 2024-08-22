@@ -1,5 +1,17 @@
 @import "../../App";
-$button-gradient-bg-color: linear-gradient(135deg, #0978ec, #0056b3);
+
+
+$button-goal-bg-color: #0978ec;
+$button-goal-hover-bg-color: #0056b3;
+$button-step-bg-color: #ac6790;
+$button-step-hover-bg-color: #5c0a48;
+$goal-bg-color: rgba(170, 10, 77, 0.72); // Цвет фона для целей
+$step-bg-color: #bfadb8; // Цвет фона для шагов
+$border-goal-color: #bd95b9;
+$border-goal-active-color: #fd0b0b;
+$border-step-color: #67425d;
+
+
 .dashboardButton {
   padding: 5px 10px;
   font-size: 0.9em;
@@ -59,7 +71,7 @@ $button-gradient-bg-color: linear-gradient(135deg, #0978ec, #0056b3);
   }
 
   &Item {
-    background: linear-gradient(180deg, #f4a8a8, #bab0b7, #685565);
+    //background: linear-gradient(75deg, #f4a8a8, #bab0b7, #685565);
     display: block;
     border: 2px solid $border-goal-color;
     padding: 20px;

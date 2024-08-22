@@ -1,29 +1,32 @@
 // Переменные
-$app-bg-color: #98728c; // Цвет фона приложения
-$container-bg-color: #fff; // Цвет фона контейнера
 
+//container
+$app-bg-color: #98728c; // Цвет фона приложения
+$container-bg-color: #ffffff; // Цвет фона контейнера
+$box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Тень для контейнера
+$padding: 40px; // Внутренний отступ контейнера
+
+//button
 $button-bg-color: #9f4186; // Цвет фона кнопки
 $button-hover-bg-color: #6e0b55; // Цвет фона кнопки при наведении
-$button-goal-bg-color: #0978ec;
-$button-goal-hover-bg-color: #0056b3;
-$button-step-bg-color: #ac6790;
-$button-step-hover-bg-color: #5c0a48;
 $button-delete-color: #7c1c65;
 $button-delete-hover-bg-color: #5c0a48;
 
-$goal-bg-color: rgba(170, 10, 77, 0.72); // Цвет фона для целей
-$step-bg-color: #bfadb8; // Цвет фона для шагов
+//input
 $input-border-color: #ccc; // Цвет обводки поля ввода
-$box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Тень для контейнера
+
+//other
 $border-radius: 8px; // Радиус закругления углов
-$padding: 40px; // Внутренний отступ контейнера
-$border-goal-color: #bd95b9;
-$border-goal-active-color: #fd0b0b;
-
-$border-step-color: #67425d;
 
 
-// Миксин для кнопок
+* {
+  margin: 0 !important;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+// button
 @mixin button-style($bg-color, $hover-color) {
   background-color: $bg-color;
   color: white;
@@ -38,10 +41,10 @@ $border-step-color: #67425d;
   }
 }
 
-// Миксин для полей ввода
+// input
 @mixin input-style($border-color) {
   padding: 10px;
-  border-radius: 5px;
+  border-radius: $border-radius;
   border: 1px solid $border-color;
 }
 
@@ -62,7 +65,7 @@ $border-step-color: #67425d;
   border-radius: $border-radius;
   box-shadow: $box-shadow;
   text-align: center;
-  max-width: 100%; // Ограничиваем максимальную ширину контейнера
+  max-width: 100%;
 }
 
 // Кнопка

@@ -156,12 +156,11 @@ export function UserDashboardPage() {
         handleDeleteGoal,
     };
 
-// code snippet from UserDashboardPage.jsx
     const goalStates = {
         editingGoal,
         setEditingGoal,
-        isAddingStep,  // Проверяем, передается ли правильно
-        setIsAddingStep,  // Проверяем, передается ли правильно
+        isAddingStep,
+        setIsAddingStep,
         newStep,
         setNewStep,
         editingStep,

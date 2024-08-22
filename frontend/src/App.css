@@ -154,12 +154,12 @@ input, select {
 .dashboardContent .error {
   margin-bottom: 20px;
 }
-.dashboardContent .searchUser {
+.dashboardContent .searchPanel {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
 }
-.dashboardContent .searchUser .searchInput {
+.dashboardContent .searchPanel .searchInput {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -167,7 +167,7 @@ input, select {
   border-radius: 4px 0 0 4px;
   outline: none;
 }
-.dashboardContent .searchUser .searchButton {
+.dashboardContent .searchPanel .searchButton {
   background-color: #9f4186;
   color: white;
   padding: 10px 20px;
@@ -178,7 +178,7 @@ input, select {
   border-radius: 0 4px 4px 0;
   padding: 10px 20px;
 }
-.dashboardContent .searchUser .searchButton:hover {
+.dashboardContent .searchPanel .searchButton:hover {
   background-color: #6e0b55;
 }
 .dashboardContent .editUser {

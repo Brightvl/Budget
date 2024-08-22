@@ -61,7 +61,7 @@ export default function StepList({
                                     }}>
                                         {step.completed ? "Отметить как невыполненный" : "Отметить как выполненный"}
                                     </button>
-                                    <p>Время начала шага: {new Date(step.startTime).toLocaleString()}</p>
+                                    <p>Время начала шага: {new Date(step.startTime).toLocaleDateString()}</p>
 
                                     <div className="stepFormButtonGroup">
                                         <button className="stepFormButton" onClick={(e) => {

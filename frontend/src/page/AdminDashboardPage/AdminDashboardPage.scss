@@ -1,34 +1,32 @@
 @import "../../App";
 
+// переменные
+
+.container {
+  position: relative;
+}
+
 // страница Админа
 .dashboardHeader {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: $container-bg-color;
-  border-bottom: 2px solid $input-border-color;
-
-
-  .button {
-    @include button-style($button-bg-color, $button-hover-bg-color);
-    padding: 10px 20px;
-  }
 }
 
 .dashboardContent {
-  padding: $padding;
-  max-width: 1000px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   .error {
     @extend .error-text;
-    margin-bottom: 20px;
   }
 
-  .searchUser {
+
+  .searchPanel {
     display: flex;
-    gap: 10px;
     margin-bottom: 20px;
 
     .searchInput {
@@ -47,9 +45,12 @@
 
   .editUser {
     border: 1px solid $input-border-color;
-    padding: $padding;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 
     h3 {
       margin-top: 0;
@@ -71,11 +72,12 @@
 
     .buttonGroup {
       display: flex;
+      justify-content: center;
       gap: 10px;
       margin-top: 10px;
 
       .button {
-        @include button-style($button-step-bg-color, $button-step-hover-bg-color);
+        @include button-style($button-bg-color, $button-hover-bg-color);
         padding: 10px;
         font-size: 0.9em;
       }
@@ -84,24 +86,29 @@
         @include button-style($button-delete-color, $button-delete-hover-bg-color);
       }
     }
-
-    .resetPasswordSection {
-      margin-top: 20px;
-
-      h3 {
-        margin-top: 0;
-      }
-
-      .resetPasswordInput {
-        @include input-style($input-border-color);
-        margin-bottom: 10px;
-        width: 100%;
-      }
-
-      .resetPasswordButton {
-        @include button-style($button-bg-color, $button-hover-bg-color);
-        padding: 10px;
-      }
-    }
   }
 }
+.resetPasswordSection {
+  border: 1px solid $input-border-color;
+  border-radius: $border-radius;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h3 {
+    margin-top: 0;
+  }
+
+  .resetPasswordInput {
+    @include input-style($input-border-color);
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .resetPasswordButton {
+    @include button-style($button-bg-color, $button-hover-bg-color);
+    padding: 10px;
+  }
+}
+

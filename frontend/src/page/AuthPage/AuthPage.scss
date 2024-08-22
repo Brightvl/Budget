@@ -5,6 +5,16 @@
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 
+  .button {
+
+    @include button-style($button-bg-color, $button-hover-bg-color);
+    width: 120px;
+    &Block {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
 }

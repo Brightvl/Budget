@@ -1,11 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
-import {
-    validateEmail,
-    validatePassword,
-    checkLoginExists,
-    checkEmailExists
-} from '../../utils/validation.js';
+import {useNavigate} from 'react-router-dom';
+import {useState} from "react";
+import {checkEmailExists, checkLoginExists, validateEmail, validatePassword} from '../../utils/validation.js';
+import "./RegistrationPage.scss"
 
 export function RegisterPage() {
     const [login, setLogin] = useState('');
@@ -77,7 +73,7 @@ export function RegisterPage() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ login, name, email, password }),
+                body: JSON.stringify({login, name, email, password}),
             });
 
             if (response.ok) {
@@ -95,78 +91,75 @@ export function RegisterPage() {
     };
 
     return (
-        <div className="registration-box">
-            <div className="container">
+        <div className="container">
+            <div className="registrationBox">
                 <h2>Регистрация</h2>
-                <div className="registration-box-list">
-                    <input
-                        type="text"
-                        placeholder="Логин"
-                        value={login}
-                        onChange={(e) => {
-                            setLogin(e.target.value);
-                            setGeneralErrors(generalErrors.filter(error => error !== 'Введите логин.'));
-                        }}
-                        className={generalErrors.includes('Введите логин.') ? 'error-border' : ''}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Имя пользователя"
-                        value={name}
-                        onChange={(e) => {
-                            setName(e.target.value);
-                            setGeneralErrors(generalErrors.filter(error => error !== 'Введите имя пользователя.'));
-                        }}
-                        className={generalErrors.includes('Введите имя пользователя.') ? 'error-border' : ''}
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            setEmailError('');
-                        }}
-                        className={emailError ? 'error-border' : ''}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Пароль"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setPasswordError('');
-                        }}
-                        className={passwordError ? 'error-border' : ''}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Подтвердите пароль"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setPasswordError('');
-                        }}
-                        className={passwordError ? 'error-border' : ''}
-                    />
-                </div>
+                <input
+                    type="text"
+                    placeholder="Логин"
+                    value={login}
+                    onChange={(e) => {
+                        setLogin(e.target.value);
+                        setGeneralErrors(generalErrors.filter(error => error !== 'Введите логин.'));
+                    }}
+                    className={generalErrors.includes('Введите логин.') ? 'error-border' : ''}
+                />
+                <input
+                    type="text"
+                    placeholder="Имя пользователя"
+                    value={name}
+                    onChange={(e) => {
+                        setName(e.target.value);
+                        setGeneralErrors(generalErrors.filter(error => error !== 'Введите имя пользователя.'));
+                    }}
+                    className={generalErrors.includes('Введите имя пользователя.') ? 'error-border' : ''}
+                />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailError('');
+                    }}
+                    className={emailError ? 'error-border' : ''}
+                />
+                <input
+                    type="password"
+                    placeholder="Пароль"
+                    value={password}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        setPasswordError('');
+                    }}
+                    className={passwordError ? 'error-border' : ''}
+                />
+                <input
+                    type="password"
+                    placeholder="Подтвердите пароль"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setPasswordError('');
+                    }}
+                    className={passwordError ? 'error-border' : ''}
+                />
                 <button className={"button"} onClick={handleRegister} disabled={isLoginChecking || isEmailChecking}>
                     {isLoginChecking || isEmailChecking ? 'Проверка...' : 'Зарегистрироваться'}
                 </button>
-
-                {generalErrors.length === 1 ? (
-                    <p className="error-text">{generalErrors[0]}</p>
-                ) : generalErrors.length > 1 ? (
-                    <div>
-                        <p className="error-text">Пожалуйста, исправьте ошибки в форме:</p>
-                        <ul className="error-text">
-                            {generalErrors.map((error, index) => (
-                                <li key={index}>{error}</li>
-                            ))}
-                        </ul>
-                    </div>
-                ) : null}
             </div>
+            {generalErrors.length === 1 ? (
+                <p className="error-text">{generalErrors[0]}</p>
+            ) : generalErrors.length > 1 ? (
+                <div>
+                    <p className="error-text">Пожалуйста, исправьте ошибки в форме:</p>
+                    <ul className="error-text">
+                        {generalErrors.map((error, index) => (
+                            <li key={index}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            ) : null}
         </div>
     );
 }

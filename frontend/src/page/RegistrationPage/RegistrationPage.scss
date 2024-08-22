@@ -1,12 +1,19 @@
 @import "../../App";
 
 // Стили для регистрации
-.registration-box {
-  width: 80vh;
+.registrationBox {
+  min-width: 400px;
 
-  &-list {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 8px;
+
+  input{
+
+  }
+  .button {
+    @include button-style($button-bg-color, $button-hover-bg-color);
   }
 }

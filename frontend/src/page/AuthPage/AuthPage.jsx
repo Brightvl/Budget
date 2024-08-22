@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext.jsx";
 import "./AuthPage.scss"
+import Header from "../../components/Header.jsx";
 
 export function AuthPage() {
     const [login, setLogin] = useState('');
@@ -56,6 +57,9 @@ export function AuthPage() {
 
     return (
         <div className="container">
+            <div className="header">
+                <h1>Добро пожаловать</h1>
+            </div>
             <div className="authBox">
                 <h2>Вход</h2>
                 <input
@@ -70,8 +74,10 @@ export function AuthPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Пароль"
                 />
-                <button className={"button"} onClick={handleLogin}>Войти</button>
-                <button className={"button"} onClick={() => navigate('/register')}>Регистрация</button>
+                <div className="buttonBlock">
+                    <button className={"button"} onClick={handleLogin}>Войти</button>
+                    <button className={"button"} onClick={() => navigate('/register')}>Регистрация</button>
+                </div>
                 {errorMessage && <p className={"error-text"}>{errorMessage}</p>}
             </div>
         </div>

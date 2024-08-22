@@ -1,6 +1,5 @@
 import './App.scss';
-import { WelcomePage } from "./page/WelcomePage.jsx";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import { AuthPage } from "./page/AuthPage/AuthPage.jsx";
 import { UserDashboardPage } from "./page/UserDashboardPage/UserDashboardPage.jsx";
 import { RegisterPage } from "./page/RegistrationPage/RegisterPage.jsx";
@@ -15,7 +14,7 @@ function App() {
             <Router>
                 <div className="app-container">
                     <Routes>
-                        <Route path="/" element={<WelcomePage />} />
+                        <Route path="/" element={<Navigate to="/auth" />} />
                         <Route path="/auth" element={<AuthPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/dashboard" element={<UserDashboardPage />} />
