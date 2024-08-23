@@ -7,7 +7,7 @@ import GoalList from "./goal/GoalList.jsx";
 import LogoutButton from "../../components/LogoutButton.jsx";
 import AddGoalForm from "./goal/AddGoalForm.jsx";
 import { handleLogout } from "../../utils/authUtils.js";
-import "./userDashboardPage.scss";
+import "./UserDashboardPage.scss";
 
 export function UserDashboardPage() {
     const navigate = useNavigate();
