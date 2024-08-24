@@ -1,6 +1,6 @@
 import React from 'react';
-import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
 import XIcon from "../../../assets/svg/XIcon.jsx";
+import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
 
 export default function AddStepForm({ stepData, handleAddStep, handleCancel}) {
     const { newStep, setNewStep } = stepData;

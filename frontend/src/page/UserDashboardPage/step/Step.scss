@@ -49,29 +49,32 @@ $border-step-color: #67425d;
     border: 1.5px solid $border-step-color;
     border-radius: $border-radius;
 
-    &:hover{
+    &:hover {
       border: 1.5px solid $button-hover-bg-color;
     }
+
     &Header {
-      cursor: pointer;
+      display: flex;
+      flex-basis: 0;
+      flex-grow: 1;
+      flex-shrink: 1;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
       font-size: 1rem;
-      word-wrap: break-word;
-      white-space: normal;
-      overflow-wrap: break-word;
       max-width: 100%;
       text-align: center;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      overflow-wrap: break-word;
+      white-space: normal;
+      word-break: break-word;
     }
 
-      &ActionsBox {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px;
-      }
+    &ActionsBox {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+    }
 
     &Info {
       display: flex;

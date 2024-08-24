@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
+import React, {useEffect, useState} from 'react';
 import XIcon from "../../../assets/svg/XIcon.jsx";
+import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
 
 export default function EditableField({ value, onSave }) {
     const [isEditing, setIsEditing] = useState(false);

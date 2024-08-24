@@ -1,6 +1,6 @@
 import React from 'react';
 import EditableStepField from './EditableStepField.jsx';
-import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
+import CheckBoxIcon from '../../../assets/svg/CheckBoxIcon.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
 
@@ -23,7 +23,7 @@ export default function StepItem({
             {!isSelected ? (
                 <div className="stepItemHeader" onClick={onToggleSelect}>
                     <h3>{step.title}</h3>
-                    <CheckIcon
+                    <CheckBoxIcon
                         onClick={(e) => {
                             e.stopPropagation();
                             handleToggleStepCompletion(goalId, step.id);
@@ -51,7 +51,7 @@ export default function StepItem({
                                     onToggleSelect();
                                 }}
                             />
-                            <CheckIcon
+                            <CheckBoxIcon
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleToggleStepCompletion(goalId, step.id);
