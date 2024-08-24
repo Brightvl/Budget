@@ -1,0 +1,46 @@
+.icon {
+  width: 15px; /* Ширина иконки */
+  height: 15px; /* Высота иконки */
+}
+
+.pencilIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.pencilIcon:hover {
+  fill: #007bff; /* Синий цвет при наведении */
+}
+
+.trashIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.trashIcon:hover {
+  fill: red; /* Красный цвет при наведении */
+}
+.xIcon {
+  stroke: currentColor;
+  transition: stroke 0.3s ease;
+}
+
+.xIcon:hover {
+  stroke: red; /* Красный цвет при наведении */
+}
+.checkIcon {
+  stroke: currentColor;
+  transition: stroke 0.3s ease;
+}
+
+.checkIcon:hover {
+  stroke: green; /* Зеленый цвет при наведении */
+}
+.minusIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.minusIcon:hover {
+  fill: #007bff; /* Жёлтый цвет при наведении */
+}
