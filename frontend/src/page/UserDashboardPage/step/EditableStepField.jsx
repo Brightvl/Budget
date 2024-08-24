@@ -15,6 +15,10 @@ export default function EditableStepField({ value, onSave }) {
             .then(() => setIsEditing(false))
             .catch((error) => console.error('Failed to save:', error));
     };
+    const handleCancel = () => {
+        setIsEditing(false);
+        setInputValue(value); // Сброс значения при отмене
+    };
 
     return (
         <div className="editableField">
@@ -28,7 +32,7 @@ export default function EditableStepField({ value, onSave }) {
                     />
                     <button className={"editableInputGroupButton"} onClick={handleSave}>
                         <CheckIcon/></button>
-                    <button className={"editableInputGroupButton"} onClick={() => setIsEditing(false)}>
+                    <button className={"editableInputGroupButton"} onClick={handleCancel}>
                         <XIcon/></button>
                 </div>
             ) : (

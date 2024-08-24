@@ -1,10 +1,10 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
 import AddStepForm from '../step/AddStepForm.jsx';
-import { UserContext } from '../../../context/UserContext.jsx'; // Импортируем контекст пользователя
+import { UserContext } from '../../../context/UserContext.jsx';
 
 export default function GoalItem({
                                      goal,
@@ -14,32 +14,32 @@ export default function GoalItem({
                                      goalStates,
                                      stepHandlers
                                  }) {
-    const { user } = useContext(UserContext); // Достаем пользователя из контекста
+    const { user } = useContext(UserContext);
     const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
-    const { editingGoal, setEditingGoal, setStepsForGoal } = goalStates;
+    const { setStepsForGoal } = goalStates;
+    const [stepsLoaded, setStepsLoaded] = useState(false); // Новый стейт для отслеживания загрузки шагов
 
-    // Функция для загрузки шагов при открытии цели
     const loadStepsForGoal = async (goalId) => {
         try {
             const response = await fetch(`/api/goals/${goalId}/steps`, {
                 headers: {
-                    'Authorization': `Bearer ${user.token}`, // Используем токен из контекста пользователя
+                    'Authorization': `Bearer ${user.token}`,
                     'Content-Type': 'application/json',
                 },
             });
             const steps = await response.json();
-            setStepsForGoal(goalId, steps); // Сохраняем шаги в состоянии
+            setStepsForGoal(goalId, steps);
+            setStepsLoaded(true); // Устанавливаем флаг, что шаги загружены
         } catch (error) {
             console.error("Error loading steps:", error);
         }
     };
 
     useEffect(() => {
-        if (selectedGoalId === goal.id && (!goal.steps || goal.steps.length === 0)) {
-            loadStepsForGoal(goal.id); // Загружаем шаги при первом открытии цели
+        if (selectedGoalId === goal.id && !stepsLoaded) { // Загружаем шаги только если они еще не загружены
+            loadStepsForGoal(goal.id);
         }
-    }, [selectedGoalId, goal.steps]); // Добавляем зависимость от goal.steps
-
+    }, [selectedGoalId]);
 
     const completedSteps = (goal.steps || []).filter(step => step.completed).length;
     const totalSteps = goal.steps?.length || 0;
@@ -47,8 +47,9 @@ export default function GoalItem({
 
     const saveField = (field, value) => {
         const updatedGoal = { ...goal, [field]: value };
-        setEditingGoal(null);
-        return handleUpdateGoal(goal.id, updatedGoal);
+        return handleUpdateGoal(goal.id, updatedGoal).then(() => {
+            setStepsLoaded(false); // Сбрасываем флаг, чтобы шаги могли быть перезагружены после обновления цели
+        });
     };
 
     return (

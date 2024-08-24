@@ -7,13 +7,20 @@ export default function EditableField({ value, onSave }) {
     const [inputValue, setInputValue] = useState(value);
 
     useEffect(() => {
-        setInputValue(value);
-    }, [value]);
+        if (isEditing) {
+            setInputValue(value); // Сброс значения на актуальное при начале редактирования
+        }
+    }, [isEditing, value]);
 
     const handleSave = () => {
         onSave(inputValue)
             .then(() => setIsEditing(false))
             .catch((error) => console.error('Failed to save:', error));
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        setInputValue(value); // Сброс значения при отмене
     };
 
     return (
@@ -28,10 +35,11 @@ export default function EditableField({ value, onSave }) {
                     />
                     <button
                         className={"editableInputGroupButton"} onClick={handleSave}>
-                        <CheckIcon>
-                        </CheckIcon>
+                        <CheckIcon />
                     </button>
-                    <button  className={"editableInputGroupButton"} onClick={() => setIsEditing(false)}><XIcon/></button>
+                    <button className={"editableInputGroupButton"} onClick={handleCancel}>
+                        <XIcon />
+                    </button>
                 </div>
             ) : (
                 <span
