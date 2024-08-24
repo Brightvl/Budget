@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PencilIcon from '../../../assets/svg/PencilIcon.jsx';
-import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
-import XIcon from '../../../assets/svg/XIcon.jsx';
+import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
+import XIcon from "../../../assets/svg/XIcon.jsx";
 
 export default function EditableField({ value, onSave }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -13,8 +12,8 @@ export default function EditableField({ value, onSave }) {
 
     const handleSave = () => {
         onSave(inputValue)
-            .then(() => setIsEditing(false)) // Закрываем окно редактирования после успешного сохранения
-            .catch((error) => console.error('Failed to save:', error)); // Обработка ошибок при сохранении
+            .then(() => setIsEditing(false))
+            .catch((error) => console.error('Failed to save:', error));
     };
 
     return (
@@ -22,18 +21,26 @@ export default function EditableField({ value, onSave }) {
             {isEditing ? (
                 <div className="editableInputGroup">
                     <input
+                        className={"editableInputGroupInput"}
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
-                    <CheckIcon onClick={handleSave} />
-                    <XIcon onClick={() => setIsEditing(false)} />
+                    <button
+                        className={"editableInputGroupButton"} onClick={handleSave}>
+                        <CheckIcon>
+                        </CheckIcon>
+                    </button>
+                    <button  className={"editableInputGroupButton"} onClick={() => setIsEditing(false)}><XIcon/></button>
                 </div>
             ) : (
-                <div className="editableDisplay">
-                    <span>{value}</span>
-                    <PencilIcon onClick={() => setIsEditing(true)} />
-                </div>
+                <span
+                    className="editableDisplay"
+                    onClick={() => setIsEditing(true)}
+                    title="Click to edit"
+                >
+                    {value}
+                </span>
             )}
         </div>
     );

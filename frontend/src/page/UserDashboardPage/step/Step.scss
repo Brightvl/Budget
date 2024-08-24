@@ -58,6 +58,50 @@ $border-step-color: #67425d;
         align-items: center;
         padding: 8px;
       }
+
+      .stepInfo {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        gap: 4px;
+        padding: 8px;
+      }
+
+      .editableDisplay {
+        display: block;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        border: 1px solid $border-step-color;
+
+
+        &:hover {
+          border: 2px solid $border-step-color;
+
+          color: #000;
+        }
+      }
+
+      .editableInputGroup {
+        display: flex;
+
+        &Input {
+          padding: 4px;
+          font-size: 1rem;
+        }
+
+        &Button {
+          color: #000;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+
+        &Button:hover {
+          color: green;
+        }
+      }
     }
   }
 
