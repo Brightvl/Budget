@@ -21,12 +21,12 @@ export default function StepItem({
     return (
         <div className="stepItem">
             {!isSelected ? (
-                <div className="stepHeader" onClick={onToggleSelect}>
+                <div className="stepItemHeader" onClick={onToggleSelect}>
                     <h3>{step.title}</h3>
                 </div>
             ) : (
                 <div className="stepItemDetails">
-                    <div className="stepItemDetailsactionsBox">
+                    <div className="stepItemActionsBox">
                         <CheckIcon
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -49,7 +49,7 @@ export default function StepItem({
                             />
                         </div>
                     </div>
-                    <div className="stepInfo">
+                    <div className="stepItemInfo">
                         <EditableStepField
                             value={step.title}
                             onSave={(value) => saveField('title', value)}
@@ -58,7 +58,7 @@ export default function StepItem({
                             value={step.description || ''}
                             onSave={(value) => saveField('description', value)}
                         />
-                        <p>Время начала шага: {new Date(step.startTime).toLocaleDateString()}</p>
+                        <p>Дата создания шага: {new Date(step.startTime).toLocaleDateString()}</p>
                     </div>
                 </div>
             )}

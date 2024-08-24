@@ -38,7 +38,8 @@ export default function GoalItem({
         if (selectedGoalId === goal.id && (!goal.steps || goal.steps.length === 0)) {
             loadStepsForGoal(goal.id); // Загружаем шаги при первом открытии цели
         }
-    }, [selectedGoalId]);
+    }, [selectedGoalId, goal.steps]); // Добавляем зависимость от goal.steps
+
 
     const completedSteps = (goal.steps || []).filter(step => step.completed).length;
     const totalSteps = goal.steps?.length || 0;

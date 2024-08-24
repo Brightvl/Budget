@@ -69,27 +69,27 @@ $border-goal-active-color: #733365;
     box-shadow: $box-shadow;
     margin-bottom: 20px;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 
-    &Details {
-
-    }
 
     &Info {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: start;
       gap: 8px;
+      text-align: start;
 
       .editableDisplay {
         display: block;
         cursor: pointer;
-        padding: 2px;
+        padding: 4px;
         border-radius: 4px;
         border: 1px solid $border-goal-color;
 
         &:hover {
-          border: 2px solid $border-goal-color;
+          border: 1px solid $button-hover-bg-color;
 
           color: #000; // Цвет текста при наведении
         }
@@ -97,19 +97,18 @@ $border-goal-active-color: #733365;
 
       .editableInputGroup {
         display: flex;
-
+        align-items: center;
         &Input {
+          width: 100%;
           padding: 4px;
           font-size: 1rem;
         }
+
         &Button {
           color: #000;
           background: none;
           border: none;
           cursor: pointer;
-        }
-        &Button:hover {
-          color: green;
         }
       }
 

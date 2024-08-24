@@ -70,9 +70,13 @@ export function UserDashboardPage() {
 
     const handleUpdateGoal = (goalId, updatedGoal) => {
         return new Promise((resolve, reject) => {
+            const currentGoal = goals.find(goal => goal.id === goalId);
+            const savedSteps = currentGoal.steps; // Сохраняем шаги перед обновлением
+
             putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
+                // Восстанавливаем шаги в обновленной цели
                 setGoals(goals.map(goal =>
-                    goal.id === goalId ? updatedGoal : goal
+                    goal.id === goalId ? { ...updatedGoal, steps: savedSteps } : goal
                 ));
                 setEditingGoal(null);
                 resolve();
@@ -81,6 +85,7 @@ export function UserDashboardPage() {
             });
         });
     };
+
 
     const handleAddStep = (goalId) => {
         const step = {
