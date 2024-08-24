@@ -58,7 +58,7 @@ export default function GoalItem({
             style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
             onClick={() => setSelectedGoalId(goal.id)}
         >
-            <div className="goalHeader">
+            <div className="goalItemHeader">
                 <h2>
                     {goal.title} ({completionPercentage.toFixed(0)}%)
                 </h2>
@@ -83,14 +83,21 @@ export default function GoalItem({
                         </div>
 
                         <div className="goalItemInfo">
-                            <EditableField
-                                value={goal.title}
-                                onSave={(value) => saveField('title', value)}
-                            />
-                            <EditableField
-                                value={goal.description}
-                                onSave={(value) => saveField('description', value)}
-                            />
+                            <div className="">
+                                <h4>Название</h4>
+                                <EditableField
+                                    value={goal.title}
+                                    onSave={(value) => saveField('title', value)}
+                                />
+                            </div>
+                            <div className="">
+                                <h4>Описание</h4>
+                                <EditableField
+                                    value={goal.description}
+                                    onSave={(value) => saveField('description', value)}
+                                />
+                            </div>
+
                             <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
                         </div>
                     </div>

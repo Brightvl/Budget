@@ -14,7 +14,7 @@ export default function StepItem({
                                      handleUpdateStep
                                  }) {
     const saveField = (field, value) => {
-        const updatedStep = { ...step, [field]: value };
+        const updatedStep = {...step, [field]: value};
         return handleUpdateStep(goalId, step.id, updatedStep);
     };
 
@@ -50,14 +50,21 @@ export default function StepItem({
                         </div>
                     </div>
                     <div className="stepItemInfo">
-                        <EditableStepField
-                            value={step.title}
-                            onSave={(value) => saveField('title', value)}
-                        />
-                        <EditableStepField
-                            value={step.description || ''}
-                            onSave={(value) => saveField('description', value)}
-                        />
+                        <div className="">
+                            <h5>Название шага</h5>
+                            <EditableStepField
+                                value={step.title}
+                                onSave={(value) => saveField('title', value)}
+                            />
+                        </div>
+                        <div className="">
+                            <h5>Описание</h5>
+                            <EditableStepField
+                                value={step.description || ''}
+                                onSave={(value) => saveField('description', value)}
+                            />
+                        </div>
+
                         <p>Дата создания шага: {new Date(step.startTime).toLocaleDateString()}</p>
                     </div>
                 </div>

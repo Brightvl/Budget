@@ -27,19 +27,21 @@ export default function EditableField({ value, onSave }) {
         <div className="editableField">
             {isEditing ? (
                 <div className="editableInputGroup">
-                    <input
+                    <textarea
                         className={"editableInputGroupInput"}
-                        type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
-                    <button
-                        className={"editableInputGroupButton"} onClick={handleSave}>
-                        <CheckIcon />
-                    </button>
-                    <button className={"editableInputGroupButton"} onClick={handleCancel}>
-                        <XIcon />
-                    </button>
+                    <div className="editableInputGroupButtonBox">
+                        <button
+                            className={"editableInputGroupButton"} onClick={handleSave}>
+                            <CheckIcon/>
+                        </button>
+                        <button className={"editableInputGroupButton"} onClick={handleCancel}>
+                            <XIcon/>
+                        </button>
+                    </div>
+
                 </div>
             ) : (
                 <span

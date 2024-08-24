@@ -52,12 +52,14 @@ $border-step-color: #67425d;
     &:hover{
       border: 1.5px solid $button-hover-bg-color;
     }
-    &Header{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 40px;
-      cursor: pointer;
+    &Header {
+      font-size: 1rem;
+      word-wrap: break-word;
+      white-space: normal;
+      overflow-wrap: break-word;
+      max-width: 100%;
+      text-align: center;
+      padding: 8px;
     }
 
       &ActionsBox {
@@ -81,22 +83,30 @@ $border-step-color: #67425d;
         padding: 4px;
         border-radius: 4px;
         border: 1px solid $border-step-color;
+        word-wrap: break-word; // Перенос длинных слов
+        white-space: pre-wrap; // Перенос строк и сохранение пробелов
+
 
         &:hover {
-          border: 1px solid $border-step-color;
-
-          color: #000; // Цвет текста при наведении
+          border: 1px solid $button-hover-bg-color;
         }
       }
 
       .editableInputGroup {
         display: flex;
+        flex-direction: column;
         align-items: center;
+        position: relative;
 
         &Input {
           width: 100%;
           padding: 4px;
           font-size: 1rem;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          min-height: 150px;
+          box-sizing: border-box;
+          border-radius: $border-radius;
         }
 
         &Button {
@@ -104,6 +114,13 @@ $border-step-color: #67425d;
           background: none;
           border: none;
           cursor: pointer;
+
+          &Box {
+            position: absolute;
+            right: 8px;
+            top: -18px;
+            display: flex;
+          }
         }
       }
 

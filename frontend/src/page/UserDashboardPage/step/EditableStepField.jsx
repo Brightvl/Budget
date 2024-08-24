@@ -7,14 +7,17 @@ export default function EditableStepField({ value, onSave }) {
     const [inputValue, setInputValue] = useState(value);
 
     useEffect(() => {
-        setInputValue(value);
-    }, [value]);
+        if (isEditing) {
+            setInputValue(value); // Сброс значения на актуальное при начале редактирования
+        }
+    }, [isEditing, value]);
 
     const handleSave = () => {
         onSave(inputValue)
             .then(() => setIsEditing(false))
             .catch((error) => console.error('Failed to save:', error));
     };
+
     const handleCancel = () => {
         setIsEditing(false);
         setInputValue(value); // Сброс значения при отмене
@@ -24,16 +27,19 @@ export default function EditableStepField({ value, onSave }) {
         <div className="editableField">
             {isEditing ? (
                 <div className="editableInputGroup">
-                    <input
+                    <textarea
                         className={"editableInputGroupInput"}
-                        type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
-                    <button className={"editableInputGroupButton"} onClick={handleSave}>
-                        <CheckIcon/></button>
-                    <button className={"editableInputGroupButton"} onClick={handleCancel}>
-                        <XIcon/></button>
+                    <div className="editableInputGroupButtonBox">
+                        <button className={"editableInputGroupButton"} onClick={handleSave}>
+                            <CheckIcon />
+                        </button>
+                        <button className={"editableInputGroupButton"} onClick={handleCancel}>
+                            <XIcon />
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <span
