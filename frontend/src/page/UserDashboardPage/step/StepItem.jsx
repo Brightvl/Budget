@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import EditableStepField from './EditableStepField.jsx';
 import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
@@ -26,26 +26,28 @@ export default function StepItem({
                 </div>
             ) : (
                 <div className="stepItemDetails">
-                    <div className="Actions">
+                    <div className="stepItemDetailsactionsBox">
                         <CheckIcon
                             onClick={(e) => {
                                 e.stopPropagation();
                                 handleToggleStepCompletion(goalId, step.id);
                             }}
-                            color={step.completed ? 'green' : 'red'} // Используем color для изменения цвета
+                            completed={step.completed} // передаем состояние completed
                         />
-                        <MinusIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleSelect();
-                            }}
-                        />
-                        <TrashIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteStep(goalId, step.id);
-                            }}
-                        />
+                        <div className="">
+                            <MinusIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleSelect();
+                                }}
+                            />
+                            <TrashIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteStep(goalId, step.id);
+                                }}
+                            />
+                        </div>
                     </div>
                     <div className="stepInfo">
                         <EditableStepField

@@ -29,13 +29,18 @@
   stroke: red; /* Красный цвет при наведении */
 }
 .checkIcon {
-  stroke: currentColor;
-  transition: stroke 0.3s ease;
+  fill: gray; /* цвет по умолчанию */
+  transition: fill 0.3s;
+
+  &:hover {
+    fill: green; /* цвет при наведении */
+  }
 }
 
-.checkIcon:hover {
-  stroke: green; /* Зеленый цвет при наведении */
+.checkIcon.completed {
+  fill: green; /* цвет, если задача выполнена */
 }
+
 .minusIcon {
   fill: currentColor;
   transition: fill 0.3s ease;

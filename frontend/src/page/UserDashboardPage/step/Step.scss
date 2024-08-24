@@ -16,7 +16,8 @@ $border-step-color: #67425d;
     border: 1px solid $border-step-color;
     border-radius: $border-radius;
     padding: 8px;
-    &InputBox{
+
+    &InputBox {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -47,8 +48,17 @@ $border-step-color: #67425d;
   &Item {
     border: 1px solid $border-step-color;
     border-radius: $border-radius;
+
     &Details {
-    position: relative;
+      position: relative;
+
+      &actionsBox {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+      }
     }
   }
+
 }
