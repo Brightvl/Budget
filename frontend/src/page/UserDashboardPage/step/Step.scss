@@ -54,6 +54,7 @@ $border-step-color: #67425d;
     }
 
     &Header {
+      cursor: pointer;
       display: flex;
       flex-basis: 0;
       flex-grow: 1;

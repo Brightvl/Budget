@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
 import AddStepForm from '../step/AddStepForm.jsx';
 import CheckBoxIcon from '../../../assets/svg/CheckBoxIcon.jsx';
-import {UserContext} from '../../../context/UserContext.jsx';
+import { UserContext } from '../../../context/UserContext.jsx';
 
 export default function GoalItem({
                                      goal,
@@ -15,9 +15,9 @@ export default function GoalItem({
                                      goalStates,
                                      stepHandlers
                                  }) {
-    const {user} = useContext(UserContext);
-    const {handleUpdateGoal, handleDeleteGoal} = goalHandlers;
-    const {setStepsForGoal} = goalStates;
+    const { user } = useContext(UserContext);
+    const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
+    const { setStepsForGoal } = goalStates;
     const [stepsLoaded, setStepsLoaded] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [localGoal, setLocalGoal] = useState(goal);
@@ -55,23 +55,23 @@ export default function GoalItem({
     }, [goal]);
 
     const updateGoalState = async (updatedFields) => {
-        const updatedGoal = {...localGoal, ...updatedFields};
+        const updatedGoal = { ...localGoal, ...updatedFields };
         setLocalGoal(updatedGoal);
         await handleUpdateGoal(goal.id, updatedGoal);
     };
 
     const handleMarkAsCompleted = () => {
-        updateGoalState({isCompleted: true, isFailed: false});
+        updateGoalState({ isCompleted: true, isFailed: false });
         setMenuOpen(false);
     };
 
     const handleMarkAsFailed = () => {
-        updateGoalState({isCompleted: false, isFailed: true});
+        updateGoalState({ isCompleted: false, isFailed: true });
         setMenuOpen(false);
     };
 
     const handleResetStatus = () => {
-        updateGoalState({isCompleted: false, isFailed: false});
+        updateGoalState({ isCompleted: false, isFailed: false });
         setMenuOpen(false);
     };
 
@@ -87,54 +87,59 @@ export default function GoalItem({
     return (
         <div
             className="goalItem"
-            style={{cursor: localGoal.id !== selectedGoalId ? 'pointer' : 'default'}}
+            style={{ cursor: localGoal.id !== selectedGoalId ? 'pointer' : 'default' }}
             onClick={() => setSelectedGoalId(localGoal.id)}
         >
             <div className="goalItemHeader">
-                <h2>
+                <h3>
                     {localGoal.title}
-                </h2>
-                <CheckBoxIcon
-                    onClick={handleIconClick}
-                    completionPercentage={completionPercentage}
-                    isFailed={localGoal.isFailed}
-                    manualCompletion={manualCompletion}
-                    isGoal={true}
-                />
-            </div>
+                </h3>
+                <div className="goalItemActions">
+                    {selectedGoalId === localGoal.id && (
+                        <TrashIcon
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteGoal(localGoal.id);
+                            }}
+                        />
+                    )}
 
-            {menuOpen && (
-                <div className="goalStatusMenu">
+                    {selectedGoalId === localGoal.id && (
+                        <MinusIcon
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedGoalId(null);
+                            }}
+                        />
+                    )}
+                    <CheckBoxIcon
+                        onClick={handleIconClick}
+                        completionPercentage={completionPercentage}
+                        isFailed={localGoal.isFailed}
+                        manualCompletion={manualCompletion}
+                        isGoal={true}
+                    />
 
-                    <button onClick={handleMarkAsCompleted} disabled={localGoal.isCompleted}>
-                        Отметить как выполнено
-                    </button>
-                    <button onClick={handleMarkAsFailed} disabled={localGoal.isFailed}>
-                        Отметить как провалено
-                    </button>
-                    <button onClick={handleResetStatus} disabled={!localGoal.isCompleted && !localGoal.isFailed}>
-                        Сбросить статус
-                    </button>
                 </div>
-            )}
+            </div>
 
             {selectedGoalId === localGoal.id && (
                 <>
-                    <div className="goalItemDetails">
-                        <div className="Actions">
-                            <MinusIcon
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedGoalId(null);
-                                }}
-                            />
-                            <TrashIcon
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteGoal(localGoal.id);
-                                }}
-                            />
+                    {menuOpen && (
+                        <div className="goalStatusMenu">
+                            <button onClick={handleMarkAsCompleted} disabled={localGoal.isCompleted}>
+                                Отметить как выполнено
+                            </button>
+                            <button onClick={handleMarkAsFailed} disabled={localGoal.isFailed}>
+                                Отметить как провалено
+                            </button>
+                            <button onClick={handleResetStatus} disabled={!localGoal.isCompleted && !localGoal.isFailed}>
+                                Сбросить статус
+                            </button>
                         </div>
+                    )}
+
+                    <div className="goalItemDetails">
 
                         <div className="goalItemInfo">
                             <div className="">
@@ -146,14 +151,14 @@ export default function GoalItem({
                                 <h4>Название</h4>
                                 <EditableField
                                     value={localGoal.title}
-                                    onSave={(value) => updateGoalState({title: value})}
+                                    onSave={(value) => updateGoalState({ title: value })}
                                 />
                             </div>
                             <div className="">
                                 <h4>Описание</h4>
                                 <EditableField
                                     value={localGoal.description}
-                                    onSave={(value) => updateGoalState({description: value})}
+                                    onSave={(value) => updateGoalState({ description: value })}
                                 />
                             </div>
                         </div>
@@ -171,7 +176,7 @@ export default function GoalItem({
                         )}
                     </div>
 
-                    <div className="add-step-form">
+                    <div className="goalAddStepForm">
                         {!goalStates.isAddingStep ? (
                             <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(localGoal.id)}>
                                 Добавить шаг
@@ -182,7 +187,9 @@ export default function GoalItem({
                                 handleAddStep={() => stepHandlers.handleAddStep(localGoal.id)}
                                 handleCancel={() => goalStates.setIsAddingStep(null)}
                             />
-                        )}
+                        )
+                        }
+
                     </div>
                 </>
             )}
