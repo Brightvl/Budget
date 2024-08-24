@@ -15,14 +15,14 @@ public class JwtCore {
 
     private final SecretKey key;
 
-    @Value("${test.app.lifetime}")
+    @Value("${app.jwt.lifetime}")
     private Long lifetime;
 
     /**
      * Инициализация секретного ключа из строки при создании компонента
      * @param secret Ключевое слово
      */
-    public JwtCore(@Value("${test.app.secret}") String secret) {
+    public JwtCore(@Value("${app.jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
