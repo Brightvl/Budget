@@ -83,6 +83,8 @@ export default function GoalItem({
                         </div>
 
                         <div className="goalItemInfo">
+                            <h5>Создан: {new Date(goal.startTime).toLocaleDateString()}</h5>
+
                             <div className="">
                                 <h4>Название</h4>
                                 <EditableField
@@ -98,12 +100,11 @@ export default function GoalItem({
                                 />
                             </div>
 
-                            <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
                         </div>
                     </div>
 
                     <div className="goalItemSteps">
-                        {goal.steps && goal.steps.length > 0 ? (
+                    {goal.steps && goal.steps.length > 0 ? (
                             <StepList
                                 goalId={goal.id}
                                 steps={goal.steps}

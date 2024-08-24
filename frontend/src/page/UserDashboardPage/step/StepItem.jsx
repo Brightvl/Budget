@@ -60,6 +60,8 @@ export default function StepItem({
                             /></div>
                     </div>
                     <div className="stepItemInfo">
+                        <h5>Создан: {new Date(step.startTime).toLocaleDateString()}</h5>
+
                         <div className="">
                             <h5>Название шага</h5>
                             <EditableStepField
@@ -74,7 +76,6 @@ export default function StepItem({
                                 onSave={(value) => saveField('description', value)}
                             />
                         </div>
-                        <p>Дата создания шага: {new Date(step.startTime).toLocaleDateString()}</p>
                     </div>
                 </div>
             )}
