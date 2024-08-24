@@ -29,13 +29,11 @@ export default function StepItem({
                             handleToggleStepCompletion(goalId, step.id);
                         }}
                         completed={step.completed}
-
                     />
                 </div>
             ) : (
                 <div className="stepItemDetails">
                     <div className="stepItemActionsBox">
-
                         <div className="">
                             <TrashIcon
                                 onClick={(e) => {
@@ -56,12 +54,12 @@ export default function StepItem({
                                     e.stopPropagation();
                                     handleToggleStepCompletion(goalId, step.id);
                                 }}
-                                completed={step.completed} // передаем состояние completed
-                            /></div>
+                                completed={step.completed}
+                            />
+                        </div>
                     </div>
                     <div className="stepItemInfo">
                         <h5>Создан: {new Date(step.startTime).toLocaleDateString()}</h5>
-
                         <div className="">
                             <h5>Название шага</h5>
                             <EditableStepField

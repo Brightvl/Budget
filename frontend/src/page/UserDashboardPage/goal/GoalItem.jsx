@@ -17,7 +17,7 @@ export default function GoalItem({
     const { user } = useContext(UserContext);
     const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
     const { setStepsForGoal } = goalStates;
-    const [stepsLoaded, setStepsLoaded] = useState(false); // Новый стейт для отслеживания загрузки шагов
+    const [stepsLoaded, setStepsLoaded] = useState(false);
 
     const loadStepsForGoal = async (goalId) => {
         try {
@@ -29,14 +29,14 @@ export default function GoalItem({
             });
             const steps = await response.json();
             setStepsForGoal(goalId, steps);
-            setStepsLoaded(true); // Устанавливаем флаг, что шаги загружены
+            setStepsLoaded(true);
         } catch (error) {
             console.error("Error loading steps:", error);
         }
     };
 
     useEffect(() => {
-        if (selectedGoalId === goal.id && !stepsLoaded) { // Загружаем шаги только если они еще не загружены
+        if (selectedGoalId === goal.id && !stepsLoaded) {
             loadStepsForGoal(goal.id);
         }
     }, [selectedGoalId]);
@@ -48,8 +48,23 @@ export default function GoalItem({
     const saveField = (field, value) => {
         const updatedGoal = { ...goal, [field]: value };
         return handleUpdateGoal(goal.id, updatedGoal).then(() => {
-            setStepsLoaded(false); // Сбрасываем флаг, чтобы шаги могли быть перезагружены после обновления цели
+            setStepsLoaded(false);
         });
+    };
+
+    const handleMarkAsCompleted = () => {
+        saveField('isCompleted', true);
+        saveField('isFailed', false);
+    };
+
+    const handleMarkAsFailed = () => {
+        saveField('isCompleted', false);
+        saveField('isFailed', true);
+    };
+
+    const handleResetStatus = () => {
+        saveField('isCompleted', false);
+        saveField('isFailed', false);
     };
 
     return (
@@ -100,11 +115,24 @@ export default function GoalItem({
                                 />
                             </div>
 
+                            <div className="goalStatusActions">
+                                <h4>Статус цели</h4>
+                                <button onClick={handleMarkAsCompleted} disabled={goal.isCompleted}>
+                                    Отметить как выполнено
+                                </button>
+                                <button onClick={handleMarkAsFailed} disabled={goal.isFailed}>
+                                    Отметить как провалено
+                                </button>
+                                <button onClick={handleResetStatus} disabled={!goal.isCompleted && !goal.isFailed}>
+                                    Сбросить статус
+                                </button>
+                            </div>
+
                         </div>
                     </div>
 
                     <div className="goalItemSteps">
-                    {goal.steps && goal.steps.length > 0 ? (
+                        {goal.steps && goal.steps.length > 0 ? (
                             <StepList
                                 goalId={goal.id}
                                 steps={goal.steps}
