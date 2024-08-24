@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import EditableStepField from './EditableStepField.jsx';
 import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
@@ -14,49 +14,68 @@ export default function StepItem({
                                      handleUpdateStep
                                  }) {
     const saveField = (field, value) => {
-        const updatedStep = { ...step, [field]: value };
+        const updatedStep = {...step, [field]: value};
         return handleUpdateStep(goalId, step.id, updatedStep);
     };
 
     return (
         <div className="stepItem">
             {!isSelected ? (
-                <div className="stepHeader" onClick={onToggleSelect}>
+                <div className="stepItemHeader" onClick={onToggleSelect}>
                     <h3>{step.title}</h3>
+                    <CheckIcon
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStepCompletion(goalId, step.id);
+                        }}
+                        completed={step.completed}
+
+                    />
                 </div>
             ) : (
                 <div className="stepItemDetails">
-                    <div className="Actions">
-                        <CheckIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggleStepCompletion(goalId, step.id);
-                            }}
-                            color={step.completed ? 'green' : 'red'} // Используем color для изменения цвета
-                        />
-                        <MinusIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleSelect();
-                            }}
-                        />
-                        <TrashIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteStep(goalId, step.id);
-                            }}
-                        />
+                    <div className="stepItemActionsBox">
+
+                        <div className="">
+                            <TrashIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteStep(goalId, step.id);
+                                }}
+                            />
+                        </div>
+                        <div className="">
+                            <MinusIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleSelect();
+                                }}
+                            />
+                            <CheckIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleStepCompletion(goalId, step.id);
+                                }}
+                                completed={step.completed} // передаем состояние completed
+                            /></div>
                     </div>
-                    <div className="stepInfo">
-                        <EditableStepField
-                            value={step.title}
-                            onSave={(value) => saveField('title', value)}
-                        />
-                        <EditableStepField
-                            value={step.description || ''}
-                            onSave={(value) => saveField('description', value)}
-                        />
-                        <p>Время начала шага: {new Date(step.startTime).toLocaleDateString()}</p>
+                    <div className="stepItemInfo">
+                        <h5>Создан: {new Date(step.startTime).toLocaleDateString()}</h5>
+
+                        <div className="">
+                            <h5>Название шага</h5>
+                            <EditableStepField
+                                value={step.title}
+                                onSave={(value) => saveField('title', value)}
+                            />
+                        </div>
+                        <div className="">
+                            <h5>Описание</h5>
+                            <EditableStepField
+                                value={step.description || ''}
+                                onSave={(value) => saveField('description', value)}
+                            />
+                        </div>
                     </div>
                 </div>
             )}

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
-import AddStepForm from '../step/AddStepForm.jsx'; // Импортируем AddStepForm
+import AddStepForm from '../step/AddStepForm.jsx';
+import { UserContext } from '../../../context/UserContext.jsx';
 
 export default function GoalItem({
                                      goal,
@@ -13,8 +14,32 @@ export default function GoalItem({
                                      goalStates,
                                      stepHandlers
                                  }) {
+    const { user } = useContext(UserContext);
     const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
-    const { editingGoal, setEditingGoal } = goalStates;
+    const { setStepsForGoal } = goalStates;
+    const [stepsLoaded, setStepsLoaded] = useState(false); // Новый стейт для отслеживания загрузки шагов
+
+    const loadStepsForGoal = async (goalId) => {
+        try {
+            const response = await fetch(`/api/goals/${goalId}/steps`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const steps = await response.json();
+            setStepsForGoal(goalId, steps);
+            setStepsLoaded(true); // Устанавливаем флаг, что шаги загружены
+        } catch (error) {
+            console.error("Error loading steps:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedGoalId === goal.id && !stepsLoaded) { // Загружаем шаги только если они еще не загружены
+            loadStepsForGoal(goal.id);
+        }
+    }, [selectedGoalId]);
 
     const completedSteps = (goal.steps || []).filter(step => step.completed).length;
     const totalSteps = goal.steps?.length || 0;
@@ -22,28 +47,23 @@ export default function GoalItem({
 
     const saveField = (field, value) => {
         const updatedGoal = { ...goal, [field]: value };
-        setEditingGoal(null);
-        return handleUpdateGoal(goal.id, updatedGoal);
+        return handleUpdateGoal(goal.id, updatedGoal).then(() => {
+            setStepsLoaded(false); // Сбрасываем флаг, чтобы шаги могли быть перезагружены после обновления цели
+        });
     };
 
     return (
         <div
             className="goalItem"
             style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
-            onClick={() => {
-                if (goal.id !== selectedGoalId) {
-                    setSelectedGoalId(goal.id);
-                }
-            }}
+            onClick={() => setSelectedGoalId(goal.id)}
         >
-            {/* Свернутое состояние */}
-            <div className="goalHeader">
+            <div className="goalItemHeader">
                 <h2>
                     {goal.title} ({completionPercentage.toFixed(0)}%)
                 </h2>
             </div>
 
-            {/* Развернутое состояние */}
             {selectedGoalId === goal.id && (
                 <>
                     <div className="goalItemDetails">
@@ -63,29 +83,38 @@ export default function GoalItem({
                         </div>
 
                         <div className="goalItemInfo">
-                            <EditableField
-                                value={goal.title}
-                                onSave={(value) => saveField('title', value)}
-                            />
-                            <EditableField
-                                value={goal.description}
-                                onSave={(value) => saveField('description', value)}
-                            />
-                            <p>Дата создания: {new Date(goal.startTime).toLocaleDateString()}</p>
+                            <h5>Создан: {new Date(goal.startTime).toLocaleDateString()}</h5>
+
+                            <div className="">
+                                <h4>Название</h4>
+                                <EditableField
+                                    value={goal.title}
+                                    onSave={(value) => saveField('title', value)}
+                                />
+                            </div>
+                            <div className="">
+                                <h4>Описание</h4>
+                                <EditableField
+                                    value={goal.description}
+                                    onSave={(value) => saveField('description', value)}
+                                />
+                            </div>
+
                         </div>
                     </div>
 
                     <div className="goalItemSteps">
-                        <StepList
-                            goalId={goal.id}
-                            steps={goal.steps}
-                            stepHandlers={stepHandlers}
-                            stepStates={goalStates}
-                        />
-
-
+                    {goal.steps && goal.steps.length > 0 ? (
+                            <StepList
+                                goalId={goal.id}
+                                steps={goal.steps}
+                                stepHandlers={stepHandlers}
+                            />
+                        ) : (
+                            <p>Шаги отсутствуют</p>
+                        )}
                     </div>
-                    {/* Добавляем AddStepForm после списка шагов */}
+
                     <div className="add-step-form">
                         {!goalStates.isAddingStep ? (
                             <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
@@ -95,7 +124,7 @@ export default function GoalItem({
                             <AddStepForm
                                 stepData={{ newStep: goalStates.newStep, setNewStep: goalStates.setNewStep }}
                                 handleAddStep={() => stepHandlers.handleAddStep(goal.id)}
-                                handleCancel={() => goalStates.setIsAddingStep(null)} // Закрываем форму при нажатии на крестик
+                                handleCancel={() => goalStates.setIsAddingStep(null)}
                             />
                         )}
                     </div>
@@ -104,4 +133,3 @@ export default function GoalItem({
         </div>
     );
 }
-
