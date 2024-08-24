@@ -86,6 +86,7 @@ public class StepController {
 
         Step step = stepOptional.get();
         step.setTitle(stepDTO.getTitle());
+        step.setDescription(stepDTO.getDescription());
         step.setIsCompleted(stepDTO.isCompleted());
 
         Step updatedStep = stepService.updateStep(step);
@@ -109,6 +110,7 @@ public class StepController {
         return StepDTO.builder()
                 .id(step.getId())
                 .title(step.getTitle())
+                .description(step.getDescription())
                 .isCompleted(step.getIsCompleted())
                 .startTime(step.getStartTime())
                 .build();
@@ -117,6 +119,7 @@ public class StepController {
     private Step convertToStepEntity(StepDTO stepDTO) {
         return Step.builder()
                 .title(stepDTO.getTitle())
+                .description(stepDTO.getDescription())
                 .isCompleted(stepDTO.isCompleted())
                 .startTime(stepDTO.getStartTime())
                 .build();

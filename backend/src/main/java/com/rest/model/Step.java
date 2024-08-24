@@ -20,6 +20,7 @@ public class Step {
     private Long id;
 
     private String title;
+    private String description;
     private Boolean isCompleted = false;
     private LocalDateTime startTime = LocalDateTime.now();
 
