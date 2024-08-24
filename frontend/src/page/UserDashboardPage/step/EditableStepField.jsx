@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
+import React, {useEffect, useState} from 'react';
 import XIcon from "../../../assets/svg/XIcon.jsx";
+import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
 
 export default function EditableStepField({ value, onSave }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +34,7 @@ export default function EditableStepField({ value, onSave }) {
                     />
                     <div className="editableInputGroupButtonBox">
                         <button className={"editableInputGroupButton"} onClick={handleSave}>
-                            <CheckIcon />
+                            <CheckIcon/>
                         </button>
                         <button className={"editableInputGroupButton"} onClick={handleCancel}>
                             <XIcon />
