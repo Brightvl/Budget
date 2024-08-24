@@ -88,13 +88,14 @@ export default function GoalItem({
                     {/* Добавляем AddStepForm после списка шагов */}
                     <div className="add-step-form">
                         {!goalStates.isAddingStep ? (
-                            <button className="stepFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
+                            <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
                                 Добавить шаг
                             </button>
                         ) : (
                             <AddStepForm
-                                stepData={{newStep: goalStates.newStep, setNewStep: goalStates.setNewStep}}
+                                stepData={{ newStep: goalStates.newStep, setNewStep: goalStates.setNewStep }}
                                 handleAddStep={() => stepHandlers.handleAddStep(goal.id)}
+                                handleCancel={() => goalStates.setIsAddingStep(null)} // Закрываем форму при нажатии на крестик
                             />
                         )}
                     </div>

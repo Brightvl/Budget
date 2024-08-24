@@ -2,8 +2,8 @@
 @import "./goal/Goal";
 @import "./step/Step";
 
-$button-goal-bg-color: #0978ec;
-$button-goal-hover-bg-color: #0056b3;
+$button-bg-color: #ac6790;
+$button-hover-bg-color: #5c0a48;
 
 
 .Actions {
@@ -12,12 +12,7 @@ $button-goal-hover-bg-color: #0056b3;
   top: 8px;
 }
 
-.dashboardButton {
-  padding: 5px 10px;
-  font-size: 0.9em;
 
-  //@include button-style($button-step-bg-color, $button-step-hover-bg-color);
-}
 
 .container {
   position: relative;
@@ -31,6 +26,13 @@ $button-goal-hover-bg-color: #0056b3;
 
   .icon {
     width: 20px;
+  }
+
+  .dashboardButton {
+    padding: 5px 10px;
+    font-size: 0.9em;
+
+    @include button-style($button-bg-color, $button-hover-bg-color);
   }
 }
 

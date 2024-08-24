@@ -16,6 +16,12 @@ $border-step-color: #67425d;
     border: 1px solid $border-step-color;
     border-radius: $border-radius;
     padding: 8px;
+    &InputBox{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
   }
 
   &List {
