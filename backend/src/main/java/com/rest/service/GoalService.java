@@ -31,8 +31,13 @@ public class GoalService {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         goal.setUser(user);
+
+        goal.updateCompletionPercentage();
+        goal.updateGoalStatus();
+
         return goalRepository.save(goal);
     }
+
 
     public Goal updateGoal(Long userId, Long goalId, Goal updatedGoal) {
         var existingGoalOptional = goalRepository.findByIdAndUserId(goalId, userId);
@@ -41,12 +46,20 @@ public class GoalService {
             existingGoal.setTitle(updatedGoal.getTitle());
             existingGoal.setDescription(updatedGoal.getDescription());
             existingGoal.setIsCompleted(updatedGoal.getIsCompleted());
+            existingGoal.setIsFailed(updatedGoal.getIsFailed());
             existingGoal.setStartTime(updatedGoal.getStartTime());
+            existingGoal.setEndTime(updatedGoal.getEndTime());
+            existingGoal.setCreatedTime(updatedGoal.getCreatedTime());
+
+            existingGoal.updateCompletionPercentage();
+            existingGoal.updateGoalStatus();
+
             return goalRepository.save(existingGoal);
         } else {
             return null;
         }
     }
+
 
     public boolean deleteGoal(Long userId, Long goalId) {
         var existingGoalOptional = goalRepository.findByIdAndUserId(goalId, userId);

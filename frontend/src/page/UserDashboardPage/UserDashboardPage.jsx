@@ -54,8 +54,7 @@ export function UserDashboardPage() {
         const goal = {
             title: newGoal.title || 'Цель не указана',
             description: newGoal.description || 'Нет описания',
-            startTime: new Date().toISOString(),
-            steps: []
+            startTime: new Date().toISOString()
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
             setGoals([...goals, goal]);
@@ -63,6 +62,7 @@ export function UserDashboardPage() {
             setIsAddingGoal(false);
         });
     };
+
 
     const handleCancelAddGoal = () => {
         setIsAddingGoal(false);
