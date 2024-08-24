@@ -23,6 +23,15 @@ export function UserDashboardPage() {
     const [isAddingStep, setIsAddingStep] = useState(null);
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
+    // Новое состояние для хранения шагов
+    const setStepsForGoal = (goalId, steps) => {
+        setGoals(prevGoals =>
+            prevGoals.map(goal =>
+                goal.id === goalId ? { ...goal, steps } : goal
+            )
+        );
+    };
+
     useEffect(() => {
         if (role !== 'USER') {
             navigate('/auth');
@@ -123,7 +132,6 @@ export function UserDashboardPage() {
         });
     };
 
-
     const handleDeleteGoal = (goalId) => {
         deleteData(`/api/goals/${user.id}/${goalId}`, user, () => {
             setGoals(goals.filter(goal => goal.id !== goalId));
@@ -153,7 +161,8 @@ export function UserDashboardPage() {
         newStep,
         setNewStep,
         editingStep,
-        setEditingStep
+        setEditingStep,
+        setStepsForGoal // Добавляем эту функцию в goalStates
     };
 
     const stepHandlers = {

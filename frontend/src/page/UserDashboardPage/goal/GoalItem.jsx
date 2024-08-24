@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
-import AddStepForm from '../step/AddStepForm.jsx'; // Импортируем AddStepForm
+import AddStepForm from '../step/AddStepForm.jsx';
+import { UserContext } from '../../../context/UserContext.jsx'; // Импортируем контекст пользователя
 
 export default function GoalItem({
                                      goal,
@@ -13,8 +14,31 @@ export default function GoalItem({
                                      goalStates,
                                      stepHandlers
                                  }) {
+    const { user } = useContext(UserContext); // Достаем пользователя из контекста
     const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
-    const { editingGoal, setEditingGoal } = goalStates;
+    const { editingGoal, setEditingGoal, setStepsForGoal } = goalStates;
+
+    // Функция для загрузки шагов при открытии цели
+    const loadStepsForGoal = async (goalId) => {
+        try {
+            const response = await fetch(`/api/goals/${goalId}/steps`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`, // Используем токен из контекста пользователя
+                    'Content-Type': 'application/json',
+                },
+            });
+            const steps = await response.json();
+            setStepsForGoal(goalId, steps); // Сохраняем шаги в состоянии
+        } catch (error) {
+            console.error("Error loading steps:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedGoalId === goal.id && (!goal.steps || goal.steps.length === 0)) {
+            loadStepsForGoal(goal.id); // Загружаем шаги при первом открытии цели
+        }
+    }, [selectedGoalId]);
 
     const completedSteps = (goal.steps || []).filter(step => step.completed).length;
     const totalSteps = goal.steps?.length || 0;
@@ -30,20 +54,14 @@ export default function GoalItem({
         <div
             className="goalItem"
             style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
-            onClick={() => {
-                if (goal.id !== selectedGoalId) {
-                    setSelectedGoalId(goal.id);
-                }
-            }}
+            onClick={() => setSelectedGoalId(goal.id)}
         >
-            {/* Свернутое состояние */}
             <div className="goalHeader">
                 <h2>
                     {goal.title} ({completionPercentage.toFixed(0)}%)
                 </h2>
             </div>
 
-            {/* Развернутое состояние */}
             {selectedGoalId === goal.id && (
                 <>
                     <div className="goalItemDetails">
@@ -76,16 +94,17 @@ export default function GoalItem({
                     </div>
 
                     <div className="goalItemSteps">
-                        <StepList
-                            goalId={goal.id}
-                            steps={goal.steps}
-                            stepHandlers={stepHandlers}
-                            stepStates={goalStates}
-                        />
-
-
+                        {goal.steps && goal.steps.length > 0 ? (
+                            <StepList
+                                goalId={goal.id}
+                                steps={goal.steps}
+                                stepHandlers={stepHandlers}
+                            />
+                        ) : (
+                            <p>Шаги отсутствуют</p>
+                        )}
                     </div>
-                    {/* Добавляем AddStepForm после списка шагов */}
+
                     <div className="add-step-form">
                         {!goalStates.isAddingStep ? (
                             <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
@@ -95,7 +114,7 @@ export default function GoalItem({
                             <AddStepForm
                                 stepData={{ newStep: goalStates.newStep, setNewStep: goalStates.setNewStep }}
                                 handleAddStep={() => stepHandlers.handleAddStep(goal.id)}
-                                handleCancel={() => goalStates.setIsAddingStep(null)} // Закрываем форму при нажатии на крестик
+                                handleCancel={() => goalStates.setIsAddingStep(null)}
                             />
                         )}
                     </div>
@@ -104,4 +123,3 @@ export default function GoalItem({
         </div>
     );
 }
-

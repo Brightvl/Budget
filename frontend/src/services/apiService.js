@@ -10,6 +10,7 @@ export const fetchData = async (url, user, setData, setLoading) => {
         if (response.ok) {
             const data = await response.json();
             setData(data);
+            console.log(data)
         } else {
             console.error('Failed to fetch data:', response.status);
         }
