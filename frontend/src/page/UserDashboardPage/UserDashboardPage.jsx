@@ -23,6 +23,15 @@ export function UserDashboardPage() {
     const [isAddingStep, setIsAddingStep] = useState(null);
     const [showLogoutWarning, setShowLogoutWarning] = useState(false);
 
+    // Новое состояние для хранения шагов
+    const setStepsForGoal = (goalId, steps) => {
+        setGoals(prevGoals =>
+            prevGoals.map(goal =>
+                goal.id === goalId ? { ...goal, steps } : goal
+            )
+        );
+    };
+
     useEffect(() => {
         if (role !== 'USER') {
             navigate('/auth');
@@ -45,8 +54,7 @@ export function UserDashboardPage() {
         const goal = {
             title: newGoal.title || 'Цель не указана',
             description: newGoal.description || 'Нет описания',
-            startTime: new Date().toISOString(),
-            steps: []
+            startTime: new Date().toISOString()
         };
         postData(`/api/goals/${user.id}`, user, goal, (goal) => {
             setGoals([...goals, goal]);
@@ -55,15 +63,20 @@ export function UserDashboardPage() {
         });
     };
 
+
     const handleCancelAddGoal = () => {
         setIsAddingGoal(false);
     };
 
     const handleUpdateGoal = (goalId, updatedGoal) => {
         return new Promise((resolve, reject) => {
+            const currentGoal = goals.find(goal => goal.id === goalId);
+            const savedSteps = currentGoal.steps; // Сохраняем шаги перед обновлением
+
             putData(`/api/goals/${user.id}/${goalId}`, user, updatedGoal, (updatedGoal) => {
+                // Восстанавливаем шаги в обновленной цели
                 setGoals(goals.map(goal =>
-                    goal.id === goalId ? updatedGoal : goal
+                    goal.id === goalId ? { ...updatedGoal, steps: savedSteps } : goal
                 ));
                 setEditingGoal(null);
                 resolve();
@@ -72,6 +85,7 @@ export function UserDashboardPage() {
             });
         });
     };
+
 
     const handleAddStep = (goalId) => {
         const step = {
@@ -123,7 +137,6 @@ export function UserDashboardPage() {
         });
     };
 
-
     const handleDeleteGoal = (goalId) => {
         deleteData(`/api/goals/${user.id}/${goalId}`, user, () => {
             setGoals(goals.filter(goal => goal.id !== goalId));
@@ -153,7 +166,8 @@ export function UserDashboardPage() {
         newStep,
         setNewStep,
         editingStep,
-        setEditingStep
+        setEditingStep,
+        setStepsForGoal // Добавляем эту функцию в goalStates
     };
 
     const stepHandlers = {

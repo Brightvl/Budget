@@ -16,7 +16,8 @@ $border-step-color: #67425d;
     border: 1px solid $border-step-color;
     border-radius: $border-radius;
     padding: 8px;
-    &InputBox{
+
+    &InputBox {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -45,10 +46,93 @@ $border-step-color: #67425d;
 
 
   &Item {
-    border: 1px solid $border-step-color;
+    border: 1.5px solid $border-step-color;
     border-radius: $border-radius;
-    &Details {
-    position: relative;
+
+    &:hover {
+      border: 1.5px solid $button-hover-bg-color;
+    }
+
+    &Header {
+      cursor: pointer;
+      display: flex;
+      flex-basis: 0;
+      flex-grow: 1;
+      flex-shrink: 1;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      font-size: 1rem;
+      max-width: 100%;
+      text-align: center;
+      overflow-wrap: break-word;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    &ActionsBox {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+    }
+
+    &Info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      text-align: start;
+      padding: 8px;
+
+      .editableDisplay {
+        display: block;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        border: 1px solid $border-step-color;
+        word-wrap: break-word; // Перенос длинных слов
+        white-space: pre-wrap; // Перенос строк и сохранение пробелов
+
+
+        &:hover {
+          border: 1px solid $button-hover-bg-color;
+        }
+      }
+
+      .editableInputGroup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+
+        &Input {
+          width: 100%;
+          padding: 4px;
+          font-size: 1rem;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          min-height: 150px;
+          box-sizing: border-box;
+          border-radius: $border-radius;
+        }
+
+        &Button {
+          color: #000;
+          background: none;
+          border: none;
+          cursor: pointer;
+
+          &Box {
+            position: absolute;
+            right: 8px;
+            top: -18px;
+            display: flex;
+          }
+        }
+      }
+
     }
   }
 }
+

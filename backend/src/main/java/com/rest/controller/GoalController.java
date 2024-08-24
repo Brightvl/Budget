@@ -86,13 +86,18 @@ public class GoalController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // Создаем объект Goal без учета шагов
         Goal goal = Goal.builder()
                 .title(goalDTO.getTitle())
                 .description(goalDTO.getDescription())
                 .isCompleted(goalDTO.getIsCompleted())
+                .isFailed(goalDTO.getIsFailed())
+                .completionPercentage(goalDTO.getCompletionPercentage())
+                .createdTime(goalDTO.getCreatedTime())
+                .endTime(goalDTO.getEndTime())
                 .startTime(goalDTO.getStartTime())
                 .build();
+
+
 
         Goal updatedGoal = goalService.updateGoal(userId, goalId, goal);
 
@@ -133,6 +138,10 @@ public class GoalController {
                 .title(goal.getTitle())
                 .description(goal.getDescription())
                 .isCompleted(goal.getIsCompleted())
+                .isFailed(goal.getIsFailed())
+                .completionPercentage(goal.getCompletionPercentage())
+                .createdTime(goal.getCreatedTime())
+                .endTime(goal.getEndTime())
                 .startTime(goal.getStartTime())
                 .stepIds(goal.getSteps() != null ? goal.getSteps().stream()
                         .map(step -> step.getId())
@@ -145,6 +154,10 @@ public class GoalController {
                 .title(goalDTO.getTitle())
                 .description(goalDTO.getDescription())
                 .isCompleted(goalDTO.getIsCompleted())
+                .isFailed(goalDTO.getIsFailed())
+                .completionPercentage(goalDTO.getCompletionPercentage())
+                .createdTime(goalDTO.getCreatedTime())
+                .endTime(goalDTO.getEndTime())
                 .startTime(goalDTO.getStartTime())
                 .build();
     }

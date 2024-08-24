@@ -71,6 +71,13 @@ public class StepController {
         step.setGoal(goalOptional.get());
 
         Step createdStep = stepService.createStep(step);
+
+        // Обновляем цель после добавления шага
+        Goal goal = goalOptional.get();
+        goal.updateCompletionPercentage();
+        goal.updateGoalStatus();
+        goalService.updateGoal(currentUser.getId(), goalId, goal);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(convertToStepDTO(createdStep));
     }
@@ -86,9 +93,17 @@ public class StepController {
 
         Step step = stepOptional.get();
         step.setTitle(stepDTO.getTitle());
+        step.setDescription(stepDTO.getDescription());
         step.setIsCompleted(stepDTO.isCompleted());
 
         Step updatedStep = stepService.updateStep(step);
+
+        // Обновляем цель после изменения шага
+        Goal goal = step.getGoal();
+        goal.updateCompletionPercentage();
+        goal.updateGoalStatus();
+        goalService.updateGoal(currentUser.getId(), goalId, goal);
+
         return ResponseEntity.ok(convertToStepDTO(updatedStep));
     }
 
@@ -102,13 +117,22 @@ public class StepController {
         }
 
         stepService.deleteStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
+
+        // Обновляем цель после удаления шага
+        Goal goal = stepOptional.get().getGoal();
+        goal.updateCompletionPercentage();
+        goal.updateGoalStatus();
+        goalService.updateGoal(currentUser.getId(), goalId, goal);
+
         return ResponseEntity.noContent().build();
     }
+
 
     private StepDTO convertToStepDTO(Step step) {
         return StepDTO.builder()
                 .id(step.getId())
                 .title(step.getTitle())
+                .description(step.getDescription())
                 .isCompleted(step.getIsCompleted())
                 .startTime(step.getStartTime())
                 .build();
@@ -117,6 +141,7 @@ public class StepController {
     private Step convertToStepEntity(StepDTO stepDTO) {
         return Step.builder()
                 .title(stepDTO.getTitle())
+                .description(stepDTO.getDescription())
                 .isCompleted(stepDTO.isCompleted())
                 .startTime(stepDTO.getStartTime())
                 .build();

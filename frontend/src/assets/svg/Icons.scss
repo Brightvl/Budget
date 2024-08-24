@@ -1,0 +1,81 @@
+.icon {
+  width: 15px; /* Ширина иконки */
+  height: 15px; /* Высота иконки */
+}
+
+.pencilIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.pencilIcon:hover {
+  fill: #007bff; /* Синий цвет при наведении */
+}
+
+.trashIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.trashIcon:hover {
+  fill: red; /* Красный цвет при наведении */
+}
+.xIcon {
+  stroke: currentColor;
+  transition: stroke 0.3s ease;
+}
+
+.xIcon:hover {
+  stroke: red; /* Красный цвет при наведении */
+}
+.checkIconWrapper {
+  position: relative;
+  display: inline-block;
+
+  .tooltip {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+
+    /* Position the tooltip above the icon */
+    position: absolute;
+    z-index: 1;
+    top: -35px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.icon {
+  fill: gray; /* Default color */
+}
+
+.icon.green {
+  fill: green;
+}
+
+.icon.red {
+  fill: red;
+}
+
+
+.minusIcon {
+  fill: currentColor;
+  transition: fill 0.3s ease;
+}
+
+.minusIcon:hover {
+  fill: #007bff; /* Жёлтый цвет при наведении */
+}

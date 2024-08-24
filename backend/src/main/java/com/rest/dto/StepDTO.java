@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class StepDTO {
     private Long id;
     private String title;
+    private String description;
     private boolean isCompleted;
     private LocalDateTime startTime;
 }

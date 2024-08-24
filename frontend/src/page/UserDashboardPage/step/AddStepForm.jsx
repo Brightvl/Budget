@@ -1,9 +1,9 @@
 import React from 'react';
-import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
 import XIcon from "../../../assets/svg/XIcon.jsx";
+import CheckIcon from "../../../assets/svg/CheckIcon.jsx";
 
-export default function AddStepForm({ stepData, handleAddStep, handleCancel}) {
-    const { newStep, setNewStep } = stepData;
+export default function AddStepForm({stepData, handleAddStep, handleCancel}) {
+    const {newStep, setNewStep} = stepData;
 
     return (
         <div className="stepAddBox">
@@ -26,10 +26,10 @@ export default function AddStepForm({ stepData, handleAddStep, handleCancel}) {
 
                 />
             </div>
-<div className="stepAddBoxInputBox">
-    <CheckIcon onClick={handleAddStep}/>
-    <XIcon onClick={handleCancel}/>
-</div>
+            <div className="stepAddBoxInputBox">
+                <CheckIcon onClick={handleAddStep}/>
+                <XIcon onClick={handleCancel}/>
+            </div>
 
         </div>
     );

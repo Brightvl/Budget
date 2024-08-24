@@ -25,9 +25,9 @@
 ### Серверная часть:
 - **Java 17**
 - **Spring Boot**
- - Spring Web
- - Spring Security
- - Spring Data JPA
+- Spring Web
+- Spring Security
+- Spring Data JPA
 - **PostgreSQL**
 - **JWT (JSON Web Token)**
 - **Docker**
@@ -46,37 +46,37 @@
 Для запуска проекта на локальной машине выполните следующие шаги:
 
 1. **Клонируйте репозиторий:**
-   ```bash
-   git clone https://github.com/Brightvl/Goal.git
-   cd Goal
-   ```
-2. Есть два варианта запуска приложения
-
-   - Собрать самим и запустить
-     - Перейдите в корневую директорию папки Goal
-     - Соберите Docker-compose
-       ```bash
-          docker-compose up --build
-       ```
-   - Воспользоваться уже собранным вариантом
-    ```bash
-    # корень программы
-    docker load -i docker_image/goal-backend.tar
-    docker load -i docker_image/goal-frontend.tar
-    docker load -i docker_image/postgres-15-alpine.tar
-    
-    docker-compose up
-    ```
-    - Сохранение локального образа
-    ```bash
-    docker save -o docker_image/goal-backend.tar goal-backend:latest
-    docker save -o docker_image/goal-frontend.tar goal-frontend:latest
-    docker save -o docker_image/postgres-15-alpine.tar postgres:15-alpine
-    
-    ```
-
+```bash
+git clone https://github.com/Brightvl/Goal.git
+cd Goal
+```
+2. Собрать проект
+- Перейдите в корневую директорию папки Goal
+- Соберите Docker-compose
+  ```bash
+     docker-compose up --build
+  ```
 - Серверная часть будет запущена на http://localhost:8080.
 - Клиентская часть будет доступна по адресу http://localhost:3000.
+
+### Локальное сохранение и использование
+
+- Сохранение локального образа (если необходимо)
+```bash
+docker save -o docker_image/goal-backend.tar goal-backend:latest
+docker save -o docker_image/goal-frontend.tar goal-frontend:latest
+docker save -o docker_image/postgres-15-alpine.tar postgres:15-alpine
+
+```
+- Воспользоваться уже собранным вариантом (только после того как сохранили локально)
+```bash
+# корень программы
+docker load -i docker_image/goal-backend.tar
+docker load -i docker_image/goal-frontend.tar
+docker load -i docker_image/postgres-15-alpine.tar
+
+docker-compose up
+```
 
 ## Использование
 - Вход/Регистрация: Создайте учетную запись или войдите в систему для управления вашими целями.

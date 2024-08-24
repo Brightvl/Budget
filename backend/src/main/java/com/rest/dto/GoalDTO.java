@@ -19,6 +19,11 @@ public class GoalDTO {
     private String title;
     private String description;
     private Boolean isCompleted;
+    private Boolean isFailed;
+    private Double completionPercentage;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDateTime createdTime;
     private List<Long> stepIds;
 }
+
