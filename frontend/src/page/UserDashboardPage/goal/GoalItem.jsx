@@ -1,9 +1,10 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import StepList from '../step/StepList.jsx';
 import EditableField from './EditableField.jsx';
 import TrashIcon from '../../../assets/svg/TrashIcon.jsx';
 import MinusIcon from '../../../assets/svg/MinusIcon.jsx';
 import AddStepForm from '../step/AddStepForm.jsx';
+import CheckIcon from '../../../assets/svg/CheckIcon.jsx';
 import { UserContext } from '../../../context/UserContext.jsx';
 
 export default function GoalItem({
@@ -18,6 +19,9 @@ export default function GoalItem({
     const { handleUpdateGoal, handleDeleteGoal } = goalHandlers;
     const { setStepsForGoal } = goalStates;
     const [stepsLoaded, setStepsLoaded] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [localGoal, setLocalGoal] = useState(goal);
+    const [manualCompletion, setManualCompletion] = useState(goal.isCompleted && !goal.isFailed);
 
     const loadStepsForGoal = async (goalId) => {
         try {
@@ -41,45 +45,79 @@ export default function GoalItem({
         }
     }, [selectedGoalId]);
 
-    const completedSteps = (goal.steps || []).filter(step => step.completed).length;
-    const totalSteps = goal.steps?.length || 0;
-    const completionPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
+    useEffect(() => {
+        setLocalGoal(goal);
+        if (goal.isCompleted && !goal.isFailed && completionPercentage < 100) {
+            setManualCompletion(true);
+        } else {
+            setManualCompletion(false);
+        }
+    }, [goal]);
 
-    const saveField = (field, value) => {
-        const updatedGoal = { ...goal, [field]: value };
-        return handleUpdateGoal(goal.id, updatedGoal).then(() => {
-            setStepsLoaded(false);
-        });
+    const updateGoalState = async (updatedFields) => {
+        const updatedGoal = { ...localGoal, ...updatedFields };
+        setLocalGoal(updatedGoal);
+        await handleUpdateGoal(goal.id, updatedGoal);
     };
 
     const handleMarkAsCompleted = () => {
-        saveField('isCompleted', true);
-        saveField('isFailed', false);
+        updateGoalState({ isCompleted: true, isFailed: false });
+        setMenuOpen(false);
     };
 
     const handleMarkAsFailed = () => {
-        saveField('isCompleted', false);
-        saveField('isFailed', true);
+        updateGoalState({ isCompleted: false, isFailed: true });
+        setMenuOpen(false);
     };
 
     const handleResetStatus = () => {
-        saveField('isCompleted', false);
-        saveField('isFailed', false);
+        updateGoalState({ isCompleted: false, isFailed: false });
+        setMenuOpen(false);
     };
+
+    const handleIconClick = (e) => {
+        e.stopPropagation();
+        setMenuOpen(!menuOpen);
+    };
+
+    const completedSteps = (localGoal.steps || []).filter(step => step.completed).length;
+    const totalSteps = localGoal.steps?.length || 0;
+    const completionPercentage = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
     return (
         <div
             className="goalItem"
-            style={{ cursor: goal.id !== selectedGoalId ? 'pointer' : 'default' }}
-            onClick={() => setSelectedGoalId(goal.id)}
+            style={{ cursor: localGoal.id !== selectedGoalId ? 'pointer' : 'default' }}
+            onClick={() => setSelectedGoalId(localGoal.id)}
         >
             <div className="goalItemHeader">
                 <h2>
-                    {goal.title} ({completionPercentage.toFixed(0)}%)
+                    {localGoal.title} ({completionPercentage.toFixed(0)}%)
                 </h2>
+                <CheckIcon
+                    onClick={handleIconClick}
+                    completionPercentage={completionPercentage}
+                    isFailed={localGoal.isFailed}
+                    manualCompletion={manualCompletion}
+                    isGoal={true}
+                />
             </div>
 
-            {selectedGoalId === goal.id && (
+            {menuOpen && (
+                <div className="goalStatusMenu">
+                    <button onClick={handleMarkAsCompleted} disabled={localGoal.isCompleted}>
+                        Отметить как выполнено
+                    </button>
+                    <button onClick={handleMarkAsFailed} disabled={localGoal.isFailed}>
+                        Отметить как провалено
+                    </button>
+                    <button onClick={handleResetStatus} disabled={!localGoal.isCompleted && !localGoal.isFailed}>
+                        Сбросить статус
+                    </button>
+                </div>
+            )}
+
+            {selectedGoalId === localGoal.id && (
                 <>
                     <div className="goalItemDetails">
                         <div className="Actions">
@@ -92,50 +130,36 @@ export default function GoalItem({
                             <TrashIcon
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDeleteGoal(goal.id);
+                                    handleDeleteGoal(localGoal.id);
                                 }}
                             />
                         </div>
 
                         <div className="goalItemInfo">
-                            <h5>Создан: {new Date(goal.startTime).toLocaleDateString()}</h5>
+                            <h5>Создан: {new Date(localGoal.startTime).toLocaleDateString()}</h5>
 
                             <div className="">
                                 <h4>Название</h4>
                                 <EditableField
-                                    value={goal.title}
-                                    onSave={(value) => saveField('title', value)}
+                                    value={localGoal.title}
+                                    onSave={(value) => updateGoalState({ title: value })}
                                 />
                             </div>
                             <div className="">
                                 <h4>Описание</h4>
                                 <EditableField
-                                    value={goal.description}
-                                    onSave={(value) => saveField('description', value)}
+                                    value={localGoal.description}
+                                    onSave={(value) => updateGoalState({ description: value })}
                                 />
                             </div>
-
-                            <div className="goalStatusActions">
-                                <h4>Статус цели</h4>
-                                <button onClick={handleMarkAsCompleted} disabled={goal.isCompleted}>
-                                    Отметить как выполнено
-                                </button>
-                                <button onClick={handleMarkAsFailed} disabled={goal.isFailed}>
-                                    Отметить как провалено
-                                </button>
-                                <button onClick={handleResetStatus} disabled={!goal.isCompleted && !goal.isFailed}>
-                                    Сбросить статус
-                                </button>
-                            </div>
-
                         </div>
                     </div>
 
                     <div className="goalItemSteps">
-                        {goal.steps && goal.steps.length > 0 ? (
+                        {localGoal.steps && localGoal.steps.length > 0 ? (
                             <StepList
-                                goalId={goal.id}
-                                steps={goal.steps}
+                                goalId={localGoal.id}
+                                steps={localGoal.steps}
                                 stepHandlers={stepHandlers}
                             />
                         ) : (
@@ -145,13 +169,13 @@ export default function GoalItem({
 
                     <div className="add-step-form">
                         {!goalStates.isAddingStep ? (
-                            <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(goal.id)}>
+                            <button className="goalFormButton" onClick={() => goalStates.setIsAddingStep(localGoal.id)}>
                                 Добавить шаг
                             </button>
                         ) : (
                             <AddStepForm
                                 stepData={{ newStep: goalStates.newStep, setNewStep: goalStates.setNewStep }}
-                                handleAddStep={() => stepHandlers.handleAddStep(goal.id)}
+                                handleAddStep={() => stepHandlers.handleAddStep(localGoal.id)}
                                 handleCancel={() => goalStates.setIsAddingStep(null)}
                             />
                         )}

@@ -28,18 +28,48 @@
 .xIcon:hover {
   stroke: red; /* Красный цвет при наведении */
 }
-.checkIcon {
-  fill: gray; /* цвет по умолчанию */
-  transition: fill 0.3s;
+.checkIconWrapper {
+  position: relative;
+  display: inline-block;
 
-  &:hover {
-    fill: green; /* цвет при наведении */
+  .tooltip {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+
+    /* Position the tooltip above the icon */
+    position: absolute;
+    z-index: 1;
+    top: -35px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
   }
 }
 
-.checkIcon.completed {
-  fill: green; /* цвет, если задача выполнена */
+.icon {
+  fill: gray; /* Default color */
 }
+
+.icon.green {
+  fill: green;
+}
+
+.icon.red {
+  fill: red;
+}
+
 
 .minusIcon {
   fill: currentColor;

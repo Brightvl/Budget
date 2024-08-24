@@ -28,7 +28,9 @@ export default function StepItem({
                             e.stopPropagation();
                             handleToggleStepCompletion(goalId, step.id);
                         }}
-                        completed={step.completed}
+                        completionPercentage={step.completed ? 100 : 0}
+                        isFailed={false}
+                        isGoal={false} // указываем, что это не иконка цели, а шага
                     />
                 </div>
             ) : (
@@ -54,7 +56,9 @@ export default function StepItem({
                                     e.stopPropagation();
                                     handleToggleStepCompletion(goalId, step.id);
                                 }}
-                                completed={step.completed}
+                                completionPercentage={step.completed ? 100 : 0}
+                                isFailed={false}
+                                isGoal={false}
                             />
                         </div>
                     </div>
