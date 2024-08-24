@@ -23,24 +23,20 @@ export default function StepItem({
             {!isSelected ? (
                 <div className="stepItemHeader" onClick={onToggleSelect}>
                     <h3>{step.title}</h3>
+                    <CheckIcon
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleStepCompletion(goalId, step.id);
+                        }}
+                        completed={step.completed}
+
+                    />
                 </div>
             ) : (
                 <div className="stepItemDetails">
                     <div className="stepItemActionsBox">
-                        <CheckIcon
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggleStepCompletion(goalId, step.id);
-                            }}
-                            completed={step.completed} // передаем состояние completed
-                        />
+
                         <div className="">
-                            <MinusIcon
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onToggleSelect();
-                                }}
-                            />
                             <TrashIcon
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -48,6 +44,20 @@ export default function StepItem({
                                 }}
                             />
                         </div>
+                        <div className="">
+                            <MinusIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleSelect();
+                                }}
+                            />
+                            <CheckIcon
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleStepCompletion(goalId, step.id);
+                                }}
+                                completed={step.completed} // передаем состояние completed
+                            /></div>
                     </div>
                     <div className="stepItemInfo">
                         <div className="">
@@ -64,7 +74,6 @@ export default function StepItem({
                                 onSave={(value) => saveField('description', value)}
                             />
                         </div>
-
                         <p>Дата создания шага: {new Date(step.startTime).toLocaleDateString()}</p>
                     </div>
                 </div>

@@ -60,6 +60,9 @@ $border-step-color: #67425d;
       max-width: 100%;
       text-align: center;
       padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
       &ActionsBox {
