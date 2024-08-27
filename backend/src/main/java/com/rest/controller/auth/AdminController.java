@@ -33,7 +33,10 @@ public class AdminController {
                         user.getName(),
                         user.getEmail(),
                         user.getRole(),
-                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                        user.getGoals()
+                                .stream()
+                                .map(Goal::getId)
+                                .collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());
     }
@@ -47,7 +50,10 @@ public class AdminController {
                         user.getName(),
                         user.getEmail(),
                         user.getRole(),
-                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                        user.getGoals()
+                                .stream()
+                                .map(Goal::getId)
+                                .collect(Collectors.toList())
                 )))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
@@ -83,7 +89,7 @@ public class AdminController {
                         user.getName(),
                         user.getEmail(),
                         user.getRole(),
-                        user.getGoals().stream().map(goal -> goal.getId()).collect(Collectors.toList())
+                        user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
                 )))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
@@ -93,7 +99,6 @@ public class AdminController {
         User user = userService.getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Проверка на уникальность логина
         if (!userDTO.getLogin().equals(user.getLogin())) {
             if (userService.getUserByLogin(userDTO.getLogin()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
@@ -102,7 +107,7 @@ public class AdminController {
             }
         }
 
-        user.setName(userDTO.getName()); // Обновление имени пользователя
+        user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setRole(userDTO.getRole());
 
@@ -111,10 +116,13 @@ public class AdminController {
         UserDTO updatedUserDTO = new UserDTO(
                 updatedUser.getId(),
                 updatedUser.getLogin(),
-                updatedUser.getName(), // Передача обновленного имени
+                updatedUser.getName(),
                 updatedUser.getEmail(),
                 updatedUser.getRole(),
-                updatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+                updatedUser.getGoals()
+                        .stream()
+                        .map(Goal::getId)
+                        .collect(Collectors.toList())
         );
 
         return ResponseEntity.ok(updatedUserDTO);
@@ -122,7 +130,9 @@ public class AdminController {
 
 
     @PutMapping("/users/{id}/reset-password")
-    public ResponseEntity<Void> resetUserPassword(@PathVariable Long id, @RequestBody Map<String, String> passwordRequest) {
+    public ResponseEntity<Void> resetUserPassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> passwordRequest) {
         String newPassword = passwordRequest.get("password");
         userService.resetUserPassword(id, newPassword);
         return ResponseEntity.ok().build();

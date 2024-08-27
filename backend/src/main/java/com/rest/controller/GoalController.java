@@ -2,6 +2,7 @@ package com.rest.controller;
 
 import com.rest.dto.GoalDTO;
 import com.rest.model.Goal;
+import com.rest.model.Step;
 import com.rest.model.auth.User;
 import com.rest.service.GoalService;
 import org.springframework.http.HttpStatus;
@@ -97,10 +98,7 @@ public class GoalController {
                 .startTime(goalDTO.getStartTime())
                 .build();
 
-
-
         Goal updatedGoal = goalService.updateGoal(userId, goalId, goal);
-
         if (updatedGoal == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -125,7 +123,10 @@ public class GoalController {
     }
 
     private Long getCurrentUserId() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         if (principal instanceof User) {
             return ((User) principal).getId();
         }
@@ -144,7 +145,7 @@ public class GoalController {
                 .endTime(goal.getEndTime())
                 .startTime(goal.getStartTime())
                 .stepIds(goal.getSteps() != null ? goal.getSteps().stream()
-                        .map(step -> step.getId())
+                        .map(Step::getId)
                         .collect(Collectors.toList()) : null)
                 .build();
     }

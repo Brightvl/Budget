@@ -1,7 +1,4 @@
 app:
-  jwt:
-    secret: "мой-длинный-ключ-для-HS256"
-    lifetime: 3600000
   db:
     name: appdb
     user: appUser

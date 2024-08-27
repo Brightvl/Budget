@@ -1,7 +1,9 @@
 package com.rest.service.auth;
 
+import com.rest.model.auth.Role;
 import com.rest.model.auth.User;
 import com.rest.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,12 +35,12 @@ public class UserService {
         User user = getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setName(userDetails.getName()); // Обновление имени пользователя
-        user.setLogin(userDetails.getLogin()); // Обновление логина
+        user.setName(userDetails.getName());
+        user.setLogin(userDetails.getLogin());
         user.setEmail(userDetails.getEmail());
         user.setRole(userDetails.getRole());
 
-        return userRepository.save(user); // Сохранение изменений
+        return userRepository.save(user);
     }
 
 
@@ -46,7 +48,6 @@ public class UserService {
         User user = getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Хеширование нового пароля
         user.setPassword(passwordEncoder.encode(newPassword));
 
         return userRepository.save(user);
@@ -61,5 +62,21 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+
+    @PostConstruct
+    public void ensureAdminUserExists() {
+        if (userRepository.countByRole(Role.ADMIN) == 0) {
+            User admin = User.builder()
+                    .login("admin")
+                    .name("admin")
+                    .email("admin@example.com")
+                    .password(passwordEncoder.encode("admin"))
+                    .role(Role.ADMIN)
+                    .build();
+            userRepository.save(admin);
+            System.out.println("Admin user created");
+        }
     }
 }

@@ -27,7 +27,9 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtCore jwtCore;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager, JwtCore jwtCore) {
+    public UserController(UserService userService,
+                          AuthenticationManager authenticationManager,
+                          JwtCore jwtCore) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtCore = jwtCore;
@@ -50,7 +52,6 @@ public class UserController {
         }
 
         user.setPassword(userDTO.getPassword());
-
         try {
             userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
@@ -62,7 +63,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginUser(@RequestBody LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDTO.getLogin(), loginRequestDTO.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDTO.getLogin(),
+                        loginRequestDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,7 +80,10 @@ public class UserController {
                 authenticatedUser.getName(),
                 authenticatedUser.getEmail(),
                 authenticatedUser.getRole(),
-                authenticatedUser.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
+                authenticatedUser.getGoals()
+                        .stream()
+                        .map(Goal::getId)
+                        .collect(Collectors.toList())
         );
 
         return ResponseEntity.ok(new JwtResponse(token, userDTO));
@@ -85,6 +91,10 @@ public class UserController {
 
     @GetMapping("/{login}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String login) {
+        return getUserDTOResponseEntity(login);
+    }
+
+    private ResponseEntity<UserDTO> getUserDTOResponseEntity(@PathVariable String login) {
         User user = userService.getUserByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -98,22 +108,12 @@ public class UserController {
         );
         return ResponseEntity.ok(userDTO);
     }
+
     @GetMapping("/current")
     public ResponseEntity<UserDTO> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
 
-        User user = userService.getUserByLogin(login)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        UserDTO userDTO = new UserDTO(
-                user.getId(),
-                user.getLogin(),
-                user.getName(),
-                user.getEmail(),
-                user.getRole(),
-                user.getGoals().stream().map(Goal::getId).collect(Collectors.toList())
-        );
-        return ResponseEntity.ok(userDTO);
+        return getUserDTOResponseEntity(login);
     }
 }

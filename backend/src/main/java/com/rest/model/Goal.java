@@ -36,13 +36,12 @@ public class Goal {
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<Step> steps = new ArrayList<>(); // Инициализация пустым списком
+    private List<Step> steps = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Метод для обновления состояния цели
     public void updateGoalStatus() {
         if (Boolean.TRUE.equals(isCompleted)) {
             isFailed = false;
@@ -57,7 +56,6 @@ public class Goal {
         }
     }
 
-    // Метод для обновления процента выполнения
     public void updateCompletionPercentage() {
         if (steps == null || steps.isEmpty()) {
             this.completionPercentage = 0.0;

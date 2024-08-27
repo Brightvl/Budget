@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class BudgetApplication {
+public class GoalApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BudgetApplication.class, args);
+        SpringApplication.run(GoalApplication.class, args);
     }
 }

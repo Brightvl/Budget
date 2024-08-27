@@ -42,14 +42,7 @@ public class GoalService {
     public Goal updateGoal(Long userId, Long goalId, Goal updatedGoal) {
         var existingGoalOptional = goalRepository.findByIdAndUserId(goalId, userId);
         if (existingGoalOptional.isPresent()) {
-            var existingGoal = existingGoalOptional.get();
-            existingGoal.setTitle(updatedGoal.getTitle());
-            existingGoal.setDescription(updatedGoal.getDescription());
-            existingGoal.setIsCompleted(updatedGoal.getIsCompleted());
-            existingGoal.setIsFailed(updatedGoal.getIsFailed());
-            existingGoal.setStartTime(updatedGoal.getStartTime());
-            existingGoal.setEndTime(updatedGoal.getEndTime());
-            existingGoal.setCreatedTime(updatedGoal.getCreatedTime());
+            var existingGoal = getGoal(updatedGoal, existingGoalOptional);
 
             existingGoal.updateCompletionPercentage();
             existingGoal.updateGoalStatus();
@@ -58,6 +51,18 @@ public class GoalService {
         } else {
             return null;
         }
+    }
+
+    private static Goal getGoal(Goal updatedGoal, Optional<Goal> existingGoalOptional) {
+        var existingGoal = existingGoalOptional.get();
+        existingGoal.setTitle(updatedGoal.getTitle());
+        existingGoal.setDescription(updatedGoal.getDescription());
+        existingGoal.setIsCompleted(updatedGoal.getIsCompleted());
+        existingGoal.setIsFailed(updatedGoal.getIsFailed());
+        existingGoal.setStartTime(updatedGoal.getStartTime());
+        existingGoal.setEndTime(updatedGoal.getEndTime());
+        existingGoal.setCreatedTime(updatedGoal.getCreatedTime());
+        return existingGoal;
     }
 
 

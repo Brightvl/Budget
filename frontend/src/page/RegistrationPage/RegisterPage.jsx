@@ -2,6 +2,7 @@ import {useNavigate} from 'react-router-dom';
 import {useState} from "react";
 import {checkEmailExists, checkLoginExists, validateEmail, validatePassword} from '../../utils/validation.js';
 import "./RegistrationPage.scss"
+import LogoutButton from "../../components/LogoutButton.jsx";
 
 export function RegisterPage() {
     const [login, setLogin] = useState('');

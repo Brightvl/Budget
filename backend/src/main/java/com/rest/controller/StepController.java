@@ -34,7 +34,7 @@ public class StepController {
         User currentUser = authService.getCurrentUser();
         Optional<Goal> goalOptional = goalService.getGoalByIdAndUserId(goalId, currentUser.getId());
 
-        if (!goalOptional.isPresent()) {
+        if (goalOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -49,13 +49,13 @@ public class StepController {
     @GetMapping("/{stepId}")
     public ResponseEntity<StepDTO> getStepById(@PathVariable Long goalId, @PathVariable Long stepId) {
         User currentUser = authService.getCurrentUser();
-        Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
+        Optional<Step> stepOptional = stepService
+                .getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!stepOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return stepOptional.map(step -> ResponseEntity
+                .ok(convertToStepDTO(step)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
-        return ResponseEntity.ok(convertToStepDTO(stepOptional.get()));
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class StepController {
         User currentUser = authService.getCurrentUser();
         Optional<Goal> goalOptional = goalService.getGoalByIdAndUserId(goalId, currentUser.getId());
 
-        if (!goalOptional.isPresent()) {
+        if (goalOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -72,7 +72,6 @@ public class StepController {
 
         Step createdStep = stepService.createStep(step);
 
-        // Обновляем цель после добавления шага
         Goal goal = goalOptional.get();
         goal.updateCompletionPercentage();
         goal.updateGoalStatus();
@@ -87,7 +86,7 @@ public class StepController {
         User currentUser = authService.getCurrentUser();
         Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!stepOptional.isPresent()) {
+        if (stepOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -98,7 +97,6 @@ public class StepController {
 
         Step updatedStep = stepService.updateStep(step);
 
-        // Обновляем цель после изменения шага
         Goal goal = step.getGoal();
         goal.updateCompletionPercentage();
         goal.updateGoalStatus();
@@ -112,7 +110,7 @@ public class StepController {
         User currentUser = authService.getCurrentUser();
         Optional<Step> stepOptional = stepService.getStepByIdAndGoalIdAndUserId(stepId, goalId, currentUser.getId());
 
-        if (!stepOptional.isPresent()) {
+        if (stepOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
