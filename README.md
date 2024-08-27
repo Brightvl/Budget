@@ -115,5 +115,6 @@ docker run --name appdb -e POSTGRES_USER=appUser -e POSTGRES_PASSWORD=appPass -e
 
 ## Контакты
 
-Если у вас есть вопросы или предложения, свяжитесь со мной по ziro-x-100@mail.ru
-
+Если у вас есть вопросы или предложения, свяжитесь со мной:
+- ziro-x-100@mail.ru
+- https://t.me/Bright_vl
